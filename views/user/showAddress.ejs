@@ -192,6 +192,7 @@
                             class="form-control"
                             name="first_name"
                             value="<%= userAdd.first_name %>"
+                            readonly
                             required
                           />
                         </div>
@@ -207,6 +208,7 @@
                             class="form-control"
                             name="last_name"
                             value="<%= userAdd.last_name %>"
+                            readonly
                             required
                           />
                         </div>
@@ -227,6 +229,7 @@
                             class="form-control"
                             name="phone"
                             value="<%= userAdd.phone %>"
+                            readonly
                             required
                           />
                         </div>
@@ -243,6 +246,7 @@
                             class="form-control"
                             name="pincode"
                             value="<%= userAdd.address[0].pincode %>"
+                            readonly
                             required
                           />
                         </div>
@@ -260,6 +264,7 @@
                             class="form-control"
                             name="locality"
                             value="<%= userAdd.address[0].locality %>"
+                            readonly
                             required
                           />
                         </div>
@@ -276,6 +281,7 @@
                             name="email"
                             class="form-control"
                             value="<%= userAdd.email %>"
+                            readonly
                             required
                           />
                         </div>
@@ -292,6 +298,7 @@
                             name="fullAddress"
                             rows="4"
                             required
+                            readonly
                           > <%= userAdd.address[0].fullAddress %> </textarea>
                         </div>
                       </div>
@@ -309,6 +316,7 @@
                             name="city"
                             value="<%= userAdd.address[0].city %>"
                             required
+                            readonly
                           />
                         </div>
                       </div>

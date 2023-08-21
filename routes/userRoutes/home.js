@@ -79,6 +79,9 @@ router.get("/profile/edit-profile/:id", ProfileController.getProfileEdit);
 // router for updating the user profile
 router.post("/profile/editProfile/:id", ProfileController.postProfileEdit);
 
+// router for moving to the checkout page
+router.get("/product/cart/checkout", cartController.getCheckout);
+
 // router for adding new product to the cart
 router.get("/product/cart/:id", cartController.addProducts);
 

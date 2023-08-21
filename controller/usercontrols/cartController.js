@@ -4,10 +4,10 @@
 const mongoose = require("mongoose");
 const cartCollection = require("../../models/cart/cartDetail");
 const productCollection = require("../../models/product/productDetails");
-// const userCollection = require("../../models/user/userDatabase");
+const userCollection = require("../../models/user/userDatabase");
 
 // for saving the products in the cart
-const User = mongoose.model("userCollection"); // Replace "User" with your actual model name
+const User = mongoose.model("userCollection");
 const Product = mongoose.model("product");
 
 exports.addProducts = async (req, res) => {
@@ -53,7 +53,7 @@ exports.addProducts = async (req, res) => {
       res.render("user/cart", { cartPage });
     } else {
       console.error("User not found for email: " + userEmail);
-      res.redirect("/product");
+      res.redirect("/login");
     }
   } catch (error) {
     console.error("Error adding the product to the cart:", error);
@@ -148,3 +148,31 @@ exports.putStock = async (req, res) => {
 //     console.log("There is an error while rendering the cart page");
 //   }
 // };
+
+// router for checkoutpage
+exports.getCheckout = async (req, res) => {
+  const address = req.session.user;
+  try {
+    const user = await userCollection.findOne({ email: address });
+    if (user) {
+      const userId = user._id;
+      console.log("userId", userId);
+
+      const cartItem = await cartCollection
+        .find({ user: userId })
+        .populate({ path: "product", model: "product" });
+      const useAdd = await userCollection.findOne({ email: address });
+
+      console.log("cartItems", cartItem);
+      console.log(useAdd);
+
+      res.render("user/checkout", { address, useAdd, cartItem });
+    } else {
+      console.log("User is not found for the email");
+      res.redirect("/product");
+    }
+  } catch (error) {
+    console.error("Error while loading the checkout page..");
+    res.redirect("/product");
+  }
+};

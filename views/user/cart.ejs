@@ -17,6 +17,7 @@
 />
 
   </head>
+  <body>
   <!-- header for the user profile -->
   <nav class="navbar navbar-expand-lg navbar-light shadow">
     <div class="container d-flex justify-content-between align-items-center">
@@ -101,7 +102,7 @@
       </div>
     </div>
   </nav>
-  <body>
+ 
     <section class="h-100 h-custom" style="background-color: #d2c9ff">
       <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -200,50 +201,36 @@
                       <hr class="my-4" />
 
                       <div class="d-flex justify-content-between mb-4">
-                        <h5 class="text-uppercase">items 3</h5>
-                        <h5>€ 132.00</h5>
+                        <h5 class="text-uppercase">items</h5>
+                        <h5 class="text-uppercase">quantity</h5>
+                        <h5 class="text-uppercase">price</h5>
                       </div>
-
-                      <h5 class="text-uppercase mb-3">Shipping</h5>
-
-                      <div class="mb-4 pb-2">
-                        <select class="select">
-                          <option value="1">Standard-Delivery- €5.00</option>
-                          <option value="2">Two</option>
-                          <option value="3">Three</option>
-                          <option value="4">Four</option>
-                        </select>
-                      </div>
-
-                      <h5 class="text-uppercase mb-3">Give code</h5>
-
-                      <div class="mb-5">
-                        <div class="form-outline">
-                          <input
-                            type="text"
-                            id="form3Examplea2"
-                            class="form-control form-control-lg"
-                          />
-                          <label class="form-label" for="form3Examplea2"
-                            >Enter your code</label
-                          >
+                      
+                      <% let totalPrice = 0; %>
+                      <% cartPage.forEach((cartItem) => { %>
+                        <div class="d-flex justify-content-between mb-4">
+                          <h5 style="max-width: 120px; word-wrap: break-word;"><%= cartItem.product.name %></h5>
+                          <h5><%= cartItem.quantity %></h5>
+                          <h5 class="text-uppercase"> &#8377 <%= cartItem.product.price.toFixed(2)*cartItem.quantity %></h5>
                         </div>
-                      </div>
+                        <% totalPrice += cartItem.product.price * cartItem.quantity; %>
+                        <% }) %>
+                        
+                        <hr class="my-4" />
+                        
+                        <div class="d-flex justify-content-between mb-5">
+                          <h5 class="text-uppercase">Total price</h5>
+                          <h5> &#8377 <%= totalPrice.toFixed(2) %></h5>
+                        </div>
 
-                      <hr class="my-4" />
-
-                      <div class="d-flex justify-content-between mb-5">
-                        <h5 class="text-uppercase">Total price</h5>
-                        <h5>€ 137.00</h5>
-                      </div>
-
+                      <a href="/product/cart/checkout"> 
                       <button
                         type="button"
-                        class="btn btn-dark btn-block btn-lg"
+                        class="btn btn-primary btn-block btn-lg"
                         data-mdb-ripple-color="dark"
                       >
-                        Register
-                      </button>
+                       Place Order
+                      </button></a> 
                     </div>
                   </div>
                 </div>
