@@ -8,6 +8,7 @@ const multer = require('multer')
 // requiring the local modules for the project
 const routerHome = require('./routes/userRoutes/home')
 const userDb = require('./models/user/userDatabase')
+
 // setting the express() as app
 const app = express();
 
