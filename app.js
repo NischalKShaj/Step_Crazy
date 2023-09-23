@@ -16,6 +16,9 @@ const app = express();
 // setting up the port number
 const port = 4000;
 
+// setting up the public folders
+app.use(express.static('public'))
+
 // setting up the ejs page
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname,'views'))
