@@ -15,6 +15,11 @@ exports.getSignupPage = (req, res) => {
   res.render("signup");
 };
 
+// redirectiong the loginpage
+exports.postLoginPage = (req, res) => {
+  res.redirect('/login')
+}
+
 // rendirecting the homepage
 exports.postHomePage = (req, res) => {
   res.redirect("/");

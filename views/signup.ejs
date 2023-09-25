@@ -24,17 +24,18 @@
                       Sign up
                     </p>
 
-                    <form class="mx-1 mx-md-4" action="/" method="post">
+                    <form class="mx-1 mx-md-4" action="/signup/otp" method="post">
                       <div class="d-flex flex-row align-items-center mb-4">
                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
                           <input
                             type="text"
                             id="fname"
+                            name="first_name"
                             class="form-control"
                             required
                           />
-                          <label class="form-label" for="fname"
+                          <label class="form-label" for="first_name"
                             >First Name</label
                           >
                         </div>
@@ -46,10 +47,10 @@
                             type="text"
                             id="lname"
                             class="form-control"
-                            name="lname"
+                            name="last_name"
                             required
                           />
-                          <label class="form-label" for="lname"
+                          <label class="form-label" for="last_name"
                             >Last Name</label
                           >
                         </div>
@@ -92,8 +93,8 @@
                         <div class="form-outline flex-fill mb-0">
                           <input
                             type="password"
-                            id="passsword"
-                            name="passsword"
+                            id="password"
+                            name="password"
                             class="form-control"
                             required
                           />
@@ -103,12 +104,13 @@
                         </div>
                       </div>
 
-                      <div class="d-flex flex-row align-items-center mb-4">
+                      <!-- <div class="d-flex flex-row align-items-center mb-4">
                         <i class="fas fa-key fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
                           <input
                             type="password"
                             id="passsword1"
+                            name="passsword"
                             class="form-control"
                             required
                           />
@@ -116,7 +118,7 @@
                             >Repeat your password</label
                           >
                         </div>
-                      </div>
+                      </div> -->
 
                       <div
                         class="form-check d-flex justify-content-center mb-5"
