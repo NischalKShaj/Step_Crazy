@@ -10,6 +10,11 @@ exports.getLoginPage = (req, res) => {
   res.render("login");
 };
 
+// getting the signup page
+exports.getSignupPage = (req, res) => {
+  res.render("signup");
+};
+
 // rendirecting the homepage
 exports.postHomePage = (req, res) => {
   res.redirect("/");
