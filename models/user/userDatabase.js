@@ -1,7 +1,7 @@
 // requiring the modules for this page
 const mongoose = require('mongoose')
 
-const stepCrazyUser = new mongoose.Schema({
+const stepCrazy = new mongoose.Schema({
     first_name : {
         type : String,
         required : true,
@@ -61,7 +61,7 @@ const stepCrazyUser = new mongoose.Schema({
 })
 
 // declaring the collection name 
-const collection = new mongoose.model("userCollection",stepCrazyUser)
+const collection = new mongoose.model("userCollection",stepCrazy)
 
 // exporting the database to app.js
 module.exports  =  collection

@@ -4,7 +4,7 @@
 const mongoose = require('mongoose')
 
 // connecting to the mongodb
-mongoose.connect("mongodb://localhost:27017/stepCrazyUser")
+mongoose.connect("mongodb://localhost:27017/stepCrazy")
 .then(()=>{
     console.log("Connection Success....");
 })
