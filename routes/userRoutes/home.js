@@ -7,5 +7,11 @@ const router = express.Router();
 // getting the homepage
 router.get('/',homeController.getHomePage)
 
+// getting the loginpage
+router.get('/login',homeController.getLoginPage)
+
+// redirecting the homepage
+router.post('/',homeController.postHomePage)
+
 // exporting the module to app.js
 module.exports = router;

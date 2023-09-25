@@ -25,6 +25,7 @@ app.set('views', path.join(__dirname,'views'))
 
 // setting up the routes
 app.use('/',routerHome)
+app.use('/login',routerHome)
 
 // running the project in the specified port number
 app.listen(port,()=>{
