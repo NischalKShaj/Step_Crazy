@@ -2,6 +2,7 @@
 const express = require("express");
 const homeController = require("../../controller/usercontrols/homecontroller");
 const signupController = require('../../controller/usercontrols/signupcontroller')
+const loginController  = require('../../controller/usercontrols/logincontroller')
 // setting the router for this page
 const router = express.Router();
 
@@ -12,7 +13,7 @@ router.get("/", homeController.getHomePage);
 router.get("/login", homeController.getLoginPage);
 
 // redirecting the homepage
-router.post("/", homeController.postHomePage);
+router.post("/", loginController.postHomePage);
 
 // getting the signup page
 router.get("/signup", homeController.getSignupPage);
@@ -24,7 +25,7 @@ router.post('/login', homeController.postLoginPage)
 router.post('/otp',signupController.postOtpPage)
 
 // redirecting the homepage
-router.post("/", homeController.postHomePage);
+router.post("/", loginController.postHomePage);
 
 // exporting the module to app.js
 module.exports = router;

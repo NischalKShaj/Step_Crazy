@@ -1,0 +1,3 @@
+# the files th at neednot to be uploaded in the git
+
+.env
