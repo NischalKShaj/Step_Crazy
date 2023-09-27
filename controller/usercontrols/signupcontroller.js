@@ -7,7 +7,6 @@ let otp;
 let userDetails;
 const router = express.Router();
 
-
 //  Create a Nodemailer transporter for sending OTP emails
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -25,21 +24,21 @@ const optMap = new Map();
 const generateOtp = () => {
   return Math.floor(1000 + Math.random() * 9000).toString();
 };
-exports.getOtpPage = (req, res)=>{
-  res.render('otp')
-}
+exports.getOtpPage = (req, res) => {
+  res.render("home/otp");
+};
 // posting the login page after signing the user
+
 try {
   exports.postOtpPage = async (req, res) => {
     console.log(req.body.email, req.body.Phone, req.body.password);
-      userDetails = {
+    userDetails = {
       first_name: req.body.first_name,
       last_name: req.body.last_name,
       email: req.body.email,
       phone: req.body.Phone,
       password: req.body.password,
     };
-   
 
     otp = generateOtp();
     console.log(otp);
@@ -50,7 +49,7 @@ try {
       from: "nischalkshaj5@gmail.com",
       to: userDetails.email,
       subject: "OTP Verification",
-      text: `Your OTP is: ${otp}`,
+      text: `Your OTP is: ${otp}. Please don't share your otp with others`,
     };
     // sending the email to the specified email address
     transporter.sendMail(mailOptions, (error, info) => {
@@ -63,25 +62,40 @@ try {
       }
     });
 
-    res.redirect('/signup/otp');
+    res.redirect("/signup/otp");
   };
-} catch { 
+} catch {
   res.redirect("/signup");
   console.log("error occured while entering the values in the database");
 }
 
-
-exports.checkOtp = async(req, res) =>{
+// inserting the value to the database if the otp is valid
+exports.checkOtp = async (req, res) => {
   const OTP = req.body.otp;
   console.log(OTP, otp);
-  if(otp === OTP){
+  if (otp === OTP) {
     console.log(userDetails);
 
     await collection.insertMany([userDetails]);
-    res.redirect('/login')
+    // sending the confirmation mail to the user
+    const mailContent = {
+      from: "nischalkshaj5@gmail.com",
+      to: userDetails.email,
+      subject: "User Registration Success",
+      text: "You have successfully registered with Step Crazy. Enjoy shopping with us.",
+    };
+    // sending the email to the specified email address
+    transporter.sendMail(mailContent, (error, info) => {
+      if (error) {
+        console.log(error);
+        res.status(500).json({ message: "Failed to register user" });
+      } else {
+        console.log("user registered");
+        res.status(200).json({ message: "User registration success" });
+      }
+    });
+    res.redirect("/login");
   } else {
-    res.redirect('/signup/otp')
+    res.redirect("/signup/otp");
   }
-
-}
-
+};

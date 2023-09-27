@@ -6,7 +6,7 @@ const router = express.Router();
 
 const collection = require("../../models/user/userDatabase");
 
-
+// checking the values in the database
 exports.postHomePage = async (req, res) => {
   try {
     const data = await collection.findOne({

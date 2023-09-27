@@ -25,7 +25,7 @@ exports.postAdminHome = (req, res) => {
 
     if (email1 == email && password1 == password) {
       console.log("inside the dashboard...");
-      res.render("admindashboard");
+      res.render("admin/admindashboard");
     }
   } catch (err) {
     res.redirect("/admin");
