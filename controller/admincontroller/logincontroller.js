@@ -8,9 +8,9 @@ exports.getAdminPage = (req, res) => {
   res.render("admin");
 };
 
-exports.getAdminHome = (req, res) =>{
-  res.render('admindashboard')
-}
+// exports.getAdminHome = (req, res) =>{
+//   res.render('admindashboard')
+// }
 
 // setting the admin credentials
 // const credentials = {

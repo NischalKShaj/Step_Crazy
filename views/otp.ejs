@@ -1,23 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OTP</title>
-    <link rel="stylesheet" type="text/css" href="../CSS/user/otp.css">
-</head>
-<body>
+    <link rel="stylesheet" type="text/css" href="../CSS/user/otp.css" />
+  </head>
+  <body>
     <div class="container">
-        <h1>OTP Validation</h1>
-        <p>Enter the OTP sent to your email or phone:</p>
+      <h1>OTP Validation</h1>
+      <p>Enter the OTP sent to your email or phone:</p>
 
-        <!-- Display an error message if OTP validation fails -->
+      <!-- Display an error message if OTP validation fails -->
 
+      <form id="otp-form" method="POST" action="/login/checkOtp">
+        <input
+          id="otp-input"
+          type="text"
+          name="otp"
+          placeholder="Enter OTP"
+          required
+        />
+        <button type="submit">Verify OTP</button>
+      </form>
 
-        <form method="POST" action="/login">
-            <input type="text" name="otp" placeholder="Enter OTP" required>
-            <button type="submit">Verify OTP</button>
-        </form>
+     
     </div>
-</body>
+  </body>
 </html>

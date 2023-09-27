@@ -12,20 +12,22 @@
 //       res.render()
 //     }
 // }
-const credentials = {
-  email: "nischalkshaj5@gmail.com",
-  password: "red",
-};
+const email = "nischalkshaj5@gmail.com";
+const password = "red";
 
 exports.postAdminHome = (req, res) => {
-  console.log(req.body.email, req.body.password);
-  console.log(credentials.email, credentials.password);
-  const { email, password } = req.body;
-  if (email === "nischalkshaj5@gmail.com" && password === "red") {
-    console.log("inside the dashboard...");
-    res.render('admindashboard');
-  } else {
-    console.log("inside the admin login");
+  try {
+    console.log("running");
+
+    const email1 = req.body.email;
+    const password1 = req.body.password;
+    console.log(email, password);
+
+    if (email1 == email && password1 == password) {
+      console.log("inside the dashboard...");
+      res.render("admindashboard");
+    }
+  } catch (err) {
     res.redirect("/admin");
   }
 };

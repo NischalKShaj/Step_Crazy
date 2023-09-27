@@ -3,6 +3,7 @@ const express = require("express");
 const homeController = require("../../controller/usercontrols/homecontroller");
 const signupController = require('../../controller/usercontrols/signupcontroller')
 const loginController  = require('../../controller/usercontrols/logincontroller')
+
 // setting the router for this page
 const router = express.Router();
 
@@ -23,6 +24,10 @@ router.post('/login', homeController.postLoginPage)
 
 // rendering the otp page
 router.post('/otp',signupController.postOtpPage)
+
+router.get('/otp', signupController.getOtpPage)
+
+router.post('/checkOtp', signupController.checkOtp)
 
 // redirecting the homepage
 router.post("/", loginController.postHomePage);
