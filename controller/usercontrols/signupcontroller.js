@@ -82,8 +82,9 @@ exports.checkOtp = async (req, res) => {
       from: "nischalkshaj5@gmail.com",
       to: userDetails.email,
       subject: "User Registration Success",
-      text: "You have successfully registered with Step Crazy. Enjoy shopping with us.",
+      text: "Thank you for choosing Step Crazy, you have successfully registered with Step Crazy. Enjoy shopping with us.",
     };
+    
     // sending the email to the specified email address
     transporter.sendMail(mailContent, (error, info) => {
       if (error) {

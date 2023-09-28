@@ -9,7 +9,7 @@ const multer = require("multer");
 const routerHome = require("./routes/userRoutes/home");
 const mongose = require("./Database/connection");
 const userDb = require("./models/user/userDatabase");
-const routerSignup =  require('./routes/userRoutes/signup');
+const routerSignup = require("./routes/userRoutes/signup");
 const routerAdmin = require("./routes/adminRoutes/home");
 
 // setting the express() as app
@@ -22,22 +22,31 @@ const port = 4000;
 app.use(express.static("public"));
 
 // setting up the ejs page
-app.set("view engine", "ejs"); 
+app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 // paring the user inputed data
-app.use(express.json())
-app.use(express.urlencoded({extended : true}))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+// session for the project
+app.use(
+  session({
+    secret: "mysecretkey",
+    saveUninitialized: true,
+    resave: false,
+  })
+);
 
 // setting up the routes
 app.use("/", routerHome);
 app.use("/login", routerHome);
-app.use("/signup", routerHome); 
-app.use('/admin', routerAdmin)
-// app.use('/otp',routerHome) 
+app.use("/signup", routerHome);
+app.use("/admin", routerAdmin);
+
+// app.use('/otp',routerHome)
 
 // running the project in the specified port number
-app.listen(port, () => {
+app.listen(port, () => { 
   console.log(`Server started at the port ${port}`);
 });
