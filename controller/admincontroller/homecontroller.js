@@ -1,20 +1,15 @@
 // admin dashboard
 
-// // modules required for the admin login
-// const collection = require("../../models/admin/adminDatabase");
-// require('dotenv').config()
-
-// const username = process.env.Admin_email
-// const password = process.env.Admin_password
-
-// exports.postAdminHome = (req, res) =>{
-//     if(username === req.body.email && password === req.body.password){
-//       res.render()
-//     }
-// }
+// admin credentials 
 const email = "nischalkshaj5@gmail.com";
 const password = "red";
 
+
+exports.getAdminHome = (req, res) =>{
+  res.render('admin/admindashboard')
+}
+
+// for showing the admin dashboard
 exports.postAdminHome = (req, res) => {
   try {
     console.log("running");
@@ -25,9 +20,11 @@ exports.postAdminHome = (req, res) => {
 
     if (email1 == email && password1 == password) {
       console.log("inside the dashboard...");
-      res.render("admin/admindashboard");
+      res.redirect('/admin/dashboard');
     }
   } catch (err) {
     res.redirect("/admin");
   }
 };
+
+
