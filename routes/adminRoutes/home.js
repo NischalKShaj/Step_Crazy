@@ -32,4 +32,7 @@ router.post("/dashboard/product", productController.postProductPage);
 // router for adding the new product in the page
 router.get("/dashboard/product/add", productController.getAddProduct);
 
+// router for adding the new product in the page 
+// router.post('/dashboard/product/add', productController.postAddProduct)
+
 module.exports = router;
