@@ -9,7 +9,6 @@ const multer = require("multer");
 const routerHome = require("./routes/userRoutes/home");
 const mongose = require("./Database/connection");
 const userDb = require("./models/user/userDatabase");
-const routerSignup = require("./routes/userRoutes/signup");
 const routerAdmin = require("./routes/adminRoutes/home");
 
 // setting the express() as app
@@ -18,8 +17,9 @@ const app = express();
 // setting up the port number
 const port = 4000;
 
-// setting up the public folders
+// setting up the static folders
 app.use(express.static("public"));
+app.use(express.static("uploads"));
 
 // setting up the ejs page
 app.set("view engine", "ejs");
@@ -47,6 +47,6 @@ app.use("/admin", routerAdmin);
 // app.use('/otp',routerHome)
 
 // running the project in the specified port number
-app.listen(port, () => { 
+app.listen(port, () => {
   console.log(`Server started at the port ${port}`);
 });

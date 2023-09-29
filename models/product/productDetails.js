@@ -26,7 +26,6 @@ const stepCrazy = new mongoose.Schema({
   },
   image: [
     {
-      data: Buffer,
       type: String,
       required: true,
     },

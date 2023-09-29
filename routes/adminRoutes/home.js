@@ -12,7 +12,7 @@ const userController = require("../../controller/admincontroller/userController"
 router.get("/", homecontroller.getAdminPage);
 
 // router for getting the admin dashboard
-router.get('/dashboard', loginController.getAdminHome)
+router.get("/dashboard", loginController.getAdminHome);
 
 // router for posting the admin dashboard
 router.post("/dashboard", loginController.postAdminHome);
@@ -27,12 +27,13 @@ router.post("/dashboard/user", userController.postUserPage);
 router.get("/dashboard/product", productController.getProductPage);
 
 // router for posting the product page
-router.post("/dashboard/product", productController.postProductPage);
+router.post(
+  "/dashboard/product",
+  productController.uploads,
+  productController.postProductPage
+);
 
 // router for adding the new product in the page
 router.get("/dashboard/product/add", productController.getAddProduct);
-
-// router for adding the new product in the page 
-// router.post('/dashboard/product/add', productController.postAddProduct)
 
 module.exports = router;

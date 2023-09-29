@@ -47,13 +47,16 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
-            <a class="nav-link active" aria-current="page" href="#"
+            <a
+              class="nav-link active"
+              aria-current="page"
+              href="/admin/dashboard"
               >Dashboard</a
             >
             <a
               class="nav-link active"
               aria-current="page"
-              href="admin/dashboard/user"
+              href="/admin/dashboard/user"
               >Users</a
             >
             <a
@@ -70,6 +73,7 @@
       <div class="row my-4">
         <div class="col-lg-14">
           <div class="table-responsive">
+            <% if (users !== '') { %>
             <table class="table table-striped text-center">
               <thead>
                 <tr class="table-dark">
@@ -83,30 +87,29 @@
                 </tr>
               </thead>
               <tbody>
+                <% users.forEach((row, index) => { %>
                 <tr>
-                  <td>1</td>
-                  <td>Nischal</td>
-                  <td>K Shaj</td>
-                  <td>Male</td>
-                  <td>nischalkshaj5@gmail.com</td>
-                  <td>9544291856</td>
+                  <td><%= index %></td>
+                  <td><%= row.first_name %></td>
+                  <td><%= row.last_name %></td>
+                  <td><%= row.gender %></td>
+                  <td><%= row.email %></td>
+                  <td><%= row.phone %></td>
                   <td>
                     <button id="blockButton" class="btn btn-danger">
-                        Block
+                      Block
                     </button>
 
                     <!-- Unblock Button (initially hidden) -->
-                    <button
-                      id="unblockButton"
-                      class="btn btn-success"
-                      
-                    >
+                    <button id="unblockButton" class="btn btn-success">
                       Unblock
                     </button>
                   </td>
+                  <% }) %>
                 </tr>
               </tbody>
             </table>
+            <% } else {%> <% } %>
           </div>
         </div>
       </div>
@@ -120,5 +123,4 @@
     crossorigin = "anonymous";
     referrerpolicy = "no-referrer";
   </script>
-
 </html>

@@ -47,10 +47,18 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
-            <a class="nav-link active" aria-current="page" href="#"
+            <a
+              class="nav-link active"
+              aria-current="page"
+              href="/admin/dashboard"
               >Dashboard</a
             >
-            <a class="nav-link active" aria-current="page" href="#">Users</a>
+            <a
+              class="nav-link active"
+              aria-current="page"
+              href="/admin/dashboard/user"
+              >Users</a
+            >
             <a
               class="nav-link active"
               aria-current="page"
@@ -70,6 +78,7 @@
       <div class="row my-4">
         <div class="col-lg-14">
           <div class="table-responsive">
+            <% if (product !== '') { %>
             <table class="table table-striped text-center">
               <thead>
                 <tr class="table-dark">
@@ -84,29 +93,44 @@
                 </tr>
               </thead>
               <tbody>
+                <% product.forEach((row, index) => { %>
                 <tr>
-                  <td>1</td>
-                  <td><img src="../../Img/home/casual2.jpeg" alt="image" /></td>
-                  <td>PICAASO</td>
+                  <td><%= row.id %></td>
                   <td>
-                    PICAASO Junior-7 Sports Shoes for Men | Latest Stylish
-                    Casual Shoes for Men |Running Shoes for Boys | Lace up
-                    Lightweight Shoes for Running, Walking and Gym
+                    <% if (row.image) { %> <% row.image.forEach((imageName) => {
+                    %>
+                    <img
+                      src="../../<%= imageName %>"
+                      width="50"
+                      class="img-thumbnail"
+                    />
+
+                    <% }) %> <% } else { %>
+                    <!-- Handle the case when there are no images -->
+                    No images available <% } %>
                   </td>
-                  <td>1,399</td>
-                  <td>40</td>
-                  <td>Sneakers</td>
+                  <td><%= row.name %></td>
+                  <td><%= row.description %></td>
+                  <td><%= row.price %></td>
+                  <td><%= row.stock %></td>
+                  <td><%= row.category %></td>
                   <td>
-                    <a href="" class="text-success"
+                    <a href="/edit/<%= row._id %>" class="text-success"
                       ><i class="fas fa-edit fa-lg"></i
                     ></a>
-                    <a href="" class="text-danger"
+                    <a href="/delete/<%= row._id %>" class="text-danger"
                       ><i class="fas fa-trash fa-lg mx-1"></i
                     ></a>
                   </td>
                 </tr>
+                <% }) %>
               </tbody>
             </table>
+            <% } else {%>
+            <h1 class="text-center text-secondary mt-5">
+              No users found in the database
+            </h1>
+            <% } %>
           </div>
         </div>
       </div>

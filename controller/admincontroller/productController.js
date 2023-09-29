@@ -1,6 +1,6 @@
 // importing the required modules for the file
-const collection = require("../../models/product/productDetails");
 const multer = require("multer");
+const collection = require("../../models/product/productDetails");
 
 // storing the images in the database
 const storage = multer.diskStorage({
@@ -13,13 +13,14 @@ const storage = multer.diskStorage({
 });
 
 // uploading the images in the database
-const uploads = multer({
+exports.uploads = multer({
   storage: storage,
 }).array("image");
 
 // for getting the product page
-exports.getProductPage = (req, res) => {
-  res.render("admin/product");
+exports.getProductPage = async(req, res) => {
+  const product = await collection.find()
+  res.render("admin/product",{product});
 };
 
 // for getting the product adding page
@@ -28,7 +29,6 @@ exports.getAddProduct = (req, res) => {
 };
 
 // for posting the values in the database
-
 exports.postProductPage = async (req, res) => {
   console.log(req.body.id, req.body.name, req.body.description, req.body.price);
   const productDetails = {
@@ -38,16 +38,9 @@ exports.postProductPage = async (req, res) => {
     price: req.body.price,
     stock: req.body.stock,
     category: req.body.category,
-    image : req.file.filename,
+    image: req.files[0].filename,
   };
   console.log(productDetails);
   await collection.insertMany([productDetails]);
   res.redirect("/admin/dashboard/product");
 };
-
-// for posting the dashboard
-// exports.postProductPage = async (req, res) => {
-//   const product = await collection.find();
-//   console.log("hello");
-//   res.redirect("/admin/dashboard/product");
-// };

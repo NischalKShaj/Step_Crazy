@@ -4,8 +4,9 @@ const collection = require("../../models/user/userDatabase");
 let users;
 
 // setting the routes for the usermanagement page
-exports.getUserPage = (req, res) => {
-  res.render("admin/usermanagement");
+exports.getUserPage = async(req, res) => {
+  const users = await collection.find()
+  res.render("admin/usermanagement",{users});
 };
 
 exports.postUserPage = (req, res) => {
