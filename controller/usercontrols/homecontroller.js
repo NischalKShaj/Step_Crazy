@@ -20,10 +20,7 @@ exports.postLoginPage = (req, res) => {
   res.redirect("/login");
 };
 
-// rendering the product page
-exports.getProductPage = (req, res) => {
-  res.render('user/product')
-};
+
 // rendirecting the homepage
 // exports.postHomePage = (req, res) => {
 //   res.redirect("/");
