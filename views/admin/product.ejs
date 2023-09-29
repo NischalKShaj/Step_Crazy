@@ -115,7 +115,7 @@
                   <td><%= row.stock %></td>
                   <td><%= row.category %></td>
                   <td>
-                    <a href="/edit/<%= row._id %>" class="text-success"
+                    <a href="/admin/dashboard/product/edit/<%= row._id %>" class="text-success"
                       ><i class="fas fa-edit fa-lg"></i
                     ></a>
                     <a href="/delete/<%= row._id %>" class="text-danger"
@@ -128,7 +128,7 @@
             </table>
             <% } else {%>
             <h1 class="text-center text-secondary mt-5">
-              No users found in the database
+              No products found in the database
             </h1>
             <% } %>
           </div>
@@ -143,5 +143,28 @@
       "sha512-X/YkDZyjTf4wyc2Vy16YGCPHwAY8rZJY+POgokZjQB2mhIRFJCckEGc6YyX9eNsPfn0PzThEuNs+uaomE5CO6A==";
     crossorigin = "anonymous";
     referrerpolicy = "no-referrer";
+  </script>
+  
+  <script>
+    fetch("/admin/dashboard/product/delete", {
+      method: "delete",
+      Headers: {
+        "Content-Type": "application.json",
+      },
+    })
+      .then((respose) => {
+        if (respose.ok) {
+          console.log("Product deleted succussfully...");
+        } else {
+          console.error(
+            "Error deleting the product",
+            respose.status,
+            respose.statusText
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Network error", error);
+      });
   </script>
 </html>

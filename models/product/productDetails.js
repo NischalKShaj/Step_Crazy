@@ -1,8 +1,6 @@
 // requring the module for the collection
 const mongoose = require("mongoose");
 
-
-
 const stepCrazy = new mongoose.Schema({
   id: {
     type: String,
@@ -36,6 +34,10 @@ const stepCrazy = new mongoose.Schema({
       required: true,
     },
   ],
+  status: {
+    type: Boolean,
+    default: 'active',
+  },
 });
 
 // declaring the collection for the database

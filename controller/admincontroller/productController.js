@@ -18,9 +18,9 @@ exports.uploads = multer({
 }).array("image");
 
 // for getting the product page
-exports.getProductPage = async(req, res) => {
-  const product = await collection.find()
-  res.render("admin/product",{product});
+exports.getProductPage = async (req, res) => {
+  const product = await collection.find();
+  res.render("admin/product", { product });
 };
 
 // for getting the product adding page
@@ -43,4 +43,22 @@ exports.postProductPage = async (req, res) => {
   console.log(productDetails);
   await collection.insertMany([productDetails]);
   res.redirect("/admin/dashboard/product");
+};
+
+// for getting the product edit page
+exports.getEditProduct = (req, res) => {
+  let id = req.params.id;
+  collection
+    .findById(id)
+    .then((product) => {
+      if (!product) {
+        res.redirect("/admin/dashboard/product");
+      } else {
+        res.render("admin/edit_product");
+      }
+    })
+    .catch((error) => {
+      console.log("Error finding the product....");
+      res.redirect("admin/dashboard/product");
+    });
 };
