@@ -21,5 +21,3 @@ exports.postHomePage = async (req, res) => {
     res.redirect("/login");
   }
 };
-
-

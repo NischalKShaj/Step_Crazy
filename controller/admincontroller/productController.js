@@ -28,9 +28,15 @@ exports.getAddProduct = (req, res) => {
   res.render("admin/add_product");
 };
 
-// for posting the values in the database
+// for adding the values in the database
 exports.postProductPage = async (req, res) => {
   console.log(req.body.id, req.body.name, req.body.description, req.body.price);
+  const imageArray = [];
+
+  for (const file of req.files) {
+    imageArray.push(file.filename);
+  }
+
   const productDetails = {
     id: req.body.id,
     name: req.body.name,
@@ -38,7 +44,7 @@ exports.postProductPage = async (req, res) => {
     price: req.body.price,
     stock: req.body.stock,
     category: req.body.category,
-    image: req.files[0].filename,
+    image: imageArray,
   };
   console.log(productDetails);
   await collection.insertMany([productDetails]);
@@ -55,7 +61,7 @@ exports.getEditProduct = (req, res) => {
       if (!product) {
         res.redirect("/admin/dashboard/product");
       } else {
-        res.render("admin/edit_product",{product :product});
+        res.render("admin/edit_product", { product: product });
       }
     })
     .catch((error) => {

@@ -21,7 +21,4 @@ exports.postLoginPage = (req, res) => {
 };
 
 
-// rendirecting the homepage
-// exports.postHomePage = (req, res) => {
-//   res.redirect("/");
-// };
+

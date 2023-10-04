@@ -28,15 +28,10 @@ const stepCrazy = new mongoose.Schema({
       required: true,
     },
   ],
-  category: [
-    {
-      type: String,
-      required: true,
-    },
-  ],
-  status: {
-    type: Boolean,
-    default: 'active',
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "category/categoryDetail",
+    required: true,
   },
 });
 

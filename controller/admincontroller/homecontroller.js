@@ -1,30 +1,53 @@
-// admin dashboard
+// <========================> admin dashboard <=========================>
 
-// admin credentials 
-const email = "nischalkshaj5@gmail.com";
-const password = "red";
+// importing the modules for the data in the admins database
+const collection = require("../../models/admin/adminDatabase");
 
 
-exports.getAdminHome = (req, res) =>{
-  res.render('admin/admindashboard')
-}
+let admin;
+
+// for getting the admin dashboard
+exports.getAdminHome = (req, res) => {
+  res.render("admin/admindashboard");
+};
 
 // for showing the admin dashboard
-exports.postAdminHome = (req, res) => {
-  try {
-    console.log("running");
-
-    const email1 = req.body.email;
-    const password1 = req.body.password;
-    console.log(email, password);
-
-    if (email1 == email && password1 == password) {
+exports.postAdminHome = async (req, res) => {
+  try{
+    admin = await collection.findOne({
+      email: req.body.email,
+      password : req.body.password,
+    })
+    console.log(admin);
+    if(admin.email === req.body.email && admin.password === req.body.password){
       console.log("inside the dashboard...");
-      res.redirect('/admin/dashboard');
+      res.redirect("/admin/dashboard")
     }
-  } catch (err) {
-    res.redirect("/admin");
+  } catch (err){
+    res.redirect("/admin")
   }
 };
 
+// for showing the values in the admin page
+exports.getAdmin = async (req, res) => {
+  admin = await collection.find();
+  res.render("admin/adminmanagement", { admin });
+};
 
+// for gettin the form for adding the new admn
+exports.getAdminAdd = (req, res) => {
+  res.render("admin/add_admin");
+};
+
+// for inserting the value in the admin database
+exports.postAdmin = async (req, res) => {
+  console.log(req.body.password);
+  const admin = {
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+  };
+  console.log(admin);
+  await collection.insertMany([admin]);
+  res.redirect("/admin/dashboard/admins");
+};
