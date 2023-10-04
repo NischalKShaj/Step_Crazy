@@ -37,6 +37,6 @@ router.post(
 router.get("/dashboard/product/add", productController.getAddProduct);
 
 // router for editing the existing product
-router.get("/dashboard/product/edit/", productController.getEditProduct);
+router.get("/dashboard/product/edit/:id", productController.getEditProduct);
 
 module.exports = router;

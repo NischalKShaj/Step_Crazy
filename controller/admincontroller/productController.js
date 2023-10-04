@@ -48,13 +48,14 @@ exports.postProductPage = async (req, res) => {
 // for getting the product edit page
 exports.getEditProduct = (req, res) => {
   let id = req.params.id;
+  console.log("running...");
   collection
     .findById(id)
     .then((product) => {
       if (!product) {
         res.redirect("/admin/dashboard/product");
       } else {
-        res.render("admin/edit_product");
+        res.render("admin/edit_product",{product :product});
       }
     })
     .catch((error) => {

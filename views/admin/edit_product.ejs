@@ -3,108 +3,151 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Step-Crazy/product-edit</title>
+    <title>Step-Crazy/Add_Product</title>
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
       crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/css/bootstrap-utilities.rtl.min.css"
+      integrity="sha512-g/9zc34RrAHk9cSFEodVsDR+TjDAhw9+VjWHnbK6kZe6sK4xTpPJ6cqJYd3WXfFmQuNLIkhDetQdm6fOOzj/nQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
     />
   </head>
   <body>
-    <!-- form -->
-
-    <section class="vh-100 gradient-custom">
-      <div class="container py-5 h-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-          <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-            <div class="card bg-dark text-white" style="border-radius: 1rem">
-              <div class="card-body p-5 text-center">
-                <div class="mb-md-5 mt-md-4 pb-5">
-                  <h2 class="fw-bold mb-2 text-uppercase">
-                    Edit product <%= product.name %>
-                  </h2>
-                  <p class="text-white-50 mb-5">Please make the update</p>
-                  <form action="/admin/update/<%= product._id %>" method="post">
-                    <div class="form-outline form-white mb-4">
-                      <input
-                        type="text"
-                        name="name"
-                        placeholder="Enter product name"
-                        value="<%= product.name %>"
-                        class="form-control form-control-lg"
-                        required
-                      />
-                    </div>
-
-                    <div class="form-outline form-white mb-4">
-                      <textarea
-                        class="form-control form-control-lg"
-                        id="description"
-                        name="description"
-                        value="<%= product.description %>"
-                        rows="4"
-                        placeholder="Enter product description"
-                        required
-                      ></textarea>
-                    </div>
-
-                    <div class="form-outline form-white mb-4">
-                      <input
-                        type="text"
-                        name="price"
-                        placeholder="Enter price of the product"
-                        value="<%= product.price %>"
-                        class="form-control form-control-lg"
-                        required
-                      />
-                    </div>
-
-                    <div class="form-outline form-white mb-4">
-                      <input
-                        type="text"
-                        name="stock"
-                        class="form-control form-control-lg"
-                        placeholder="Enter stock of the product"
-                        value="<%= product.stock %>"
-                        required
-                      />
-                    </div>
-
-                    <div class="form-outline form-white mb-4">
-                      <input
-                        type="text"
-                        name="category"
-                        placeholder="Enter the category of the product"
-                        value="<%= product.category %>"
-                        class="form-control form-control-lg"
-                        required
-                      />
-                    </div>
-
-                    <!-- <p class="small mb-5 pb-lg-2"><a class="text-white-50" href="#!">Forgot password?</a></p> -->
-
-                    <button class="btn btn-success btn-lg px-5" type="submit">
-                      Update product
-                    </button>
-                  </form>
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col-lg-12" mx-auto mt-4>
+          <div class="card shadow">
+            <div class="card-header bg-danger">
+              <h3 class="text-light">Add Product</h3>
+              <h2 class="text-light"> <%= product.name %></h2>
+            </div>
+            <div class="card-body p-4">
+              <form
+                action="/admin/update/<%= product._id %>"
+                method="post"
+                id="add-form"
+                enctype="multipart/form-data"
+              >
+                <div class="form-outline mb-2">
+                  <label for="id">Id</label>
+                  <input
+                    value="<%= product.id %>"
+                    type="text"
+                    name="id"
+                    class="form-control form-control-lg"
+                    placeholder="Enter the id of the product"
+                    required
+                  />
                 </div>
+                <div class="form-outline mb-2">
+                  <label for="name">Name</label>
+                  <input
+                    value="<%= product.name %>"
+                    type="text"
+                    name="name"
+                    class="form-control form-control-lg"
+                    placeholder="Enter the name of the product"
+                    required
+                  />
+                </div>
+                <div class="form-outline mb-2">
+                  <label for="description">Description</label>
+                  <textarea
+                    class="form-control form-control-lg"
+                    id="description"
+                    name="description"
+                    rows="4"
+                    placeholder="Enter product description"
+                    required
+                  ><%= product.description %></textarea>
+                </div>
+                <div class="form-outline mb-2">
+                  <label for="price">Price</label>
+                  <input
+                    value="<%= product.price%>"
+                    type="text"
+                    name="price"
+                    class="form-control form-control-lg"
+                    placeholder="Enter the price of the product"
+                    required
+                  />
+                </div>
+                <div class="form-outline mb-2">
+                  <label for="stock">Stock</label>
+                  <input
+                    value="<%= product.stock %>"
+                    type="text"
+                    name="stock"
+                    class="form-control form-control-lg"
+                    placeholder="Enter the number of products available"
+                    required
+                  />
+                </div>
+                <div class="form-outline mb-2">
+                  <label for="category">Category</label>
+                  <input
+                    value="<%= product.category%>"
+                    type="text"
+                    name="category"
+                    class="form-control form-control-lg"
+                    placeholder="Enter the category of the product"
+                    required
+                  />
+                </div>
+                <div class="form-outline mb-2">
+                  <label for="image">Select Image</label>
+                  <input
+                    type="file"
+                    name="image"
+                    class="form-control form-control-lg"
+                    required
+                  />
+                </div>
+
+               
+                
+                 
+                <div style="display: flex; margin-top: 20px;">
+                  <% product.image.forEach(element => { %>                        
+                      <div style="position: relative;">
+                          <img  class="img-fluid" style="width: 90px; margin: 10px;" src="/<%= element %>" alt="">
+                          <a style="position: absolute; top: 0; right: 0; color: red;" class="fas fa-times" href="/admin/deleteproductimg/<%= element %>/<%= product._id %>"></a>
+                      </div>
+                  <% }) %>
               </div>
+
+                
+                  <button type="submit" class="btn btn-primary">
+                    Update product
+                  </button></a
+                >
+              </form>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
-      integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
-      crossorigin="anonymous"
-    ></script>
+    <script>
+      src =
+        "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/js/bootstrap.bundle.min.js";
+      integrity =
+        "sha512-X/YkDZyjTf4wyc2Vy16YGCPHwAY8rZJY+POgokZjQB2mhIRFJCckEGc6YyX9eNsPfn0PzThEuNs+uaomE5CO6A==";
+      crossorigin = "anonymous";
+      referrerpolicy = "no-referrer";
+    </script>
   </body>
 </html>
