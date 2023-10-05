@@ -43,3 +43,20 @@ exports.getEditCategory = (req, res) => {
       res.redirect("/admin/dashboard/category");
     });
 };
+
+// for updating the value in the database
+exports.postCategoryUpdate = async (req, res) => {
+  try {
+    let id = req.params.id;
+    const udateCategory = await collection.findByIdAndUpdate(id, {
+      Id: req.body.Id,
+      Type: req.body.Type,
+      Brand: req.body.Brand,
+      Gender: req.body.Gender,
+    });
+    res.redirect('/admin/dashboard/category')
+  } catch (error) {
+    console.log("There is an error while updating the values....");
+    res.redirect('/admin/dashboard/category/edit')
+  }
+};

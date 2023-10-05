@@ -26,7 +26,7 @@
                         <h1></h1>
                     </div>
                     <div class="card-body p-4">
-                        <form action="/admin/dashboard/category" method="post" id="add-form">
+                        <form action="/admin/dashboard/category/update/<%= category._id %>" method="post" id="add-form">
                             <div class="form-outline mb-2">
                                 <label for="Id">Id</label>
                                 <input type="text" value="<%= category.Id %>" name="Id" class="form-control form-control-lg"
@@ -35,12 +35,12 @@
                             <div class="form-outline mb-2">
                                 <label for="Type">Type</label>
                                 <select  name="Type" class="form-control form-control-lg" required>
-                                    <option value="">Select a type</option>
-                                    <option value="Sneakers"  <%= category.Type === 'Sneakers' ? 'selected' : '' %>>Sneakers</option>
-                                    <option value="Boots"  <%= category.Type === 'Boots' ? 'selected' : '' %>>Boots</option>
-                                    <option value="Casuals"  <%= category.Type === 'Casuals' ? 'selected' : '' %>>Casuals</option>
-                                    <option value="Formals"  <%= category.Type === 'Formals' ? 'selected' : '' %>>Formals</option>
-                                    <option value="Flip-Flops"  <%= category.Type === 'Flip-Flops' ? 'selected' : '' %>>Flip-Flops</option>
+                                    <option value="">Select the type</option>
+                                    <option value="Sneakers"  >Sneakers</option>
+                                    <option value="Boots"  >Boots</option>
+                                    <option value="Casuals"  >Casuals</option>
+                                    <option value="Formals"  >Formals</option>
+                                    <option value="Flip-Flops" >Flip-Flops</option>
                                 </select>
                             </div>
                             <div class="form-outline mb-2">
@@ -54,20 +54,20 @@
                                     <div>
                                         <i class="fas fa-mars fa-lg me-3 fa-fw"></i>
                                         <input type="radio" id="Male" name="Gender" value="Male"
-                                            class="form-check-input" <%= category.Gender === 'Male' ? 'checked' : '' %> required />
+                                            class="form-check-input" required />
                                         <label class="form-check-label" for="Male">Male</label>
                                     </div>
                                     <div>
                                         <i class="fas fa-venus fa-lg me-3 fa-fw"></i>
                                         <input type="radio" id="Female" name="Gender" value="Female"
-                                            class="form-check-input"  <%= category.Gender === 'Female' ? 'checked' : '' %> required />
+                                            class="form-check-input" required  />
                                         <label class="form-check-label" for="Female">Female</label>
                                     </div>
                                     
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">
-                                Add category
+                            <button type="submit" class="btn btn-success">
+                                Edit category
                             </button></a>
                         </form>
                     </div>

@@ -101,19 +101,23 @@
               <tbody>
                 <% users.forEach((row, index) => { %>
                 <tr>
-                  <td><%= index %></td>
+                  <td><%= index+1 %></td>
                   <td><%= row.first_name %></td>
                   <td><%= row.last_name %></td>
                   <td><%= row.gender %></td>
                   <td><%= row.email %></td>
                   <td><%= row.phone %></td>
                   <td>
-                    <button id="blockButton" class="btn btn-danger">
+                    <button id="blockButton_<%= row._id %>" class="btn btn-danger block-button" style="width: 100px;height: 40px;">
                       Block
                     </button>
 
                     <!-- Unblock Button (initially hidden) -->
-                    <button id="unblockButton" class="btn btn-success">
+                    <button
+                      id="unblockButton_<%= row._id %>"
+                      class="btn btn-success unblock-button"
+                      style="display: none;width: 100px;height: 40px;"
+                    >
                       Unblock
                     </button>
                   </td>
@@ -122,8 +126,8 @@
               </tbody>
             </table>
             <% } else {%>
-              <h1>There is no data in the database</h1>
-              <% } %>
+            <h1>There is no data in the database</h1>
+            <% } %>
           </div>
         </div>
       </div>
@@ -136,5 +140,38 @@
       "sha512-X/YkDZyjTf4wyc2Vy16YGCPHwAY8rZJY+POgokZjQB2mhIRFJCckEGc6YyX9eNsPfn0PzThEuNs+uaomE5CO6A==";
     crossorigin = "anonymous";
     referrerpolicy = "no-referrer";
+  </script>
+  <script>
+    // Get all block buttons
+const blockButtons = document.querySelectorAll(".block-button");
+
+// Get all unblock buttons
+const unblockButtons = document.querySelectorAll(".unblock-button");
+
+// Add click event listeners for each button pair
+blockButtons.forEach((blockButton) => {
+  blockButton.addEventListener("click", () => {
+    // Find the corresponding unblock button by ID
+    const userId = blockButton.id.split("_")[1];
+    const unblockButton = document.getElementById(`unblockButton_${userId}`);
+
+    // Hide block button, show unblock button
+    blockButton.style.display = "none";
+    unblockButton.style.display = "inline-block";
+  });
+});
+
+unblockButtons.forEach((unblockButton) => {
+  unblockButton.addEventListener("click", () => {
+    // Find the corresponding block button by ID
+    const userId = unblockButton.id.split("_")[1];
+    const blockButton = document.getElementById(`blockButton_${userId}`);
+
+    // Hide unblock button, show block button
+    unblockButton.style.display = "none";
+    blockButton.style.display = "inline-block";
+  });
+});
+
   </script>
 </html>

@@ -68,4 +68,10 @@ router.get("/dashboard/category/add", categoryController.getCategoryAdd);
 // router for editing the category
 router.get("/dashboard/category/edit/:id", categoryController.getEditCategory);
 
+// router for updating the category
+router.post(
+  "/dashboard/category/update/:id",
+  categoryController.postCategoryUpdate
+);
+
 module.exports = router;
