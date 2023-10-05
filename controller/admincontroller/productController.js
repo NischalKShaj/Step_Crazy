@@ -54,7 +54,6 @@ exports.postProductPage = async (req, res) => {
 // for getting the product edit page
 exports.getEditProduct = (req, res) => {
   let id = req.params.id;
-  console.log("running...");
   collection
     .findById(id)
     .then((product) => {
@@ -68,4 +67,36 @@ exports.getEditProduct = (req, res) => {
       console.log("Error finding the product....");
       res.redirect("admin/dashboard/product");
     });
+};
+
+// for posting the updated values
+exports.postUpdateProduct = async (req, res) => {
+  try {
+    let id = req.params.id;
+    const updateProduct = await collection.findByIdAndUpdate(
+      id,
+      {
+        id: req.body.id,
+        name: req.body.name,
+        description: req.body.description,
+        price: req.body.price,
+        stock: req.body.stock,
+        category: req.body.category,
+      },
+      { new: true }
+    );
+
+    // to update the images
+    if (req.files) {
+      const newImages = req.files.map((file) => file.filename);
+      updateProduct.image = updateProduct.image.concat(newImages);
+    }
+
+    await updateProduct.save();
+    res.redirect("/admin/dashboard/product");
+    console.log("value updated successfully...");
+  } catch (error) {
+    console.log("The value is not inserted properly...");
+    res.redirect("/admin/dashboard/product");
+  }
 };

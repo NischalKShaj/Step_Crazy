@@ -25,3 +25,21 @@ exports.postCategory = async (req, res) => {
   await collection.insertMany([categoryDetails]);
   res.redirect("/admin/dashboard/category");
 };
+
+// for editing the value in the category
+exports.getEditCategory = (req, res) => {
+  let id = req.params.id;
+  collection
+    .findById(id)
+    .then((category) => {
+      if (!category) {
+        res.redirect("/admin/dashboard/category");
+      } else {
+        res.render("admin/edit_category", { category: category });
+      }
+    })
+    .catch((error) => {
+      console.log("Error finding the category....");
+      res.redirect("/admin/dashboard/category");
+    });
+};

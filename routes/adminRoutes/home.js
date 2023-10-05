@@ -49,6 +49,13 @@ router.get("/dashboard/product/add", productController.getAddProduct);
 // router for editing the existing product
 router.get("/dashboard/product/edit/:id", productController.getEditProduct);
 
+// router for updating the product
+router.post(
+  "/dashboard/product/update/:id",
+  productController.uploads,
+  productController.postUpdateProduct
+);
+
 // router for getting the category page
 router.get("/dashboard/category", categoryController.getCategoryPage);
 
@@ -57,5 +64,8 @@ router.post("/dashboard/category", categoryController.postCategory);
 
 // router for adding new category
 router.get("/dashboard/category/add", categoryController.getCategoryAdd);
+
+// router for editing the category
+router.get("/dashboard/category/edit/:id", categoryController.getEditCategory);
 
 module.exports = router;
