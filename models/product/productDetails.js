@@ -34,7 +34,10 @@ const stepCrazy = new mongoose.Schema({
       required: true,
     },
   ],
-
+  status: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 // declaring the collection for the database

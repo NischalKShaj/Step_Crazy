@@ -33,6 +33,18 @@ router.get("/dashboard/user", userController.getUserPage);
 // router for posting the user page
 router.post("/dashboard/user", userController.postUserPage);
 
+// router for blocking the user
+router.post(
+  "/dashboard/user/block-user/:userId",
+  userController.postBlockeUser
+);
+
+// router for unblocking the user
+router.post(
+  "/dashboard/user/unblock-user/:userId",
+  userController.postUnblockUser
+);
+
 // router for getting the product page
 router.get("/dashboard/product", productController.getProductPage);
 

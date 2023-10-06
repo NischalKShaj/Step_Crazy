@@ -108,7 +108,11 @@
                   <td><%= row.email %></td>
                   <td><%= row.phone %></td>
                   <td>
-                    <button id="blockButton_<%= row._id %>" class="btn btn-danger block-button" style="width: 100px;height: 40px;">
+                    <button
+                      id="blockButton_<%= row._id %>"
+                      class="btn btn-danger block-button"
+                      style="width: 100px; height: 40px"
+                    >
                       Block
                     </button>
 
@@ -116,7 +120,7 @@
                     <button
                       id="unblockButton_<%= row._id %>"
                       class="btn btn-success unblock-button"
-                      style="display: none;width: 100px;height: 40px;"
+                      style="display: none; width: 100px; height: 40px"
                     >
                       Unblock
                     </button>
@@ -141,37 +145,75 @@
     crossorigin = "anonymous";
     referrerpolicy = "no-referrer";
   </script>
+
   <script>
+    // Function to handle blocking a user
+    function blockUser(userId) {
+      fetch(`/admin/dashboard/user/block-user/${userId}`, {
+        method: "POST",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            // Update the UI to reflect the user is blocked
+            const blockButton = document.getElementById(
+              `blockButton_${userId}`
+            );
+            blockButton.style.display = "none";
+            const unblockButton = document.getElementById(
+              `unblockButton_${userId}`
+            );
+            unblockButton.style.display = "inline-block";
+          }
+        })
+        .catch((error) => {
+          console.error("Error blocking user:", error);
+        });
+    }
+
+    // Function to handle unblocking a user
+    function unblockUser(userId) {
+      fetch(`/admin/dashboard/user/unblock-user/${userId}`, {
+        method: "POST",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            // Update the UI to reflect the user is unblocked
+            const unblockButton = document.getElementById(
+              `unblockButton_${userId}`
+            );
+            unblockButton.style.display = "none";
+            const blockButton = document.getElementById(
+              `blockButton_${userId}`
+            );
+            blockButton.style.display = "inline-block";
+          }
+        })
+        .catch((error) => {
+          console.error("Error unblocking user:", error);
+        });
+    }
+
     // Get all block buttons
-const blockButtons = document.querySelectorAll(".block-button");
+    const blockButtons = document.querySelectorAll(".block-button");
 
-// Get all unblock buttons
-const unblockButtons = document.querySelectorAll(".unblock-button");
+    // Get all unblock buttons
+    const unblockButtons = document.querySelectorAll(".unblock-button");
 
-// Add click event listeners for each button pair
-blockButtons.forEach((blockButton) => {
-  blockButton.addEventListener("click", () => {
-    // Find the corresponding unblock button by ID
-    const userId = blockButton.id.split("_")[1];
-    const unblockButton = document.getElementById(`unblockButton_${userId}`);
+    // Add click event listeners for each button pair
+    blockButtons.forEach((blockButton) => {
+      blockButton.addEventListener("click", () => {
+        const userId = blockButton.id.split("_")[1];
+        blockUser(userId);
+      });
+    });
 
-    // Hide block button, show unblock button
-    blockButton.style.display = "none";
-    unblockButton.style.display = "inline-block";
-  });
-});
-
-unblockButtons.forEach((unblockButton) => {
-  unblockButton.addEventListener("click", () => {
-    // Find the corresponding block button by ID
-    const userId = unblockButton.id.split("_")[1];
-    const blockButton = document.getElementById(`blockButton_${userId}`);
-
-    // Hide unblock button, show block button
-    unblockButton.style.display = "none";
-    blockButton.style.display = "inline-block";
-  });
-});
-
+    unblockButtons.forEach((unblockButton) => {
+      unblockButton.addEventListener("click", () => {
+        const userId = unblockButton.id.split("_")[1];
+        unblockUser(userId);
+      });
+    });
   </script>
 </html>

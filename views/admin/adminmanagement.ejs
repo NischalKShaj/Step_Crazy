@@ -96,7 +96,7 @@
                   <th>Id</th>
                   <th>Name</th>
                   <th>Email</th>
-                  <th>Action</th>
+                  
                 </tr>
               </thead>
               <tbody>
@@ -105,16 +105,7 @@
                   <td><%= index+1 %></td>
                   <td><%= row.name %></td>
                   <td><%= row.email %></td>
-                  <td>
-                    <button id="blockButton_<%= row._id %>" class="btn btn-danger block-button" style="width: 100px; height: 40px;">
-                      Block
-                    </button>
-
-                    <!-- Unblock Button (initially hidden) -->
-                    <button id="unblockButton_<%= row.id %>" class="btn btn-success unblock-button" style="display: none; width: 100px; height: 40px;">
-                      Unblock
-                    </button>
-                  </td>
+                  
                   <% }) %>
                 </tr>
               </tbody>
@@ -135,37 +126,5 @@
     crossorigin = "anonymous";
     referrerpolicy = "no-referrer";
   </script>
-  <script>
-    // Get all block buttons
-const blockButtons = document.querySelectorAll(".block-button");
-
-// Get all unblock buttons
-const unblockButtons = document.querySelectorAll(".unblock-button");
-
-// Add click event listeners for each button pair
-blockButtons.forEach((blockButton) => {
-  blockButton.addEventListener("click", () => {
-    // Find the corresponding unblock button by ID
-    const userId = blockButton.id.split("_")[1];
-    const unblockButton = document.getElementById(`unblockButton_${userId}`);
-
-    // Hide block button, show unblock button
-    blockButton.style.display = "none";
-    unblockButton.style.display = "inline-block";
-  });
-});
-
-unblockButtons.forEach((unblockButton) => {
-  unblockButton.addEventListener("click", () => {
-    // Find the corresponding block button by ID
-    const userId = unblockButton.id.split("_")[1];
-    const blockButton = document.getElementById(`blockButton_${userId}`);
-
-    // Hide unblock button, show block button
-    unblockButton.style.display = "none";
-    blockButton.style.display = "inline-block";
-  });
-});
-
-  </script>
+  
 </html>

@@ -22,15 +22,19 @@ const stepCrazy = new mongoose.Schema({
     type: String,
     required: true,
   },
-  gender:{
-    type : String,
-    enum: ["Male", "Female"], 
-    required : true,
+  gender: {
+    type: String,
+    enum: ["Male", "Female"],
+    required: true,
   },
   created: {
     type: Date,
     required: true,
     default: Date.now,
+  },
+  blocked: {
+    type: Boolean,
+    default: false,
   },
 });
 

@@ -48,12 +48,13 @@ exports.getEditCategory = (req, res) => {
 exports.postCategoryUpdate = async (req, res) => {
   try {
     let id = req.params.id;
-    const udateCategory = await collection.findByIdAndUpdate(id, {
+    const upateCategory = await collection.findByIdAndUpdate(id, {
       Id: req.body.Id,
       Type: req.body.Type,
       Brand: req.body.Brand,
       Gender: req.body.Gender,
     });
+    console.log(upateCategory);
     res.redirect('/admin/dashboard/category')
   } catch (error) {
     console.log("There is an error while updating the values....");

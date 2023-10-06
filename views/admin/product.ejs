@@ -109,29 +109,44 @@
                 <tr>
                   <td><%= row.id %></td>
                   <td>
-                    <% if (row.image) { %> <% row.image.forEach((imageName) => {
-                    %>
+                    <% if (row.image) { %>
+                     <% row.image.forEach((imageName) => {%>
+                    
                     <img
                       src="../../<%= imageName %>"
                       width="50"
                       class="img-thumbnail"
                     />
 
-                    <% }) %> <% } else { %>
-                    <!-- Handle the case when there are no images -->
-                    No images available <% } %>
+                    <% }) %> 
+                    <% } else { %>
+                    <h1>no image found</h1>
+                    <% } %>
                   </td>
+                  
                   <td><%= row.name %></td>
                   <td><%= row.description %></td>
                   <td><%= row.price %></td>
                   <td><%= row.stock %></td>
                   <td><%= row.category %></td>
                   <td>
-                    <a href="/admin/dashboard/product/edit/<%= row._id %>" class="text-success"
-                      ><i class="fas fa-edit fa-lg"></i
-                    ></a>
-                    <a href="/delete/<%= row._id %>" class="text-danger"
-                      ><i class="fas fa-trash fa-lg mx-1"></i
+                    <a
+                      href="/admin/dashboard/product/edit/<%= row._id %>"
+                      class="text-success"
+                      ><i class="fas fa-edit fa-lg"></i>
+                    </a>
+                    <a
+                      href="/admin/dashboard/product/deactivate_<%= row._id %>"
+                      class="text-danger"
+                      id="deactivate"
+                      ><i class="fas fa-trash fa-lg mx-1"></i>
+                    </a>
+                    <a
+                      href="/admin/dashboard/product/activate_<%= row._id %>"
+                      class="text-success"
+                      style="display: none;"
+                    >
+                      <i class="fas fa-check-circle fa-lg mx-1"></i
                     ></a>
                   </td>
                 </tr>
@@ -156,27 +171,8 @@
     crossorigin = "anonymous";
     referrerpolicy = "no-referrer";
   </script>
-  
+
   <script>
-    fetch("/admin/dashboard/product/delete", {
-      method: "delete",
-      Headers: {
-        "Content-Type": "application.json",
-      },
-    })
-      .then((respose) => {
-        if (respose.ok) {
-          console.log("Product deleted succussfully...");
-        } else {
-          console.error(
-            "Error deleting the product",
-            respose.status,
-            respose.statusText
-          );
-        }
-      })
-      .catch((error) => {
-        console.error("Network error", error);
-      });
+   
   </script>
 </html>
