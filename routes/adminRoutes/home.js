@@ -12,6 +12,9 @@ const categoryController = require("../../controller/admincontroller/categoryCon
 // router for getting the admin login page
 router.get("/", homecontroller.getAdminPage);
 
+// router for admin logout
+router.post("/logout", homecontroller.postLoginPage);
+
 // router for getting the admin dashboard
 router.get("/dashboard", loginController.getAdminHome);
 

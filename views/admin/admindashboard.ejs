@@ -77,6 +77,9 @@
               href="/admin/dashboard/category"
               >Category</a
             >
+            <button id="logout" class="btn btn-danger">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
           </div>
         </div>
       </div>
@@ -90,5 +93,25 @@
       "sha512-X/YkDZyjTf4wyc2Vy16YGCPHwAY8rZJY+POgokZjQB2mhIRFJCckEGc6YyX9eNsPfn0PzThEuNs+uaomE5CO6A==";
     crossorigin = "anonymous";
     referrerpolicy = "no-referrer";
+  </script>
+  <script>
+    const Logout = document.getElementById("logout");
+
+    Logout.addEventListener("click", () => {
+      fetch("/admin/logout", {
+        method: "post",
+      })
+        .then((response) => {
+          if (response.ok) {
+            window.location.href = "/admin";
+            console.log("The admin is successfully logged out");
+          } else {
+            console.log("Admin not properly logged out");
+          }
+        })
+        .catch((error) => {
+          console.error("Network error", error);
+        });
+    });
   </script>
 </html>

@@ -22,6 +22,14 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap"
     />
     <link rel="stylesheet" href="../CSS/home/fontawesome.min.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <!--
     
 TemplateMo 559 Zay Shop
@@ -94,7 +102,9 @@ https://templatemo.com/tm-559-zay-shop
         <!-- <a class="navbar-brand text-success logo h1 align-self-center" href="/">
           Step Crazy
         </a> -->
-       <a href="/"> <img src="../Img/login/logo.png" alt="logo" class="img-fluid w-20"></a>
+        <a href="/">
+          <img src="../Img/login/logo.png" alt="logo" class="img-fluid w-20"
+        /></a>
 
         <button
           class="navbar-toggler border-0"
@@ -133,11 +143,54 @@ https://templatemo.com/tm-559-zay-shop
               </li>
             </ul>
           </div>
-          <form action="/login" method="get">
-            <button type="submit" id="loginButton" class="btn btn-primary">
-              Login
+          <div class="dropdown">
+            <button
+              class="btn btn-light dropdown-toggle"
+              type="button"
+              id="profileDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <!-- Profile Icon -->
+              <i class="fas fa-user-circle fa-2x"></i>
             </button>
-          </form>
+            <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+              <!-- Dropdown Items -->
+              <li>
+                <a class="login" href="/login">Login</a>
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <a class="signup" href="/signup">Signup</a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- the following content is hidden willl appear only after user logins -->
+
+          <div class="userProfile" style="display: none;">
+            <button
+              class="btn btn-light dropdown-toggle"
+              type="button"
+              id="profileDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <!-- Profile Icon -->
+              <i class="fas fa-user-circle fa-2x"></i>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+              <!-- Dropdown Items -->
+              <li>
+                <a class="order" href="/order">Orders</a>
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <a class="logout" id="logout" href="/logout">Logout</a>
+              </li>
+            </ul>
+          </div>
+
           <div class="navbar align-self-center d-flex">
             <div
               class="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3"
@@ -154,33 +207,6 @@ https://templatemo.com/tm-559-zay-shop
                 </div>
               </div>
             </div>
-            <!-- <a
-              class="nav-icon d-none d-lg-inline"
-              href="#"
-              data-bs-toggle="modal"
-              data-bs-target="#templatemo_search"
-            >
-              <i class="fa fa-fw fa-search text-dark mr-2"></i>
-            </a> -->
-            <!-- <a class="nav-icon position-relative text-decoration-none" href="#">
-              <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
-              <span
-                class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark"
-                >7</span
-              >
-            </a>
-            <a class="nav-icon position-relative text-decoration-none" href="#">
-              <i class="fa fa-fw fa-user text-dark mr-3"></i>
-              <span
-                class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark"
-                >+99</span
-              >
-            </a> -->
-            <form action="/signup" method="get">
-              <button type="submit" id="loginButton" class="btn btn-primary mx-2">
-                Signup
-              </button>
-            </form>
           </div>
         </div>
       </div>
@@ -255,11 +281,7 @@ https://templatemo.com/tm-559-zay-shop
           <div class="container">
             <div class="row p-5">
               <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-                <img
-                  class="img-fluid"
-                  src="../Img/home/casuals4.webp"
-                  alt=""
-                />
+                <img class="img-fluid" src="../Img/home/casuals4.webp" alt="" />
               </div>
               <div class="col-lg-6 mb-0 d-flex align-items-center">
                 <div class="text-align-left align-self-center">
@@ -309,11 +331,7 @@ https://templatemo.com/tm-559-zay-shop
           <div class="container">
             <div class="row p-5">
               <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-                <img
-                  class="img-fluid"
-                  src="../Img/home/casuals8.webp"
-                  alt=""
-                />
+                <img class="img-fluid" src="../Img/home/casuals8.webp" alt="" />
               </div>
               <div class="col-lg-6 mb-0 d-flex align-items-center">
                 <div class="text-align-left">
@@ -688,6 +706,26 @@ https://templatemo.com/tm-559-zay-shop
     <script src="../js/bootstrap.bundle.min.js"></script>
     <script src="../js/templatemo.js"></script>
     <script src="../js/custom.js"></script>
+    <script>
+      const Logout = document.getElementById("logout");
+
+      Logout.addEventListener("click", (e)=>{
+        e.preventDefault();
+        fetch("/logout",{
+          method:"post"
+        })
+        .then((response)=>{
+          if(response.ok){
+            console.log("Logout success");
+          } else {
+            console.log("Error while logout");
+          }
+        })
+        .catch((error)=>{
+          console.error("Network error",error);
+        })
+      })
+    </script>
     <!-- End Script -->
   </body>
 </html>
