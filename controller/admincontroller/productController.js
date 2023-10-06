@@ -100,3 +100,44 @@ exports.postUpdateProduct = async (req, res) => {
     res.redirect("/admin/dashboard/product");
   }
 };
+
+// for deactivating the product
+exports.putDeactivate = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+
+    const deactivate = await collection.findByIdAndUpdate(
+      productId,
+      { status: false },
+      { new: true }
+    );
+    if (!deactivate) {
+      return res.status(404).json({ message: "Product is not found" });
+    }
+    console.log("The product is deactivated successfully..");
+    return res.json({ message: "Product deactivated" });
+  } catch (error) {
+    console.error("There was an error while deactivating the porduct", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// for activating the product
+exports.putActivate = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const activate = await collection.findByIdAndUpdate(
+      productId,
+      { status: true },
+      { new: true }
+    );
+    if (!activate) {
+      return res.status(404).json({ message: "Product is not found" });
+    }
+    console.log("The product is activated successfully...");
+    return res.json({ message: "Product is activated" });
+  } catch (error) {
+    console.error("There was an error while activating the product", error);
+    return res.status(505).json({ message: "Internal server error" });
+  }
+};

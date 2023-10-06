@@ -55,9 +55,22 @@ exports.postCategoryUpdate = async (req, res) => {
       Gender: req.body.Gender,
     });
     console.log(upateCategory);
-    res.redirect('/admin/dashboard/category')
+    res.redirect("/admin/dashboard/category");
   } catch (error) {
     console.log("There is an error while updating the values....");
-    res.redirect('/admin/dashboard/category/edit')
+    res.redirect("/admin/dashboard/category/edit");
+  }
+};
+
+// for deleting the category in the database
+exports.deleteCategory = async (req, res) => {
+  let categoryId = req.params.categoryId;
+  try {
+    const deleteCat = await collection.findByIdAndRemove(categoryId);
+    console.log("Category is deleted successfully");
+    return res.status(200).json({ message: "Category deleted successfully" });
+  } catch (error) {
+    console.error("There in deleting the category", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

@@ -109,21 +109,20 @@
                 <tr>
                   <td><%= row.id %></td>
                   <td>
-                    <% if (row.image) { %>
-                     <% row.image.forEach((imageName) => {%>
+                    <% if (row.image) { %> <% row.image.forEach((imageName) =>{%>
                     
+
                     <img
                       src="../../<%= imageName %>"
                       width="50"
                       class="img-thumbnail"
                     />
 
-                    <% }) %> 
-                    <% } else { %>
+                    <% }) %> <% } else { %>
                     <h1>no image found</h1>
                     <% } %>
                   </td>
-                  
+
                   <td><%= row.name %></td>
                   <td><%= row.description %></td>
                   <td><%= row.price %></td>
@@ -138,13 +137,14 @@
                     <a
                       href="/admin/dashboard/product/deactivate_<%= row._id %>"
                       class="text-danger"
-                      id="deactivate"
+                      id="deactivate_<%= row._id %>"
                       ><i class="fas fa-trash fa-lg mx-1"></i>
                     </a>
                     <a
                       href="/admin/dashboard/product/activate_<%= row._id %>"
                       class="text-success"
-                      style="display: none;"
+                      id="activate_<%= row._id %>"
+                      style="display: none"
                     >
                       <i class="fas fa-check-circle fa-lg mx-1"></i
                     ></a>
@@ -173,6 +173,69 @@
   </script>
 
   <script>
-   
+    const deactivate = document.querySelectorAll("[id^='deactivate_']");
+    const activate = document.querySelectorAll("[id^='activate_']");
+
+    //  for deactivating the product
+    deactivate.forEach((deactivateProduct) => {
+      deactivateProduct.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const productId = this.id.split("_")[1];
+
+        // fetching the api for deactivating the product
+        fetch(`/admin/dashboard/product/deactivate/${productId}`, {
+          method: "put",
+        })
+          .then((response) => {
+            if (response.ok) {
+              console.log("Product deactivated successfully...");
+
+              this.style.display = "none"; // Hide the deactivate link
+              document.getElementById(`activate_${productId}`).style.display =
+                "inline";
+            } else {
+              console.error(
+                "Error deactivating the product",
+                response.status,
+                response.statusText
+              );
+            }
+          })
+          .catch((error) => {
+            console.error("Network error", error);
+          });
+      });
+    });
+
+    // for activating the product
+    activate.forEach((activateProduct) => {
+      activateProduct.addEventListener("click", function (e) {
+        e.preventDefault();
+        const productId = this.id.split("_")[1];
+
+        // fetching the api for activating the product
+        fetch(`/admin/dashboard/product/activate/${productId}`, {
+          method: "PUT", 
+        })
+          .then((response) => {
+            if (response.ok) {
+              console.log("Product activated successfully...");
+              this.style.display = "none";
+              document.getElementById(`deactivate_${productId}`).style.display =
+                "inline";
+            } else {
+              console.error(
+                "Error activating the product",
+                response.status,
+                response.statusText
+              );
+            }
+          })
+          .catch((error) => {
+            console.error("Network error", error);
+          });
+      });
+    });
   </script>
 </html>

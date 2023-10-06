@@ -68,6 +68,18 @@ router.post(
   productController.postUpdateProduct
 );
 
+// router for deactivating the product
+router.put(
+  "/dashboard/product/deactivate/:productId",
+  productController.putDeactivate
+);
+
+// router for activating the product
+router.put(
+  "/dashboard/product/activate/:productId",
+  productController.putActivate
+);
+
 // router for getting the category page
 router.get("/dashboard/category", categoryController.getCategoryPage);
 
@@ -84,6 +96,12 @@ router.get("/dashboard/category/edit/:id", categoryController.getEditCategory);
 router.post(
   "/dashboard/category/update/:id",
   categoryController.postCategoryUpdate
+);
+
+// router for deleting the category
+router.delete(
+  "/dashboard/category/delete/:categoryId",
+  categoryController.deleteCategory
 );
 
 module.exports = router;
