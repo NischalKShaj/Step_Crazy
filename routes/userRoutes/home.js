@@ -17,6 +17,9 @@ router.get("/login", homeController.getLoginPage);
 // redirecting the homepage
 router.post("/", loginController.postHomePage);
 
+// redirecting to the homepage afterlogout
+router.post("/logout", homeController.postLogout);
+
 // getting the signup page
 router.get("/signup", homeController.getSignupPage);
 

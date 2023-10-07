@@ -20,5 +20,9 @@ exports.postLoginPage = (req, res) => {
   res.redirect("/login");
 };
 
-
-
+// loging out the user successfully
+exports.postLogout = (req, res) => {
+  res.status(200).json({ message: "User logged out successfully" });
+  
+  console.log("Logout successful");
+};
