@@ -1,15 +1,16 @@
 // requiring the modules for the project
 const express = require("express");
 const path = require("path");
-const mongoose = require("mongoose");
-const session = require("express-session");
-const multer = require("multer");
+// const mongoose = require("mongoose");
+// const session = require("express-session");
+// const multer = require("multer");
 
 // requiring the local modules for the project
 const routerHome = require("./routes/userRoutes/home");
 const mongose = require("./Database/connection");
 const userDb = require("./models/user/userDatabase");
 const routerAdmin = require("./routes/adminRoutes/home");
+const sessionAdmin = require("./middleware/admin/session")
 
 // setting the express() as app
 const app = express();
@@ -30,13 +31,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // session for the project
-app.use(
-  session({
-    secret: "mysecretkey",
-    saveUninitialized: true,
-    resave: false,
-  })
-);
+// app.use(
+//   session({
+//     secret: "mysecretkey",
+//     saveUninitialized: true,
+//     resave: false,
+//   })
+// );
+app.use(sessionAdmin)
 
 // setting up the routes
 app.use("/", routerHome);
