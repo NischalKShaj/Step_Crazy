@@ -148,53 +148,54 @@ https://templatemo.com/tm-559-zay-shop
             </ul>
           </div>
           <% if (user) { %>
-            <div id="loginDropdown" class="dropdown" style="margin-left: 20px;">
-
-              <button
-              
-                class="btn btn-light dropdown-toggle"
-                type="button"
-                id="profileDropdown"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
+          <div id="loginDropdown" class="dropdown" style="margin-left: 20px">
+            <button
+              class="btn btn-light dropdown-toggle"
+              type="button"
+              id="profileDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <!-- Profile Icon -->
+              <i class="fas fa-user-circle fa-2x"
+                ><i style="margin-left: 10px; font-size: large"
+                  ><%= data.first_name %></i
+                ></i
               >
-                <!-- Profile Icon -->
-                <i  class="fas fa-user-circle fa-2x"><i style="margin-left: 10px; font-size: large;"><%= data.first_name %></i></i>
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                <!-- Dropdown Items -->
-                <li style="text-align: center;">
-                  <a class="logout"  href="/logout" >Logout</a>
-                </li>
-                
-               
-              </ul>
-            </div>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+              <!-- Dropdown Items -->
+              <li style="text-align: center">
+                <a class="logout" href="/logout">Logout</a>
+              </li>
+            </ul>
+          </div>
           <% } else {%>
-            <div id="loginDropdown" class="dropdown">
-              <button
-                class="btn btn-light dropdown-toggle"
-                type="button"
-                id="profileDropdown"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <!-- Profile Icon -->
-                <i class="fas fa-user-circle fa-2x"></i>
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                <!-- Dropdown Items -->
-                <li id="loginItem">
-                  <a class="login" href="/login" onclick="toggleDropdown()">Login</a>
-                </li>
-                <li><hr class="dropdown-divider" /></li>
-                <li id="signupItem">
-                  <a class="signup" href="/signup">Signup</a>
-                </li>
-               
-              </ul>
-            </div>
-            <% } %>
+          <div id="loginDropdown" class="dropdown">
+            <button
+              class="btn btn-light dropdown-toggle"
+              type="button"
+              id="profileDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <!-- Profile Icon -->
+              <i class="fas fa-user-circle fa-2x"></i>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+              <!-- Dropdown Items -->
+              <li id="loginItem">
+                <a class="login" href="/login" onclick="toggleDropdown()"
+                  >Login</a
+                >
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li id="signupItem">
+                <a class="signup" href="/signup">Signup</a>
+              </li>
+            </ul>
+          </div>
+          <% } %>
           <!-- navbar begins here -->
           <div class="navbar align-self-center d-flex">
             <div
@@ -290,13 +291,11 @@ https://templatemo.com/tm-559-zay-shop
               </div>
               <div class="col-lg-6 mb-0 d-flex align-items-center">
                 <div class="text-align-left align-self-center">
-                  <h1 class="h1 text-success"><b>Step Crazy</b> eCommerce</h1>
-                  <h3 class="h2">Tiny and Perfect eCommerce Template</h3>
-                  <p>
-                    Zay Shop is an eCommerce HTML5 CSS template with latest
-                    version of Bootstrap 5 (beta 1). This template is 100% free
-                    provided by
-                    <a
+                  <h1 class="h1 text-success"><b>Step Crazy</b></h1>
+                  <h3 class="h2">Step into style</h3>
+                  <h3>Every Shoe Tells a Story 👟✨</h3>
+
+                  <!-- <a
                       rel="sponsored"
                       class="text-success"
                       href="https://templatemo.com"
@@ -325,8 +324,8 @@ https://templatemo.com/tm-559-zay-shop
                       href="https://icons8.com/"
                       target="_blank"
                       >Icons 8</a
-                    >.
-                  </p>
+                    >. -->
+                  <!-- </p> -->
                 </div>
               </div>
             </div>
@@ -340,14 +339,9 @@ https://templatemo.com/tm-559-zay-shop
               </div>
               <div class="col-lg-6 mb-0 d-flex align-items-center">
                 <div class="text-align-left">
-                  <h1 class="h1">Proident occaecat</h1>
-                  <h3 class="h2">Aliquip ex ea commodo consequat</h3>
-                  <p>
-                    You are permitted to use this Zay CSS template for your
-                    commercial websites. You are
-                    <strong>not permitted</strong> to re-distribute the template
-                    ZIP file in any kind of template collection websites.
-                  </p>
+                  <h1 class="h1 text-success"><b>Step Crazy</b></h1>
+                  <h3 class="h2">From Classic to Trendsetting</h3>
+                  <h3>Unleash Your Shoe Passion Here 👟❤️</h3>
                 </div>
               </div>
             </div>
@@ -357,22 +351,13 @@ https://templatemo.com/tm-559-zay-shop
           <div class="container">
             <div class="row p-5">
               <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-                <img
-                  class="img-fluid"
-                  src="../Img/home/sneakers7.jpeg"
-                  alt=""
-                />
+                <img class="img-fluid" src="../Img/login/style6.webp" alt="" />
               </div>
               <div class="col-lg-6 mb-0 d-flex align-items-center">
                 <div class="text-align-left">
-                  <h1 class="h1">Repr in voluptate</h1>
-                  <h3 class="h2">Ullamco laboris nisi ut</h3>
-                  <p>
-                    We bring you 100% free CSS templates for your websites. If
-                    you wish to support TemplateMo, please make a small
-                    contribution via PayPal or tell your friends about our
-                    website. Thank you.
-                  </p>
+                  <h1 class="h1 text-success"><b>Step Crazy</b></h1>
+                  <h3 class="h2">Walk with Confidence</h3>
+                  <h3>Find Your Perfect Fit and Style 👡👢</h3>
                 </div>
               </div>
             </div>
@@ -404,14 +389,15 @@ https://templatemo.com/tm-559-zay-shop
         <div class="col-lg-6 m-auto">
           <h1 class="h1">Categories of The Month</h1>
           <p>
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-            officia deserunt mollit anim id est laborum.
+            "Welcome to our 'Categories of The Month'! 🌟 Each month, we curate
+            a special selection of our finest footwear to cater to your
+            ever-evolving style.
           </p>
         </div>
       </div>
       <div class="row">
         <div class="col-12 col-md-4 p-5 mt-3">
-          <a href="/shop"
+          <a href="/product"
             ><img
               src="../Img/home/sneakers3.jpeg"
               class="rounded-circle img-fluid border"
@@ -420,7 +406,7 @@ https://templatemo.com/tm-559-zay-shop
           <p class="text-center"><a class="btn btn-success">Go Shop</a></p>
         </div>
         <div class="col-12 col-md-4 p-5 mt-3">
-          <a href="/shop"
+          <a href="/product"
             ><img
               src="../Img/home/formal9.jpeg"
               class="rounded-circle img-fluid border"
@@ -429,7 +415,7 @@ https://templatemo.com/tm-559-zay-shop
           <p class="text-center"><a class="btn btn-success">Go Shop</a></p>
         </div>
         <div class="col-12 col-md-4 p-5 mt-3">
-          <a href="/shop"
+          <a href="/product"
             ><img
               src="../Img/home/casual2.jpeg"
               class="rounded-circle img-fluid border"
@@ -448,8 +434,10 @@ https://templatemo.com/tm-559-zay-shop
           <div class="col-lg-6 m-auto">
             <h1 class="h1">Featured Product</h1>
             <p>
-              Reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident.
+              Superior Comfort: We understand the importance of comfort in every
+              step you take. With our products, you can enjoy all-day comfort
+              without compromising on style. Say goodbye to discomfort and hello
+              to blissful walking.
             </p>
           </div>
         </div>
@@ -480,8 +468,10 @@ https://templatemo.com/tm-559-zay-shop
                   >Gym Weight</a
                 >
                 <p class="card-text">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt
-                  in culpa qui officia deserunt.
+                  Looking to take your fitness routine to the next level? Look
+                  no further than our premium Gym Weights. These weights are the
+                  perfect companion for your strength training sessions,
+                  offering durability, versatility, and exceptional performance.
                 </p>
                 <p class="text-muted">Reviews (24)</p>
               </div>
@@ -513,8 +503,11 @@ https://templatemo.com/tm-559-zay-shop
                   >Cloud Nike Shoes</a
                 >
                 <p class="card-text">
-                  Aenean gravida dignissim finibus. Nullam ipsum diam, posuere
-                  vitae pharetra sed, commodo ullamcorper.
+                  Elevate your footwear game to new heights with our Cloud Nike
+                  Shoes. These shoes are more than just a fashion statement;
+                  they are the epitome of comfort and style. Explore what makes
+                  our Cloud Nike Shoes the perfect choice for every step you
+                  take.
                 </p>
                 <p class="text-muted">Reviews (48)</p>
               </div>
@@ -546,8 +539,11 @@ https://templatemo.com/tm-559-zay-shop
                   >Summer Addides Shoes</a
                 >
                 <p class="card-text">
-                  Curabitur ac mi sit amet diam luctus porta. Phasellus pulvinar
-                  sagittis diam, et scelerisque ipsum lobortis nec.
+                  Get ready to embrace the sunny days with style and comfort by
+                  slipping into our Summer Adidas Shoes. Designed to keep your
+                  feet cool and fashionable, these shoes are the perfect choice
+                  for all your summer adventures. Discover what sets our Summer
+                  Adidas Shoes apart.
                 </p>
                 <p class="text-muted">Reviews (74)</p>
               </div>
@@ -564,7 +560,7 @@ https://templatemo.com/tm-559-zay-shop
         <div class="row">
           <div class="col-md-4 pt-5">
             <h2 class="h2 text-success border-bottom pb-3 border-light logo">
-              Zay Shop
+              Step Crazy
             </h2>
             <ul class="list-unstyled text-light footer-link-list">
               <li>
@@ -612,8 +608,8 @@ https://templatemo.com/tm-559-zay-shop
               Further Info
             </h2>
             <ul class="list-unstyled text-light footer-link-list">
-              <li><a class="text-decoration-none" href="#">Home</a></li>
-              <li><a class="text-decoration-none" href="#">About Us</a></li>
+              <li><a class="text-decoration-none" href="/">Home</a></li>
+              <li><a class="text-decoration-none" href="/about">About Us</a></li>
               <li>
                 <a class="text-decoration-none" href="#">Shop Locations</a>
               </li>

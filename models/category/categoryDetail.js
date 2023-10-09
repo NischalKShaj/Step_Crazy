@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 // declaring the schema for the collection
 const stepCrazy = new mongoose.Schema({
-  Type: 
+  category: 
     {
       type: String,
       required: true,

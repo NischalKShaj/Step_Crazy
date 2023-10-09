@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  $("#zoom").imagezoomsl({
+  $("#product-detail").imagezoomsl({
     zoomrange: [3, 3],
   });
 });

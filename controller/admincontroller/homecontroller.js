@@ -26,12 +26,16 @@ exports.postAdminHome = async (req, res) => {
     
     console.log(admin);
     if(admin.email === req.body.email && admin.password === req.body.password){
-      req.session.admin = req.body.email
+      req.session.admin = req.body.email;
       console.log("inside the dashboard...");
       res.redirect("/admin");
-    } 
+    } else{
+      const message = "Invalid admin credentials"
+      res.redirect(`/admin?success=${encodeURIComponent(message)}`);
+    }
   } catch (err){
-    res.redirect("/admin")
+    const message = "Invalid admin credentials"
+      res.redirect(`/admin?success=${encodeURIComponent(message)}`);
   }
 };
 

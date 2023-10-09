@@ -25,13 +25,13 @@ const stepCrazy = new mongoose.Schema({
       required: true,
     },
   ],
-  category: [
+  category: 
     {
       type: String,
       required: true,
 
     },
-  ],
+  
   status: {
     type: Boolean,
     default: true,

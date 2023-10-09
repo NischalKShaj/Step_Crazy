@@ -94,20 +94,18 @@
             <table class="table table-striped text-center">
               <thead>
                 <tr class="table-dark">
-                  <th>Id</th>
-                  <th>Type</th>
-                  <th>Brand</th>
-                  <th>Gender</th>
+                  <th>Num.</th>
+                  <th>category</th>
+                  
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
                 <% category.forEach((row, index) => { %>
                 <tr>
-                  <td><%= row.Id %></td>
-                  <td><%= row.Type %></td>
-                  <td><%= row.Brand %></td>
-                  <td><%= row.Gender %></td>
+                  <td><%= index+1 %></td>
+                  <td><%= row.category %></td>
+                  
                   <td>
                     <a
                       href="/admin/dashboard/category/edit/<%= row._id %>"

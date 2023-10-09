@@ -1,5 +1,6 @@
 // importing the database for the category page
 const collection = require("../../models/category/categoryDetail");
+const productCollection = require("../../models/product/productDetails")
 
 // getting the category page
 exports.getCategoryPage = async (req, res) => {
@@ -16,7 +17,7 @@ exports.getCategoryAdd = (req, res) => {
 exports.postCategory = async (req, res) => {
   let category
   try {
-    category = await collection.findOne({Type : req.body.Type})
+    category = await collection.findOne({category : req.body.category})
     console.log(category);
     
   } catch (error) {
@@ -27,7 +28,7 @@ exports.postCategory = async (req, res) => {
   // console.log(req.body.Type);
   const categoryDetails = {
     
-    Type: req.body.Type,
+    category: req.body.category,
     
   };
   if(category === null){
@@ -66,7 +67,7 @@ exports.postCategoryUpdate = async (req, res) => {
 
     const upateCategory = await collection.findByIdAndUpdate(id, {
       
-      Type: req.body.Type,
+      category: req.body.category,
      
     });
     
@@ -78,15 +79,49 @@ exports.postCategoryUpdate = async (req, res) => {
   }
 };
 
+// // for deleting the category in the database
+// exports.deleteCategory = async (req, res) => {
+//   let categoryId = req.params.categoryId;
+//   try {
+//     const deleteCat = await collection.findByIdAndRemove(categoryId);
+//     console.log("Category is deleted successfully");
+//     const catName = deleteCat.category;
+//     console.log(catName);
+//     const productData = await productCollection.updateMany({category:catName},{$set:{status:false}})
+//     console.log(productData);
+//     return res.status(200).json({ message: "Category deleted successfully" });
+//   } catch (error) {
+//     console.error("There in deleting the category", error);
+//     return res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
 // for deleting the category in the database
 exports.deleteCategory = async (req, res) => {
   let categoryId = req.params.categoryId;
   try {
-    const deleteCat = await collection.findByIdAndRemove(categoryId);
+    // Find and remove the category by ID
+    const deletedCategory = await collection.findByIdAndRemove(categoryId);
+
+    if (!deletedCategory) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    const catName = deletedCategory.category;
+
+    // Update the status of products with the same category name to "false"
+    const productData = await productCollection.updateMany(
+      { category: catName },
+      { $set: { status: false } }
+    );
+
     console.log("Category is deleted successfully");
+    console.log(catName);
+    console.log(productData);
+
     return res.status(200).json({ message: "Category deleted successfully" });
   } catch (error) {
-    console.error("There in deleting the category", error);
+    console.error("Error in deleting the category", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };

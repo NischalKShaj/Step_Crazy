@@ -296,6 +296,9 @@ https://templatemo.com/tm-559-zay-shop
           </div>
           <div class="row">
             <% product.forEach((singleProduct) => { %>
+              <% if (singleProduct.status === true) { %>
+               
+             
             <div class="col-md-4">
               <div class="card mb-4 product-wap rounded-0">
                 <div class="card rounded-0">
@@ -364,10 +367,11 @@ https://templatemo.com/tm-559-zay-shop
                       <i class="text-muted fa fa-star"></i>
                     </li>
                   </ul>
-                  <p class="text-center mb-0">$250.00</p>
+                  <p class="text-center mb-0">r.s:<%= singleProduct.price %>/-</p>
                 </div>
               </div>
             </div>
+            <% } %>
             <% }) %>
           </div>
           <div div="row">
