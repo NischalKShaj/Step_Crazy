@@ -10,7 +10,7 @@ let admin;
 exports.getAdminHome = (req, res) => {
  
 
-    res.render("admin/admindashboard");
+    res.redirect("/admin");
  
   
 };
@@ -26,10 +26,10 @@ exports.postAdminHome = async (req, res) => {
     
     console.log(admin);
     if(admin.email === req.body.email && admin.password === req.body.password){
-      
+      req.session.admin = req.body.email
       console.log("inside the dashboard...");
-      res.redirect("/admin/dashboard")
-    }
+      res.redirect("/admin");
+    } 
   } catch (err){
     res.redirect("/admin")
   }

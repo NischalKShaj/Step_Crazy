@@ -1,18 +1,28 @@
 // <======== handling the homecontrollers ===========>
 
+const collection = require("../../models/user/userDatabase");
 // getting the homepage
-exports.getHomePage = (req, res) => {
-  res.render("home/home");
+exports.getHomePage = async (req, res) => {
+  const user = req.session.user;
+  const data = await collection.findOne(
+    { email: user },
+    { first_name: 1, _id: 0 }
+  );
+  console.log(data,user);
+  res.render("home/home",{data,user});
 };
 
 // getting the loginpage
 exports.getLoginPage = (req, res) => {
-  res.render("user/login");
+  const invalid = req.query.success;
+  console.log(invalid);
+  res.render("user/login",{invalid});
 };
 
 // getting the signup page
 exports.getSignupPage = (req, res) => {
-  res.render("user/signup");
+  const invalid = req.query.success
+  res.render("user/signup",{invalid});
 };
 
 // redirectiong the loginpage
@@ -21,8 +31,9 @@ exports.postLoginPage = (req, res) => {
 };
 
 // loging out the user successfully
-exports.postLogout = (req, res) => {
-  res.status(200).json({ message: "User logged out successfully" });
-  
+exports.Logout = (req, res) => {
+  req.session.user = null;
+  res.redirect("/")
+
   console.log("Logout successful");
 };

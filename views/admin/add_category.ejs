@@ -26,44 +26,14 @@
                     </div>
                     <div class="card-body p-4">
                         <form action="/admin/dashboard/category" method="post" id="add-form">
+                            
                             <div class="form-outline mb-2">
-                                <label for="Id">Id</label>
-                                <input type="text" name="Id" class="form-control form-control-lg"
-                                    placeholder="Enter the id of the product" required />
+                                <label for="Type">Category Name</label>
+                                <input type="text" name="Type">
+                                
+
                             </div>
-                            <div class="form-outline mb-2">
-                                <label for="Type">Type</label>
-                                <select name="Type" class="form-control form-control-lg" required>
-                                    <option value="">Select a type</option>
-                                    <option value="Sneakers">Sneakers</option>
-                                    <option value="Boots">Boots</option>
-                                    <option value="Casuals">Casuals</option>
-                                    <option value="Formals">Formals</option>
-                                    <option value="Flip-Flops">Flip-Flops</option>
-                                </select>
-                            </div>
-                            <div class="form-outline mb-2">
-                                <label for="Brand">Brand</label>
-                                <input type="text" name="Brand" class="form-control form-control-lg"
-                                    placeholder="Enter the brand name" required />
-                            </div>
-                            <div class="d-flex flex-row align-items-center mb-4">
-                                <div class="form-outline flex-fill mb-0">
-                                    <label for="Gender">Gender</label>
-                                    <div>
-                                        <i class="fas fa-mars fa-lg me-3 fa-fw"></i>
-                                        <input type="radio" id="Male" name="Gender" value="Male"
-                                            class="form-check-input" required />
-                                        <label class="form-check-label" for="Male">Male</label>
-                                    </div>
-                                    <div>
-                                        <i class="fas fa-venus fa-lg me-3 fa-fw"></i>
-                                        <input type="radio" id="Female" name="Gender" value="Female"
-                                            class="form-check-input" required />
-                                        <label class="form-check-label" for="Female">Female</label>
-                                    </div>
-                                </div>
-                            </div>
+                            
                             <button type="submit" class="btn btn-primary">
                                 Add category
                             </button></a>

@@ -10,7 +10,8 @@ const routerHome = require("./routes/userRoutes/home");
 const mongose = require("./Database/connection");
 const userDb = require("./models/user/userDatabase");
 const routerAdmin = require("./routes/adminRoutes/home");
-const sessionAdmin = require("./middleware/admin/session")
+const sessionAdmin = require("./middleware/admin/session");
+const sessionUser = require("./middleware/user/session");
 
 // setting the express() as app
 const app = express();
@@ -30,15 +31,11 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// session for the project
-// app.use(
-//   session({
-//     secret: "mysecretkey",
-//     saveUninitialized: true,
-//     resave: false,
-//   })
-// );
-app.use(sessionAdmin)
+// session for admin
+app.use(sessionAdmin);
+
+// session for user
+app.use(sessionUser);
 
 // setting up the routes
 app.use("/", routerHome);

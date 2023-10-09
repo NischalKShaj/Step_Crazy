@@ -90,7 +90,7 @@ https://templatemo.com/tm-559-zay-shop
     <nav class="navbar navbar-expand-lg navbar-light shadow">
       <div class="container d-flex justify-content-between align-items-center">
         <a href="/">
-          <img src="../Img/login/logo.png" alt="logo" class="img-fluid w-50"
+          <img src="../../Img/login/logo.png" alt="logo" class="img-fluid w-50"
         /></a>
 
         <button
@@ -219,25 +219,22 @@ https://templatemo.com/tm-559-zay-shop
       <div class="container pb-5">
         <div class="row">
           <div class="col-lg-5 mt-5">
-            <div class="card mb-3">
-              <img
-                class="card-img img-fluid"
-                src="../Img/login/style6.webp"
-                alt="Card image cap"
-                id="product-detail"
-              />
-            </div>
+            
+             
+              <div class="card mb-3">
+                
+                <img
+                  class="img-fluid"  
+                  src="/<%= productDetail.image[0] %>"
+                  alt="Card image cap"
+                  id="product-detail"
+                />
+              </div>
+            
             <div class="row">
               <!--Start Controls-->
               <div class="col-1 align-self-center">
-                <a
-                  href="#multi-item-example"
-                  role="button"
-                  data-bs-slide="prev"
-                >
-                  <i class="text-dark fas fa-chevron-left"></i>
-                  <span class="sr-only">Previous</span>
-                </a>
+               
               </div>
               <!--End Controls-->
               <!--Start Carousel Wrapper-->
@@ -249,13 +246,14 @@ https://templatemo.com/tm-559-zay-shop
                 <!--Start Slides-->
                 <div class="carousel-inner product-links-wap" role="listbox">
                   <!--First slide-->
+                  
                   <div class="carousel-item active">
                     <div class="row">
                       <div class="col-4">
                         <a href="#">
                           <img
                             class="card-img img-fluid"
-                            src="../Img/login/style6.webp"
+                            src="/<%= productDetail.image[1] %>"
                             alt="Product Image 1"
                           />
                         </a>
@@ -264,7 +262,7 @@ https://templatemo.com/tm-559-zay-shop
                         <a href="#">
                           <img
                             class="card-img img-fluid"
-                            src="../Img/login/style6.webp"
+                            src="/<%= productDetail.image[2] %>"
                             alt="Product Image 2"
                           />
                         </a>
@@ -273,7 +271,7 @@ https://templatemo.com/tm-559-zay-shop
                         <a href="#">
                           <img
                             class="card-img img-fluid"
-                            src="../Img/login/style6.webp"
+                            src="/<%= productDetail.image[3] %>"
                             alt="Product Image 3"
                           />
                         </a>
@@ -283,7 +281,7 @@ https://templatemo.com/tm-559-zay-shop
                   <!--/.First slide-->
 
                   <!--Second slide-->
-                  <div class="carousel-item">
+                  <!-- <div class="carousel-item">
                     <div class="row">
                       <div class="col-4">
                         <a href="#">
@@ -313,11 +311,11 @@ https://templatemo.com/tm-559-zay-shop
                         </a>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                   <!--/.Second slide-->
 
                   <!--Third slide-->
-                  <div class="carousel-item">
+                  <!-- <div class="carousel-item">
                     <div class="row">
                       <div class="col-4">
                         <a href="#">
@@ -347,7 +345,7 @@ https://templatemo.com/tm-559-zay-shop
                         </a>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                   <!--/.Third slide-->
                 </div>
                 <!--End Slides-->
@@ -355,14 +353,14 @@ https://templatemo.com/tm-559-zay-shop
               <!--End Carousel Wrapper-->
               <!--Start Controls-->
               <div class="col-1 align-self-center">
-                <a
+                <!-- <a
                   href="#multi-item-example"
                   role="button"
                   data-bs-slide="next"
                 >
                   <i class="text-dark fas fa-chevron-right"></i>
                   <span class="sr-only">Next</span>
-                </a>
+                </a> -->
               </div>
               <!--End Controls-->
             </div>
@@ -371,55 +369,35 @@ https://templatemo.com/tm-559-zay-shop
           <div class="col-lg-7 mt-5">
             <div class="card">
               <div class="card-body">
-                <h1 class="h2">Active Wear</h1>
-                <p class="h3 py-2">$25.00</p>
+                <h1 class="h2"><%= productDetail.name %></h1>
+                <p class="h3 py-2"><%= productDetail.price %></p>
                 <p class="py-2">
                   <i class="fa fa-star text-warning"></i>
                   <i class="fa fa-star text-warning"></i>
                   <i class="fa fa-star text-warning"></i>
                   <i class="fa fa-star text-warning"></i>
                   <i class="fa fa-star text-secondary"></i>
-                  <span class="list-inline-item text-dark"
-                    >Rating 4.8 | 36 Comments</span
-                  >
+                  
                 </p>
                 <ul class="list-inline">
                   <li class="list-inline-item">
-                    <h6>Brand:</h6>
+                    <h6></h6>
                   </li>
                   <li class="list-inline-item">
-                    <p class="text-muted"><strong>Easy Wear</strong></p>
+                    <p class="text-muted"><strong><%= productDetail.name %></strong></p>
                   </li>
                 </ul>
 
                 <h6>Description:</h6>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod temp incididunt ut labore et dolore magna aliqua.
-                  Quis ipsum suspendisse. Donec condimentum elementum convallis.
-                  Nunc sed orci a diam ultrices aliquet interdum quis nulla.
+                  <%= productDetail.description %>
                 </p>
-                <ul class="list-inline">
-                  <li class="list-inline-item">
-                    <h6>Avaliable Color :</h6>
-                  </li>
-                  <li class="list-inline-item">
-                    <p class="text-muted"><strong>White / Black</strong></p>
-                  </li>
-                </ul>
+                
 
-                <h6>Specification:</h6>
-                <ul class="list-unstyled pb-3">
-                  <li>Lorem ipsum dolor sit</li>
-                  <li>Amet, consectetur</li>
-                  <li>Adipiscing elit,set</li>
-                  <li>Duis aute irure</li>
-                  <li>Ut enim ad minim</li>
-                  <li>Dolore magna aliqua</li>
-                  <li>Excepteur sint</li>
-                </ul>
+                <h6>Category</h6>
+                <p><%= productDetail.category %></p>
 
-                <form action="" method="GET">
+                <!-- <form action="" method="GET">
                   <input
                     type="hidden"
                     name="product-title"
@@ -475,7 +453,7 @@ https://templatemo.com/tm-559-zay-shop
                         </li>
                       </ul>
                     </div>
-                  </div>
+                  </div> -->
                   <div class="row pb-3">
                     <div class="col d-grid">
                       <button
@@ -659,15 +637,16 @@ https://templatemo.com/tm-559-zay-shop
     <!-- End Footer -->
 
     <!-- Start Script -->
-    <script src="assets/js/jquery-1.11.0.min.js"></script>
-    <script src="assets/js/jquery-migrate-1.2.1.min.js"></script>
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/templatemo.js"></script>
-    <script src="assets/js/custom.js"></script>
+    <script src="../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../js/jquery-migrate-1.2.1.min.js"></script>
+    <script src="../../js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/templatemo.js"></script>
+    <script src="../../js/custom.js"></script>
+    <script src="../../js/zoom.js"></script>
     <!-- End Script -->
 
     <!-- Start Slider Script -->
-    <script src="assets/js/slick.min.js"></script>
+    <script src="../../js/slick.min.js"></script>
     <script>
       $("#carousel-related-product").slick({
         infinite: true,

@@ -28,9 +28,28 @@ exports.getOtpPage = (req, res) => {
   res.render("home/otp");
 };
 // posting the login page after signing the user
-
+let flag= true
 try {
   exports.postOtpPage = async (req, res) => {
+    const check = await collection.find({},{email:1,_id:0})
+    console.log(check[0].email);
+    for(let i = 0; i<check.length;i++){
+      if(check[i].email === req.body.email){
+        console.log("running");
+        
+        
+         flag = false;
+        break;
+    } 
+  }
+  if(flag === false){
+    console.log("running2");
+    const successMessage = 'User already exists..'
+        
+        
+    res.redirect(`/signup?success=${encodeURIComponent(successMessage)}`)
+    return
+  } else {
     console.log(req.body.email, req.body.Phone, req.body.password);
     userDetails = {
       first_name: req.body.first_name,
@@ -64,9 +83,12 @@ try {
     });
 
     res.redirect("/signup/otp");
+  }
+    
+  
   };
 } catch {
-  res.redirect("/signup");
+  // res.redirect("/signup");
   console.log("error occured while entering the values in the database");
 }
 

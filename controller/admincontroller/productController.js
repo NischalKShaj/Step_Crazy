@@ -1,6 +1,7 @@
 // importing the required modules for the file
 const multer = require("multer");
 const collection = require("../../models/product/productDetails");
+const categoryCollection = require("../../models/category/categoryDetail");
 
 // storing the images in the database
 const storage = multer.diskStorage({
@@ -24,8 +25,9 @@ exports.getProductPage = async (req, res) => {
 };
 
 // for getting the product adding page
-exports.getAddProduct = (req, res) => {
-  res.render("admin/add_product");
+exports.getAddProduct = async (req, res) => {
+  const category = await categoryCollection.find();
+  res.render("admin/add_product", { category });
 };
 
 // for adding the values in the database
@@ -38,7 +40,6 @@ exports.postProductPage = async (req, res) => {
   }
 
   const productDetails = {
-    id: req.body.id,
     name: req.body.name,
     description: req.body.description,
     price: req.body.price,
@@ -52,7 +53,8 @@ exports.postProductPage = async (req, res) => {
 };
 
 // for getting the product edit page
-exports.getEditProduct = (req, res) => {
+exports.getEditProduct = async (req, res) => {
+  const category = await categoryCollection.find();
   let id = req.params.id;
   collection
     .findById(id)
@@ -60,7 +62,7 @@ exports.getEditProduct = (req, res) => {
       if (!product) {
         res.redirect("/admin/dashboard/product");
       } else {
-        res.render("admin/edit_product", { product: product });
+        res.render("admin/edit_product", { product: product, category });
       }
     })
     .catch((error) => {
@@ -76,7 +78,6 @@ exports.postUpdateProduct = async (req, res) => {
     const updateProduct = await collection.findByIdAndUpdate(
       id,
       {
-        id: req.body.id,
         name: req.body.name,
         description: req.body.description,
         price: req.body.price,
@@ -140,4 +141,26 @@ exports.putActivate = async (req, res) => {
     console.error("There was an error while activating the product", error);
     return res.status(505).json({ message: "Internal server error" });
   }
+};
+
+// for deleting the image from the product
+exports.deleteImage = async (req, res) => {
+  
+  try {
+    const image = req.params.image;
+    const ProductId = req.params.ProductId;
+    console.log(image);
+    console.log(ProductId);
+    const updatedProduct = await collection.findByIdAndUpdate(
+        ProductId,
+        { $pull: { image: image } },
+        { new: true }
+    );
+    console.log('Image removed successfully:', updatedProduct);
+    res.redirect(`/admin/dashboard/product/edit/${ProductId}`);
+} catch (error) {
+    console.error('Error removing image:', error);
+    res.status(500).send('Error removing image');
+} 
+
 };

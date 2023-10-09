@@ -13,7 +13,7 @@ const categoryController = require("../../controller/admincontroller/categoryCon
 router.get("/", homecontroller.getAdminPage);
 
 // router for admin logout
-router.post("/logout", homecontroller.postLoginPage);
+router.get("/logout", homecontroller.Logout);
 
 // router for getting the admin dashboard
 router.get("/dashboard", loginController.getAdminHome);
@@ -82,6 +82,9 @@ router.put(
   "/dashboard/product/activate/:productId",
   productController.putActivate
 );
+
+// router for deleting the product
+router.get("/dashboard/product/delete/:image/:ProductId", productController.deleteImage)
 
 // router for getting the category page
 router.get("/dashboard/category", categoryController.getCategoryPage);

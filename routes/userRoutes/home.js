@@ -18,7 +18,7 @@ router.get("/login", homeController.getLoginPage);
 router.post("/", loginController.postHomePage);
 
 // redirecting to the homepage afterlogout
-router.post("/logout", homeController.postLogout);
+router.get("/logout", homeController.Logout);
 
 // getting the signup page
 router.get("/signup", homeController.getSignupPage);
@@ -38,11 +38,11 @@ router.post("/checkOtp", signupController.checkOtp);
 // redirecting the homepage
 router.post("/", loginController.postHomePage);
 
+router.get("/product/details/:id", productController.getProductDetail);
 // rendering the product page
 router.get("/product", productController.getProductPage);
 
 // rendering the product details page
-router.get("/product/details", productController.getProductDetail);
 
 // exporting the module to app.js
 module.exports = router;

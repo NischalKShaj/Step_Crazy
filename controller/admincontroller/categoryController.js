@@ -14,16 +14,31 @@ exports.getCategoryAdd = (req, res) => {
 
 // for putting the value in the database and redirecting the category page
 exports.postCategory = async (req, res) => {
-  console.log(req.body.Type);
+  let category
+  try {
+    category = await collection.findOne({Type : req.body.Type})
+    console.log(category);
+    
+  } catch (error) {
+    res.redirect("/admin/dashboard/category/add")
+  }
+  
+  // console.log(category.Type);
+  // console.log(req.body.Type);
   const categoryDetails = {
-    Id: req.body.Id,
+    
     Type: req.body.Type,
-    Brand: req.body.Brand,
-    Gender: req.body.Gender,
+    
   };
-  console.log(categoryDetails);
-  await collection.insertMany([categoryDetails]);
-  res.redirect("/admin/dashboard/category");
+  if(category === null){
+    console.log(categoryDetails);
+    await collection.insertMany([categoryDetails]);
+    res.redirect("/admin/dashboard/category");
+  } else {
+    res.redirect("/admin/dashboard/category/add")
+  }
+  
+  
 };
 
 // for editing the value in the category
@@ -48,17 +63,18 @@ exports.getEditCategory = (req, res) => {
 exports.postCategoryUpdate = async (req, res) => {
   try {
     let id = req.params.id;
+
     const upateCategory = await collection.findByIdAndUpdate(id, {
-      Id: req.body.Id,
+      
       Type: req.body.Type,
-      Brand: req.body.Brand,
-      Gender: req.body.Gender,
+     
     });
+    
     console.log(upateCategory);
     res.redirect("/admin/dashboard/category");
   } catch (error) {
-    console.log("There is an error while updating the values....");
     res.redirect("/admin/dashboard/category/edit");
+    console.log("There is an error while updating the values....");
   }
 };
 

@@ -299,10 +299,8 @@ https://templatemo.com/tm-559-zay-shop
             <div class="col-md-4">
               <div class="card mb-4 product-wap rounded-0">
                 <div class="card rounded-0">
-                  <% if (singleProduct.image) { %> <%
-                  singleProduct.image.forEach((imageName) => { %>
-                  <img src="<%= imageName %>" />
-                  <% }) %> <% } %>
+                  <img src="<%= singleProduct.image[0] %>" />
+                  
                   <div
                     class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center"
                   >
@@ -310,21 +308,21 @@ https://templatemo.com/tm-559-zay-shop
                       <li>
                         <a
                           class="btn btn-success text-white"
-                          href="/product/details"
+                          href="/product/details/<%= singleProduct._id  %>"
                           ><i class="far fa-heart"></i
                         ></a>
                       </li>
                       <li>
                         <a
                           class="btn btn-success text-white mt-2"
-                          href="/product/details"
+                          href="/product/details/<%= singleProduct._id  %>"
                           ><i class="far fa-eye"></i
                         ></a>
                       </li>
                       <li>
                         <a
                           class="btn btn-success text-white mt-2"
-                          href="/product/details"
+                          href="/product/details/<%= singleProduct._id  %>"
                           ><i class="fas fa-cart-plus"></i
                         ></a>
                       </li>
@@ -332,7 +330,7 @@ https://templatemo.com/tm-559-zay-shop
                   </div>
                 </div>
                 <div class="card-body">
-                  <a href="/product/details" class="h3 text-decoration-none"
+                  <a href="/product/details/<%= singleProduct._id  %>" class="h3 text-decoration-none"
                     ><%= singleProduct.name %></a
                   >
                   <ul

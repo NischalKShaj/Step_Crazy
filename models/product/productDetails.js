@@ -2,10 +2,7 @@
 const mongoose = require("mongoose");
 
 const stepCrazy = new mongoose.Schema({
-  id: {
-    type: String,
-    required: true,
-  },
+  
   name: {
     type: String,
     required: true,
@@ -15,11 +12,11 @@ const stepCrazy = new mongoose.Schema({
     required: true,
   },
   price: {
-    type: String,
+    type: Number,
     required: true,
   },
   stock: {
-    type: String,
+    type: Number,
     required: true,
   },
   image: [
@@ -32,6 +29,7 @@ const stepCrazy = new mongoose.Schema({
     {
       type: String,
       required: true,
+
     },
   ],
   status: {

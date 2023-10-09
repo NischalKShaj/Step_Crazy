@@ -147,49 +147,55 @@ https://templatemo.com/tm-559-zay-shop
               </li>
             </ul>
           </div>
-          <div class="dropdown">
-            <button
-              class="btn btn-light dropdown-toggle"
-              type="button"
-              id="profileDropdownLogout"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <!-- Profile Icon -->
-              <i class="fas fa-user-circle fa-2x"></i>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-              <!-- Dropdown Items -->
-              <li>
-                <a class="login" href="/login">Login</a>
-              </li>
-              <li><hr class="dropdown-divider" /></li>
-              <li>
-                <a class="signup" href="/signup">Signup</a>
-              </li>
-            </ul>
-          </div>
+          <% if (user) { %>
+            <div id="loginDropdown" class="dropdown" style="margin-left: 20px;">
 
-          <div class="userProfile" style="display: none">
-            <button
-              class="btn btn-light dropdown-toggle"
-              type="button"
-              id="profileDropdownLogin"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <!-- Profile Icon -->
-              <i class="fas fa-user-circle fa-2x"></i>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-              <!-- Dropdown Items -->
-                           
-              <li>
-                <button class="logout" id="logout">Logout</button>
-              </li>
-            </ul>
-          </div>
-
+              <button
+              
+                class="btn btn-light dropdown-toggle"
+                type="button"
+                id="profileDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <!-- Profile Icon -->
+                <i  class="fas fa-user-circle fa-2x"><i style="margin-left: 10px; font-size: large;"><%= data.first_name %></i></i>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                <!-- Dropdown Items -->
+                <li style="text-align: center;">
+                  <a class="logout"  href="/logout" >Logout</a>
+                </li>
+                
+               
+              </ul>
+            </div>
+          <% } else {%>
+            <div id="loginDropdown" class="dropdown">
+              <button
+                class="btn btn-light dropdown-toggle"
+                type="button"
+                id="profileDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <!-- Profile Icon -->
+                <i class="fas fa-user-circle fa-2x"></i>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                <!-- Dropdown Items -->
+                <li id="loginItem">
+                  <a class="login" href="/login" onclick="toggleDropdown()">Login</a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li id="signupItem">
+                  <a class="signup" href="/signup">Signup</a>
+                </li>
+               
+              </ul>
+            </div>
+            <% } %>
+          <!-- navbar begins here -->
           <div class="navbar align-self-center d-flex">
             <div
               class="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3"
@@ -705,37 +711,26 @@ https://templatemo.com/tm-559-zay-shop
     <script src="../js/bootstrap.bundle.min.js"></script>
     <script src="../js/templatemo.js"></script>
     <script src="../js/custom.js"></script>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script> -->
     <script>
-      let isLoggedIn = false; // Replace with your actual login status
+      function toggleDropdown() {
+        const loginItem = document.getElementById("loginItem");
+        const logoutItem = document.getElementById("logoutItem");
+        const signupItem = document.getElementById("signupItem");
 
-      const dropdownLoggedOut = document.querySelector(".dropdown");
-      const dropdownLoggedIn = document.querySelector(".userProfile");
-
-      if (isLoggedIn) {
-        dropdownLoggedOut.style.display = "none";
-        dropdownLoggedIn.style.display = "block";
-      } else {
-        dropdownLoggedOut.style.display = "block";
-        dropdownLoggedIn.style.display = "none";
-      }
-
-      const logoutButton = document.getElementById("logout");
-      if (logoutButton) {
-        logoutButton.addEventListener("click", () => {
-          fetch("/logout", {
-            method: "post",
-          }).then((response) => {
-            if (response.ok) {
-              isLoggedIn = false;
-              console.log(isLoggedIn);
-              dropdownLoggedOut.style.display = "block";
-              dropdownLoggedIn.style.display = "none";
-              window.location.href = "/";
-            }
-          });
-        });
+        if (logoutItem.style.display === "none") {
+          loginItem.style.display = "none";
+          logoutItem.style.display = "block";
+          signupItem.style.display = "none";
+        } else {
+          loginItem.style.display = "block";
+          logoutItem.style.display = "none";
+          signupItem.style.display = "block";
+        }
       }
     </script>
+
     <!-- End Script -->
   </body>
 </html>

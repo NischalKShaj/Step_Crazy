@@ -4,29 +4,13 @@ const mongoose = require("mongoose");
 
 // declaring the schema for the collection
 const stepCrazy = new mongoose.Schema({
-  Id:{
-    type: String,
-    requried: true,
-  },
-  Type: [
+  Type: 
     {
       type: String,
       required: true,
+      
     },
-  ],
-  Brand: [
-    {
-      type: String,
-      required: true,
-    },
-  ],
-  Gender: [
-    {
-      type: String,
-      enum: ["Male", "Female"],
-      required: true,
-    },
-  ],
+  
 });
 
 // declaring the collection for the module

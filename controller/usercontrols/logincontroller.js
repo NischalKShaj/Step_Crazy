@@ -13,11 +13,17 @@ exports.postHomePage = async (req, res) => {
       email: req.body.email,
       password: req.body.password,
     });
+    
     console.log(data);
-    if (data.email === req.body.email && data.password === req.body.password) {
+    if (data.email === req.body.email && data.password === req.body.password && data.blocked === false) {
+      req.session.user = req.body.email;
       res.redirect("/");
+    } else {
+      const message = "Invalid username or password"
+      res.redirect(`/login?success=${encodeURIComponent(message)}`);
     }
   } catch {
-    res.redirect("/login");
+    const message = "Invalid username or password"
+      res.redirect(`/login?success=${encodeURIComponent(message)}`);
   }
 };

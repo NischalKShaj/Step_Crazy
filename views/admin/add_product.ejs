@@ -40,16 +40,7 @@
                 id="add-form"
                 enctype="multipart/form-data"
               >
-                <div class="form-outline mb-2">
-                  <label for="id">Id</label>
-                  <input
-                    type="text"
-                    name="id"
-                    class="form-control form-control-lg"
-                    placeholder="Enter the id of the product"
-                    required
-                  />
-                </div>
+                
                 <div class="form-outline mb-2">
                   <label for="name">Name</label>
                   <input
@@ -74,7 +65,8 @@
                 <div class="form-outline mb-2">
                   <label for="price">Price</label>
                   <input
-                    type="text"
+                  min="1"
+                    type="number"
                     name="price"
                     class="form-control form-control-lg"
                     placeholder="Enter the price of the product"
@@ -84,7 +76,8 @@
                 <div class="form-outline mb-2">
                   <label for="stock">Stock</label>
                   <input
-                    type="text"
+                  min="1"
+                    type="number"
                     name="stock"
                     class="form-control form-control-lg"
                     placeholder="Enter the number of products available"
@@ -92,18 +85,21 @@
                   />
                 </div>
                 <div class="form-outline mb-2">
-                  <label for="category">Category</label>
-                  <input
-                    type="text"
-                    name="category"
-                    class="form-control form-control-lg"
-                    placeholder="Enter the category of the product"
-                    required
-                  />
+                  
+                 
+                    <label for="category" class="form-label">Category</label>
+                    <select name="category" id="Kategori" class="ms-1 d-block w-100" required>
+                        <% category.forEach((row) => { %>
+                            <option value="<%= row.Type %>"><%= row.Type %></option>
+                        <% }); %>
+                    </select>
+                
                 </div>
                 <div class="form-outline mb-2">
                   <label for="image">Select Image</label>
                   <input
+                    multiple
+                    accept="image/*"
                     type="file"
                     name="image"
                     class="form-control form-control-lg"
