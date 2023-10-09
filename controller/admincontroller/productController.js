@@ -109,7 +109,7 @@ exports.putDeactivate = async (req, res) => {
 
     const deactivate = await collection.findByIdAndUpdate(
       productId,
-      { status: false },
+      {$set:{ status: false }},
       { new: true }
     );
     if (!deactivate) {
@@ -129,7 +129,7 @@ exports.putActivate = async (req, res) => {
     const productId = req.params.productId;
     const activate = await collection.findByIdAndUpdate(
       productId,
-      { status: true },
+      {$set:{ status: true }},
       { new: true }
     );
     if (!activate) {
