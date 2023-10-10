@@ -34,6 +34,5 @@ exports.postLoginPage = (req, res) => {
 exports.Logout = (req, res) => {
   req.session.user = null;
   res.redirect("/")
-
   console.log("Logout successful");
 };

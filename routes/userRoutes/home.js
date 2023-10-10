@@ -4,6 +4,7 @@ const homeController = require("../../controller/usercontrols/homecontroller");
 const signupController = require("../../controller/usercontrols/signupcontroller");
 const loginController = require("../../controller/usercontrols/logincontroller");
 const productController = require("../../controller/usercontrols/productController");
+const ProfileController = require("../../controller/usercontrols/profileController");
 
 // setting the router for this page
 const router = express.Router();
@@ -38,11 +39,17 @@ router.post("/checkOtp", signupController.checkOtp);
 // redirecting the homepage
 router.post("/", loginController.postHomePage);
 
-router.get("/product/details/:id", productController.getProductDetail);
 // rendering the product page
 router.get("/product", productController.getProductPage);
 
 // rendering the product details page
+router.get("/product/details/:id", productController.getProductDetail);
+
+// rendering the user profile page
+router.get("/profile", ProfileController.getProfilePage);
+
+// rendering the page for adding the user
+router.get("/profile/add-adderss", ProfileController.getAddressAdd);
 
 // exporting the module to app.js
 module.exports = router;

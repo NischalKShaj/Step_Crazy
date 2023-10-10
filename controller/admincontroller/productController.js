@@ -32,7 +32,7 @@ exports.getAddProduct = async (req, res) => {
 
 // for adding the values in the database
 exports.postProductPage = async (req, res) => {
-  console.log(req.body.id, req.body.name, req.body.description, req.body.price);
+  console.log( req.body.name, req.body.description, req.body.price);
   const imageArray = [];
 
   for (const file of req.files) {
