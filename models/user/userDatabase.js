@@ -32,6 +32,31 @@ const stepCrazy = new mongoose.Schema({
     required: true,
     default: Date.now,
   },
+  address: [
+    {
+      pincode: {
+        type: String,
+        required: true,
+      },
+      locality: {
+        type: String,
+        required: true,
+      },
+      fullAddress: {
+        type: String,
+        required: true,
+      },
+      city: {
+        type: String,
+        required: true,
+      },
+      state:{
+        type: String,
+        required: true,
+      },
+
+    },
+  ],
   blocked: {
     type: Boolean,
     default: false,

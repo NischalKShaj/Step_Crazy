@@ -22,7 +22,7 @@
             
           </a> -->
           <a href="/">
-            <img src="../Img/login/logo.png" alt="logo" class="img-fluid w-50"
+            <img src="../../Img/login/logo.png" alt="logo" class="img-fluid w-50"
           /></a>
           <button
             class="navbar-toggler border-0"
@@ -117,7 +117,7 @@
                   class="rounded-circle img-fluid"
                   style="width: 150px"
                 />
-                <h5 class="my-3"><%= userProfile.first_name %></h5>
+                <h5 class="my-3"><%= user.first_name %></h5>
                 <p class="text-muted mb-1">Full Stack Developer</p>
                 <p class="text-muted mb-4">Bay Area, San Francisco, CA</p>
                 
@@ -141,7 +141,7 @@
                     class="list-group-item d-flex justify-content-between align-items-center p-3"
                   >
                     <i class="fab fa-github fa-lg" style="color: #333333"></i>
-                    <a class="text text-decoration-none" href="/profile/edit-profile/<%= userProfile._id %>">Edit</a>
+                    <a class="text text-decoration-none" href="/profile/edit-profile/<%= user._id %>">Edit</a>
                   </li>
                   <li
                     class="list-group-item d-flex justify-content-between align-items-center p-3"
@@ -174,12 +174,22 @@
           <div class="col-lg-8">
             <div class="card mb-4">
               <div class="card-body">
-                <div class="row">
+                  <form action="/profile/editProfile/<%= user._id %>" method="post">
+                    <div class="row">
                   <div class="col-sm-3">
                     <p class="mb-0">Name</p>
                   </div>
                   <div class="col-sm-9">
-                    <p class="text-muted mb-0"><%= userProfile.first_name %></p>
+                    
+                      <input
+                        type="text"
+                        id="first_name"
+                        class="form-control"
+                        name="first_name"
+                        value="<%= user.first_name %>"
+                        required
+                      />
+                    
                   </div>
                 </div>
                 <hr />
@@ -188,7 +198,14 @@
                     <p class="mb-0">Email</p>
                   </div>
                   <div class="col-sm-9">
-                    <p class="text-muted mb-0"><%= userProfile.email %></p>
+                    <input
+                        type="email"
+                        id="email"
+                        class="form-control"
+                        name="email"
+                        value="<%= user.email %>"
+                        required
+                      />
                   </div>
                 </div>
                 <hr />
@@ -197,7 +214,14 @@
                     <p class="mb-0">Phone</p>
                   </div>
                   <div class="col-sm-9">
-                    <p class="text-muted mb-0"><%= userProfile.phone %></p>
+                    <input
+                        type="text"
+                        id="phone"
+                        class="form-control"
+                        name="phone"
+                        value="<%= user.phone %>"
+                        required
+                      />
                   </div>
                 </div>
                 <hr />
@@ -206,13 +230,44 @@
                     <p class="mb-0">Gender</p>
                   </div>
                   <div class="col-sm-9">
-                    <p class="text-muted mb-0"><%= userProfile.gender %></p>
+                    <div>
+                        <input
+                          type="radio"
+                          id="Male"
+                          name="gender"
+                          value="Male"
+                          class="form-check-input"
+                          required
+                        />
+                        <label class="form-check-label" for="Male"
+                          >Male</label
+                        >
+                      </div>
+                      <div>
+                        <input
+                          type="radio"
+                          id="Female"
+                          name="gender"
+                          value="Female"
+                          class="form-check-input"
+                          required
+                        />
+                        <label class="form-check-label" for="Female"
+                          >Female</label
+                        >
+                      </div>
                   </div>
                 </div>
+                <div class="container mt-5">
+                    <button class="btn btn-primary" type="submit">Update</button>
+                </div>
                 <hr />
+                
               
               </div>
+            </form>
             </div>
+            
             <div class="row">
               <div class="col-md-6">
                 <div class="card mb-4 mb-md-0">
