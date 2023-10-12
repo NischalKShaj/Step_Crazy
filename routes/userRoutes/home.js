@@ -82,5 +82,8 @@ router.post("/profile/editProfile/:id", ProfileController.postProfileEdit);
 // router for adding new product to the cart
 router.get("/product/cart/:id", cartController.addProducts);
 
+// router for increasing and decreasing the stock
+router.put("/product/cart/update/:productId", cartController.putStock);
+
 // exporting the module to app.js
 module.exports = router;

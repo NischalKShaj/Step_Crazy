@@ -15,13 +15,10 @@ const stepCrazy = new mongoose.Schema({
     ref: "product",
     required: true,
   },
-  stock: {
+  quantity: {
     type: Number,
-    default: 1,
-  },
-  price: {
-    type: Number,
-    min: 1,
+    default: "1",
+    requied: true,
   },
 });
 

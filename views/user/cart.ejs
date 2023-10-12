@@ -11,6 +11,11 @@
       integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
       crossorigin="anonymous"
     />
+    <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+/>
+
   </head>
   <!-- header for the user profile -->
   <nav class="navbar navbar-expand-lg navbar-light shadow">
@@ -115,45 +120,50 @@
                         <h1 class="fw-bold mb-0 text-black">Shopping Cart</h1>
                       </div>
                       <hr class="my-4" />
-
+                      <% cartPage.forEach((cartItem) => { %>
                       <div
                         class="row mb-4 d-flex justify-content-between align-items-center"
                       >
                         <div class="col-md-2 col-lg-2 col-xl-2">
                           <img
-                            src=""
+                            src="/<%= cartItem.product.image[0] %>"
                             class="img-fluid rounded-3"
                             alt="Cotton T-shirt"
                           />
                         </div>
-                        <div class="col-md-3 col-lg-3 col-xl-3">
-                          <h6 class="text-muted"></h6>
-                          <h6 class="text-black mb-0">
-                            
-                          </h6>
-                        </div>
+                        
+                          <div class="col-md-3 col-lg-3 col-xl-3">
+                            <h6 class="text-muted"><%= cartItem.product.name %></h6>
+                            <h6 class="text-muted">stock availability:<%= cartItem.product.stock %></h6>
+                            <h6 class="text-black mb-0"> &#8377 <%= cartItem.product.price %></h6>
+                            <!-- Add more details as needed -->
+                          </div>
+                        
+                        
                         <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
                           <button
-                            class="btn btn-link px-2"
-                            onclick="this.parentNode.querySelector('input[type=number]').stepDown()"
+                            class="btn btn-link px-2 decrement-button"
+                            data-product-id="<%= cartItem.product._id %>"
+                            
                           >
-                            <i class="fas fa-minus"></i>
+                          <i class="fas fa-minus"></i>
                           </button>
 
                           <input
-                            id="form1"
-                            min="0"
+                            id="quantityInput_<%= cartItem.product._id %>"
+                            min="1"
                             name="quantity"
-                            value="1"
+                            value="<%= cartItem.quantity %>"
                             type="number"
                             class="form-control form-control-sm"
                           />
 
                           <button
-                            class="btn btn-link px-2"
-                            onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
+                            class="btn btn-link px-2 increment-button"
+                            data-product-id="<%= cartItem.product._id %>"
+                            
                           >
-                            <i class="fas fa-plus"></i>
+                          <i class="fas fa-plus"></i>
                           </button>
                         </div>
                         <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
@@ -167,18 +177,18 @@
                       </div>
 
                       <hr class="my-4" />
-
+                      <% }); %>
                       <div class="pt-5">
                         <h6 class="mb-0">
                           <a href="/product" class="text-body"
                             ><i class="fas fa-long-arrow-alt-left me-2"></i>Back
-                            to shop</a
-                          >
+                            to shop</a>
+                          
                         </h6>
                       </div>
                     </div>
                   </div>
-                  <!-- <div class="col-lg-4 bg-grey">
+                  <div class="col-lg-4 bg-grey">
                     <div class="p-5">
                       <h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
                       <hr class="my-4" />
@@ -229,7 +239,7 @@
                         Register
                       </button>
                     </div>
-                  </div> -->
+                  </div>
                 </div>
               </div>
             </div>
@@ -237,5 +247,87 @@
         </div>
       </div>
     </section>
+    <!-- script tag for handling the incremental and decremental of the products -->
+    <script>
+      // fuction to increment the quantity
+      function incrementQuantity(productId){
+        const quantityInput = document.getElementById(`quantityInput_${productId}`);
+        const currentQuantity = parseInt(quantityInput.value);
+        
+        
+        quantityInput.value = currentQuantity + 1
+
+        // fetching the request to update the cart in the server
+        fetch(`/product/cart/update/${productId}?increment=true`,{
+          method: "put"
+        })
+        .then((response)=>{
+          if(response.ok){
+            console.log("product quantity increased successfully");
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+            const initialQuantity = parseInt(document.getElementById(`quantityInput_${productId}`).value);
+          } else {
+            console.log("Response not ok:", response);
+          }
+        })
+        
+        .catch((error)=>{
+          console.error("error while increasing the product");
+        })
+        
+      }
+
+      // function to decrement the quantity
+      function decrementQuantity(productId){
+        const quantityInput = document.getElementById(`quantityInput_${productId}`);
+        const currentQuantity = parseInt(quantityInput.value);
+        if(currentQuantity>1){
+          
+          quantityInput.value = currentQuantity - 1;
+          
+          // fetching the request to update the cart in the server
+          fetch(`/product/cart/update/${productId}?decrement=false`,{
+            method: "put"
+          })
+          .then((response)=>{
+            if(response.ok){
+              console.log("product quantity decreased successfully");
+              setTimeout(()=>{
+
+                 window.location.reload()
+              },1000)
+            } else {
+              console.log("Response not ok:", response);
+            }
+          })
+          .catch((error)=>{
+            console.error("error while decreasing the quantity");
+          })
+        }
+        const initialQuantity = parseInt(document.getElementById(`quantityInput_${productId}`).value);
+      }
+
+      // adding event listners to all the buttons
+      const incrementButton = document.querySelectorAll(".increment-button");
+      const decrementButton = document.querySelectorAll(".decrement-button");
+
+      incrementButton.forEach((button) => {
+        const productId = button.getAttribute("data-product-id");
+        button.addEventListener("click", () => {
+          incrementQuantity(productId);
+        });
+      });
+
+      decrementButton.forEach((button) => {
+        const productId = button.getAttribute("data-product-id");
+        button.addEventListener("click", () => {
+          decrementQuantity(productId)
+        })
+      })
+      
+      
+    </script>
   </body>
 </html>
