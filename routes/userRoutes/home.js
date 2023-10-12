@@ -70,14 +70,17 @@ router.get("/profile/add-adderss", ProfileController.getAddressAdd);
 // router for showing the users address
 router.get("/profile/address", ProfileController.getAddressPage);
 
+// router for editing the address of the user
+router.get("/profile/address/edit/:id", ProfileController.getAddressEdit);
+
 // router for showing the eidt user profile
 router.get("/profile/edit-profile/:id", ProfileController.getProfileEdit);
 
 // router for updating the user profile
 router.post("/profile/editProfile/:id", ProfileController.postProfileEdit);
 
-// router for cart
-router.get("/product/cart", cartController.getCartPage);
+// router for adding new product to the cart
+router.get("/product/cart/:id", cartController.addProducts);
 
 // exporting the module to app.js
 module.exports = router;

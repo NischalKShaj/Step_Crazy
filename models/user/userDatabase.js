@@ -50,11 +50,10 @@ const stepCrazy = new mongoose.Schema({
         type: String,
         required: true,
       },
-      state:{
+      state: {
         type: String,
         required: true,
       },
-
     },
   ],
   blocked: {
@@ -66,5 +65,5 @@ const stepCrazy = new mongoose.Schema({
 // declaring the collection name
 const collection = new mongoose.model("userCollection", stepCrazy);
 
-// exporting the database to app.js
+// exporting the database 
 module.exports = collection;

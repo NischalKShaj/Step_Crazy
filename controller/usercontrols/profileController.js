@@ -1,4 +1,4 @@
-// ==================>Profile for the user <===============
+// ==================> Profile for the user <===============
 // modules required for the user profile
 const userCollection = require("../../models/user/userDatabase");
 
@@ -85,4 +85,22 @@ exports.postProfileEdit = async (req, res) => {
     res.redirect("/profile/edit-profile/");
     console.log("There is an error while updating the values....");
   }
+};
+
+// router for editing the address of the user
+exports.getAddressEdit = (req, res) => {
+  let id = req.params.id;
+  userCollection
+    .findById(id)
+    .then((address) => {
+      if (!address) {
+        res.redirect("/profile");
+      } else {
+        res.render("user/editAddress", { address: address });
+      }
+    })
+    .catch((error) => {
+      console.log("Error finding the user....");
+      res.redirect("/profile");
+    });
 };
