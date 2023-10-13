@@ -4,6 +4,7 @@
 const mongoose = require("mongoose");
 const cartCollection = require("../../models/cart/cartDetail");
 const productCollection = require("../../models/product/productDetails");
+// const userCollection = require("../../models/user/userDatabase");
 
 // for saving the products in the cart
 const User = mongoose.model("userCollection"); // Replace "User" with your actual model name
@@ -25,7 +26,6 @@ exports.addProducts = async (req, res) => {
       const existingProduct = await cartCollection.findOne({
         user: userId,
         product: productId,
-       
       });
       // if the product is already available
       if (existingProduct) {
@@ -35,7 +35,7 @@ exports.addProducts = async (req, res) => {
           // Create a new cart item
           user: userId,
           product: productId,
-          
+          quantity: req.body.quantity,
         });
 
         await cartItem.save();
@@ -49,7 +49,7 @@ exports.addProducts = async (req, res) => {
           populate: { path: "image" }, // Assuming 'image' is a field in your product collection
         })
         .exec();
-      console.log(cartPage, "run");
+      // console.log(cartPage, "run");
       res.render("user/cart", { cartPage });
     } else {
       console.error("User not found for email: " + userEmail);
@@ -65,9 +65,14 @@ exports.addProducts = async (req, res) => {
 async function increamentQuantity(productId) {
   try {
     const product = await productCollection.findById(productId);
+    // const user = await userCollection.findById(userId);
     if (product) {
       product.stock -= 1;
       await product.save();
+      const cartItem = await cartCollection.findOne({
+        user: userId,
+        product: productId,
+      });
     }
   } catch (error) {
     console.error("Error while decreasing the stock", error);
@@ -75,12 +80,16 @@ async function increamentQuantity(productId) {
 }
 
 // function to decrease the quantity and increase the stock
-async function decrementQuantity(productId) {
+async function decrementQuantity(productId, userId) {
   try {
     const product = await productCollection.findById(productId);
     if (product) {
       product.stock += 1;
       await product.save();
+      const cartItem = await cartCollection.findOne({
+        user: userId,
+        product: productId,
+      });
     }
   } catch (error) {
     console.error("Error while increasing the stock", error);
@@ -90,21 +99,38 @@ async function decrementQuantity(productId) {
 // router for increasing and decreasing the product and decreasing the stock
 exports.putStock = async (req, res) => {
   const productId = req.params.productId;
-  const increment = req.query.increment;
-  const decrement = req.query.decrement;
-  console.log(increment);
-  console.log(decrement);
+  const { plusCount, minusCount, cartId } = req.body;
+  console.log(plusCount, minusCount, cartId);
 
-  if (increment === "true") {
-    await increamentQuantity(productId);
-    console.log("stock decreased successfully");
-  } else if (decrement === "false") {
-    await decrementQuantity(productId);
-    
-    console.log("stock increased");
+  // Check if plusCount is defined
+  if (plusCount !== undefined) {
+    // Find the cart item by its _id
+    const existingCartItem = await cartCollection.findById(cartId);
+    if (existingCartItem) {
+      // Update the quantity
+      existingCartItem.quantity = plusCount;
+      increamentQuantity(productId);
+      // Save the updated cart item
+      await existingCartItem.save();
+
+      console.log("Updated quantity for cart item:", existingCartItem);
+    } else {
+      console.error("Cart item not found.");
+    }
+  } else if (minusCount !== undefined) {
+    const existingCartItem = await cartCollection.findById(cartId);
+    if (existingCartItem) {
+      // Update the quantity
+      existingCartItem.quantity = minusCount;
+      decrementQuantity(productId);
+      // Save the updated cart item
+      await existingCartItem.save();
+
+      console.log("Updated quantity for cart item:", existingCartItem);
+    } else {
+      console.error("Cart item not found.");
+    }
   }
-
-  res.status(200).json({ message: "Quantity updated successfully" });
 };
 
 // route for the cart page uncomment at the time of redirecting

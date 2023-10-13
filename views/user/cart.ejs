@@ -121,9 +121,11 @@
                       </div>
                       <hr class="my-4" />
                       <% cartPage.forEach((cartItem) => { %>
+                        
                       <div
                         class="row mb-4 d-flex justify-content-between align-items-center"
                       >
+                      
                         <div class="col-md-2 col-lg-2 col-xl-2">
                           <img
                             src="/<%= cartItem.product.image[0] %>"
@@ -131,9 +133,9 @@
                             alt="Cotton T-shirt"
                           />
                         </div>
-                        
+                                        
                           <div class="col-md-3 col-lg-3 col-xl-3">
-                            <h6 class="text-muted"><%= cartItem.product.name %></h6>
+                            <h6 class="text-muted"><%= cartItem.product.name %></h6> 
                             <h6 class="text-muted">stock availability:<%= cartItem.product.stock %></h6>
                             <h6 class="text-black mb-0"> &#8377 <%= cartItem.product.price %></h6>
                             <!-- Add more details as needed -->
@@ -144,11 +146,13 @@
                           <button
                             class="btn btn-link px-2 decrement-button"
                             data-product-id="<%= cartItem.product._id %>"
+                            data-user-id="<%= cartItem.user._id %>"
+                            cart-id = "<%= cartItem._id %>"
                             
                           >
                           <i class="fas fa-minus"></i>
                           </button>
-
+                          
                           <input
                             id="quantityInput_<%= cartItem.product._id %>"
                             min="1"
@@ -156,11 +160,13 @@
                             value="<%= cartItem.quantity %>"
                             type="number"
                             class="form-control form-control-sm"
+                            readonly
                           />
 
                           <button
                             class="btn btn-link px-2 increment-button"
                             data-product-id="<%= cartItem.product._id %>"
+                            cart-id = "<%= cartItem._id %>"
                             
                           >
                           <i class="fas fa-plus"></i>
@@ -249,24 +255,28 @@
     </section>
     <!-- script tag for handling the incremental and decremental of the products -->
     <script>
+      let plusCount;
+      let minusCount;
+
       // fuction to increment the quantity
-      function incrementQuantity(productId){
+      function incrementQuantity(productId,userId,cartId){
         const quantityInput = document.getElementById(`quantityInput_${productId}`);
         const currentQuantity = parseInt(quantityInput.value);
-        
+        console.log(cartId);
         
         quantityInput.value = currentQuantity + 1
-
+        plusCount = quantityInput.value;
+        console.log(quantityInput.value);
         // fetching the request to update the cart in the server
-        fetch(`/product/cart/update/${productId}?increment=true`,{
-          method: "put"
+        fetch(`/product/cart/update/${productId}`,{
+          method: "post",
+          headers: {"content-Type":'application/json'},
+          body: JSON.stringify({plusCount,minusCount,cartId})
         })
         .then((response)=>{
           if(response.ok){
             console.log("product quantity increased successfully");
-            setTimeout(() => {
-              window.location.reload();
-            }, 2000);
+            
             const initialQuantity = parseInt(document.getElementById(`quantityInput_${productId}`).value);
           } else {
             console.log("Response not ok:", response);
@@ -280,25 +290,24 @@
       }
 
       // function to decrement the quantity
-      function decrementQuantity(productId){
+      function decrementQuantity(productId,userId,cartId){
         const quantityInput = document.getElementById(`quantityInput_${productId}`);
         const currentQuantity = parseInt(quantityInput.value);
         if(currentQuantity>1){
           
           quantityInput.value = currentQuantity - 1;
-          
+          minusCount = quantityInput.value;
+          console.log(quantityInput.value);
           // fetching the request to update the cart in the server
-          fetch(`/product/cart/update/${productId}?decrement=false`,{
-            method: "put"
+          fetch(`/product/cart/update/${productId}`,{
+            method: "post",
+            headers: {"content-Type":'application/json'},
+            body: JSON.stringify({plusCount,minusCount,cartId})
           })
           .then((response)=>{
             if(response.ok){
               console.log("product quantity decreased successfully");
-              setTimeout(()=>{
-
-                 window.location.reload()
-              },1000)
-            } else {
+              
               console.log("Response not ok:", response);
             }
           })
@@ -315,18 +324,24 @@
 
       incrementButton.forEach((button) => {
         const productId = button.getAttribute("data-product-id");
+        const userId = button.getAttribute("data-user-id");
+        const cartId = button.getAttribute("cart-id");
+        console.log(cartId);
         button.addEventListener("click", () => {
-          incrementQuantity(productId);
+          incrementQuantity(productId,userId,cartId);
         });
       });
 
       decrementButton.forEach((button) => {
         const productId = button.getAttribute("data-product-id");
+        const userId = button.getAttribute("data-user-id");
+        const cartId = button.getAttribute("cart-id");
         button.addEventListener("click", () => {
-          decrementQuantity(productId)
+          decrementQuantity(productId,userId,cartId)
         })
       })
       
+
       
     </script>
   </body>
