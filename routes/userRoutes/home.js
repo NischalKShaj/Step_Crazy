@@ -6,6 +6,7 @@ const loginController = require("../../controller/usercontrols/logincontroller")
 const productController = require("../../controller/usercontrols/productController");
 const ProfileController = require("../../controller/usercontrols/profileController");
 const cartController = require("../../controller/usercontrols/cartController");
+const orderController = require("../../controller/usercontrols/orderController");
 
 // setting the router for this page
 const router = express.Router();
@@ -87,6 +88,9 @@ router.get("/product/cart/:id", cartController.addProducts);
 
 // router for increasing and decreasing the stock
 router.post("/product/cart/update/:productId", cartController.putStock);
+
+// router for posting the order page
+router.get("/product/order", orderController.postOrderPage);
 
 // exporting the module to app.js
 module.exports = router;

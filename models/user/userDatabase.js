@@ -56,6 +56,15 @@ const stepCrazy = new mongoose.Schema({
       },
     },
   ],
+  order:[
+    {
+      cart:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"cart",
+        required:true,
+      },
+    },
+  ],
   blocked: {
     type: Boolean,
     default: false,

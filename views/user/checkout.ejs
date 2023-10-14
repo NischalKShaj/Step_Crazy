@@ -109,142 +109,222 @@
     <!-- content for the checkout page starts here -->
 
     <section class="checkout spad">
-        <div class="container">
-            <div class="row">
+      <div class="container">
+        <div class="row"></div>
+        <div class="row">
+          <div class="col-lg-8">
+            <h2 class="mt-4">Billing detail</h2>
+            <div class="form-check">
+              <div class="card" style="max-height: 600px; overflow-y: auto">
+                <div class="card">
+                  <div
+                    style="background-color: rgb(15, 110, 253)"
+                    class="card-header text-light"
+                  >
+                    Address
+                  </div>
+                  <div class="card-body">
+                    <form class="row g-3">
+                      <div style="margin-bottom: 30px" class="col-12">
+                        <label for="address" class="form-label">Address</label>
+                        <input
+                          value="<%= useAdd.address[0].fullAddress %>"
+                          type="text"
+                          class="form-control"
+                          id="address"
+                          readonly
+                        />
+                      </div>
+
+                      <div class="col-md-6">
+                        <label for="locality" class="form-label"
+                          >Locality</label
+                        >
+                        <input
+                          value="<%= useAdd.address[0].locality %>"
+                          type="text"
+                          class="form-control"
+                          id="locality"
+                          readonly
+                        />
+                      </div>
+                      <div class="col-md-3">
+                        <label for="state" class="form-label">State</label>
+                        <input
+                          value="<%= useAdd.address[0].state %>"
+                          type="text"
+                          class="form-control"
+                          id="state"
+                          readonly
+                        />
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="pincode" class="form-label">pincode</label>
+                        <input
+                          value="<%= useAdd.address[0].pincode %>"
+                          type="text"
+                          class="form-control"
+                          id="pincode"
+                          readonly
+                        />
+                      </div>
+                    </form>
+                    <input
+                      style="margin-left: 1px"
+                      class="form-check-input"
+                      type="radio"
+                      name="flexRadioDefault"
+                      id="flexRadioDefault"
+                      data-address=""
+                    />
+                    <label
+                      style="margin-left: 20px"
+                      class="form-check-label"
+                      for="flexRadioDefault"
+                    >
+                      Select
+                    </label>
+                  </div>
+                </div>
+
+                <div class="card-header"></div>
+              </div>
             </div>
-            <div class="row">
-                <div class="col-lg-8">
-                   
-                     
-                
-                    <h2 class="mt-4">Billing detail</h2>
-                    <div class="form-check">
-                        <div class="card" style="max-height: 600px; overflow-y: auto;">
-                            
-                                
-                                    <div class="card">
-                                        <div style="background-color: rgb(15, 110, 253);" class="card-header text-light">
-                                            Address
-                                        </div>
-                                        <div class="card-body">
-    
-                                            <form class="row g-3">
-                                                <div style="margin-bottom: 30px;" class="col-12">
-                                                    <label for="address" class="form-label">Address</label>
-                                                    <input value="<%= useAdd.address[0].fullAddress %>" type="text" class="form-control"
-                                                        id="address" readonly>
-                                                </div>
-    
-                                                <div class="col-md-6">
-                                                    <label for="locality" class="form-label">Locality</label>
-                                                    <input value="<%= useAdd.address[0].locality %>" type="text" class="form-control"
-                                                        id="locality" readonly>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <label for="state" class="form-label">State</label>
-                                                    <input value="<%= useAdd.address[0].state %>" type="text" class="form-control"
-                                                        id="state" readonly>
-                                                </div>
-    
-                                                <div class="col-md-3">
-                                                    <label for="pincode" class="form-label">pincode</label>
-                                                    <input value="<%= useAdd.address[0].pincode %>" type="text" class="form-control"
-                                                        id="pincode" readonly>
-                                                </div>
-                                            </form>
-                                            <input style="margin-left: 1px;" class="form-check-input" type="radio"
-                                                name="flexRadioDefault" id="flexRadioDefault"
-                                                data-address="">
-                                            <label style="margin-left: 20px;" class="form-check-label"
-                                                for="flexRadioDefault">
-                                                Select
-                                            </label>
-                                        </div>
-                                    </div>
-                                
-    
-                            <div class="card-header"></div>
-                        </div>
-                    </div>
-                   
-                    <button style="margin-top: 20px;" type="button" class="btn btn-primary" data-toggle="modal"
-                        data-target="#exampleModal" data-whatever="@mdo">Add New Address</button>
-    
-                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">New Address</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <form class="row g-3">
-                                        <div style="margin-bottom: 30px;" class="col-12">
-                                            <label for="inputAddress" class="form-label">Address</label>
-                                            <input type="text" class="form-control" id="inputAddress"
-                                                placeholder="1234 Main St" required>
-                                        </div>
-    
-                                        <div class="col-md-6">
-                                            <label for="inputCity" class="form-label">City</label>
-                                            <input type="text" class="form-control" id="inputCity" required>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label for="inputCity" class="form-label">State</label>
-                                            <input type="text" class="form-control" id="inputState" required>
-                                        </div>
-    
-                                        <div class="col-md-3">
-                                            <label for="inputZip" class="form-label">Zip</label>
-                                            <input type="text" class="form-control" id="inputZip" required>
-                                        </div>
-    
-                                        <!-- <div style="margin-top: 20px;" class="col-12">
+
+            <button
+              style="margin-top: 20px"
+              type="button"
+              class="btn btn-primary"
+              data-toggle="modal"
+              data-target="#exampleModal"
+              data-whatever="@mdo"
+            >
+              Add New Address
+            </button>
+
+            <div
+              class="modal fade"
+              id="exampleModal"
+              tabindex="-1"
+              role="dialog"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                      New Address
+                    </h5>
+                    <button
+                      type="button"
+                      class="close"
+                      data-dismiss="modal"
+                      aria-label="Close"
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form class="row g-3">
+                      <div style="margin-bottom: 30px" class="col-12">
+                        <label for="inputAddress" class="form-label"
+                          >Address</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="inputAddress"
+                          placeholder="1234 Main St"
+                          required
+                        />
+                      </div>
+
+                      <div class="col-md-6">
+                        <label for="inputCity" class="form-label">City</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="inputCity"
+                          required
+                        />
+                      </div>
+                      <div class="col-md-3">
+                        <label for="inputCity" class="form-label">State</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="inputState"
+                          required
+                        />
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="inputZip" class="form-label">Zip</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="inputZip"
+                          required
+                        />
+                      </div>
+
+                      <!-- <div style="margin-top: 20px;" class="col-12">
                                             <button id="button" onclick="done" type="submit"
                                                 class="btn btn-primary">Save</button>
                                         </div> -->
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    </form>
+                  </div>
                 </div>
-                
-                
-            <div class="col-lg-4">
-                <div class="card" style="margin-top: 75px ;">
-                    <div class="card-body">
-                        <div class="checkout__order">
-                            <h5>Orders</h5>
-                            <div style="max-height: 350px; overflow-y: auto;">
-                              <table class="table checkout_order_product">
-                                <thead>
-                                  <tr>
-                                    <th scope="col">No</th>
-                                    <th scope="col" style="padding-left: 30px;">Product</th>
-                                    <th scope="col">Quantity</th>
-                                    <th scope="col" style="padding-left: 30px;">Price</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <% cartItem.forEach((item, index) => { %>
-                                    <tr>
-                                      <td class="text-center"><%= index + 1 %></td>
-                                      <td class="text-center" style="max-width: 120px; word-wrap: break-word;"><%= item.product.name %><section style="color: red;" id="outofstock"></section></td>
-                                      <td class="text-center"><%= item.quantity %></td>
-                                      <td class="text-center font-weight-bold">&#x20B9;<%= (item.product.price * item.quantity).toFixed(2) %></td>
-                                    </tr>
-                                  <% }) %>                           
-                                </tbody>
-                              </table>
-                            </div>
-                            <div class="checkout_order_total">
-                                <ul>
-                                    
-                                        <!-- <ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="card" style="margin-top: 75px">
+              <div class="card-body">
+                <div class="checkout__order">
+                  <h5>Orders</h5>
+                  <div style="max-height: 350px; overflow-y: auto">
+                    <table class="table checkout_order_product">
+                      <thead>
+                        <tr>
+                          <th scope="col">No</th>
+                          <th scope="col" style="padding-left: 30px">
+                            Product
+                          </th>
+                          <th scope="col">Quantity</th>
+                          <th scope="col" style="padding-left: 30px">Price</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% cartItem.forEach((item, index) => { %>
+                        <tr>
+                          <td class="text-center"><%= index + 1 %></td>
+                          <td
+                            class="text-center"
+                            style="max-width: 120px; word-wrap: break-word"
+                          >
+                            <%= item.product.name %>
+                            <section
+                              style="color: red"
+                              id="outofstock"
+                            ></section>
+                          </td>
+                          <td class="text-center"><%= item.quantity %></td>
+                          <td class="text-center font-weight-bold">
+                            &#x20B9;<%= (item.product.price *
+                            item.quantity).toFixed(2) %>
+                          </td>
+                        </tr>
+                        <% }) %>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="checkout_order_total">
+                    <ul>
+                      <!-- <ul>
                                             <li>Subtotal <span>&#x20B9;<i id="grandtotal"></i></span></li>
                                             <li id="coupenadded"><span> <i></i></span></li>
                                             <div id="clear" ></div>
@@ -255,42 +335,74 @@
                                             <li>Total <span>&#x20B9; <i id="grandtotal1"></i></span></li>
                                             <li id="total" hidden></li>
                                         </ul> -->
-                                </ul>
-                            </div>
-                            <div class="checkout_order_widget">
-                                <div class="form-check">
-                                    
-                                        <!-- <div class="input-group">
+                    </ul>
+                  </div>
+                  <div class="checkout_order_widget">
+                    <div class="form-check">
+                      <!-- <div class="input-group">
                                             <input id="coupen" type="text" placeholder="Enter your coupon code" class="form-control">
                     
                                             <button class="btn-primary" onclick="applyCoupon()" type="button">Check</button>
             Add New Address
                                         </div> -->
-                                        <!-- <section style="color: red;" id="cpn"></section>
+                      <!-- <section style="color: red;" id="cpn"></section>
             
                                         <label style="margin-top: 20px;" for=""><i type="button" id="viewcoupens" data-toggle="modal" data-target="#exampleModal1" >View all coupen ></i></label> -->
-                                </div>
-                                <div class="form-check">
-                                    <input  class="form-check-input" type="radio" name="flexRadioDefault1" id="check-payment">
-                                <label  class="form-check-label" for="flexRadioDefault4">
-                                    Cash on delivery
-                                </label>
-                                </div>
-                                <div class="form-check">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault1" id="check-payment1">
-                                <label class="form-check-label" for="flexRadioDefault5">
-                                    Online payment
-                                </label>
-                                </div>
-                            </div>
-                            <button style="margin-top: 20px;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Confirm Order</button>
-                        </div>
                     </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="flexRadioDefault1"
+                        id="check-payment"
+                      />
+                      <label class="form-check-label" for="flexRadioDefault4">
+                        Cash on delivery
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="flexRadioDefault1"
+                        id="check-payment1"
+                      />
+                      <label class="form-check-label" for="flexRadioDefault5">
+                        Online payment
+                      </label>
+                    </div>
+                  </div>
+                  <a id="order-link" href="">
+                    <button
+                      style="margin-top: 20px"
+                      type="submit"
+                      class="btn btn-primary"
+                      data-toggle="modal"
+                      data-target="#exampleModal"
+                      data-whatever="@mdo"
+                      id="confirmation"
+                    >
+                      Confirm Order
+                    </button></a
+                  >
                 </div>
+              </div>
             </div>
+          </div>
         </div>
-        </div>
-        
+      </div>
     </section>
+    <script>
+      const payment = document.getElementById("check-payment");
+      const orderLink = document.getElementById("order-link");
+      orderLink.addEventListener("click", (e) => {
+        if (payment.checked) {
+          orderLink.href = "/product/order";
+        } else {
+          e.preventDefault();
+          console.log("select the payment cash on delivery");
+        }
+      });
+    </script>
   </body>
 </html>
