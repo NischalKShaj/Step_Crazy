@@ -56,13 +56,15 @@ const stepCrazy = new mongoose.Schema({
       },
     },
   ],
-  order:[
+  order: [
     {
-      cart:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"cart",
-        required:true,
-      },
+      cart: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "cart",
+          required: true,
+        },
+      ],
     },
   ],
   blocked: {
@@ -74,5 +76,5 @@ const stepCrazy = new mongoose.Schema({
 // declaring the collection name
 const collection = new mongoose.model("userCollection", stepCrazy);
 
-// exporting the database 
+// exporting the database
 module.exports = collection;

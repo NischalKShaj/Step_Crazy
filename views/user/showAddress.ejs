@@ -172,15 +172,24 @@
             </div>
           </div>
           <div class="col-lg-8">
-            <div class="card mb-4">
+          <% userAdd.forEach((userAddress) => { %>
+            <% userAddress.address.forEach((address) => { %>
+                <div class="card mb-4">
               <div class="card-body">
                 <div class="card-header py-3 bg-primary">
                   <h5 class="mb-0 text-light">Address</h5>
                 </div>
-                <div class="row">
+                
+                  
+                   
+                  
+                  
+                      <div class="row">
                   <form action="" method="post">
                     <!-- 2 column grid layout with text inputs for the first and last names -->
                     <div class="row mb-4">
+                         
+                       
                       <div class="col">
                         <div class="form-outline">
                           <label class="form-label" for="first_name"
@@ -191,7 +200,7 @@
                             id="first_name"
                             class="form-control"
                             name="first_name"
-                            value="<%= userAdd.first_name %>"
+                            value="<%= userAddress.first_name %>"
                             readonly
                             required
                           />
@@ -207,7 +216,7 @@
                             id="last_name"
                             class="form-control"
                             name="last_name"
-                            value="<%= userAdd.last_name %>"
+                            value="<%= userAddress.last_name %>"
                             readonly
                             required
                           />
@@ -228,7 +237,7 @@
                             id="phoneNumber"
                             class="form-control"
                             name="phone"
-                            value="<%= userAdd.phone %>"
+                            value="<%= userAddress.phone %>"
                             readonly
                             required
                           />
@@ -245,7 +254,7 @@
                             id="pincode"
                             class="form-control"
                             name="pincode"
-                            value="<%= userAdd.address[0].pincode %>"
+                            value="<%= address.pincode %>"
                             readonly
                             required
                           />
@@ -263,7 +272,7 @@
                             id="locality"
                             class="form-control"
                             name="locality"
-                            value="<%= userAdd.address[0].locality %>"
+                            value="<%= address.locality %>"
                             readonly
                             required
                           />
@@ -280,7 +289,7 @@
                             id="email"
                             name="email"
                             class="form-control"
-                            value="<%= userAdd.email %>"
+                            value="<%= userAddress.email %>"
                             readonly
                             required
                           />
@@ -299,7 +308,7 @@
                             rows="4"
                             required
                             readonly
-                          > <%= userAdd.address[0].fullAddress %> </textarea>
+                          > <%= address.fullAddress %> </textarea>
                         </div>
                       </div>
                     </div>
@@ -314,7 +323,7 @@
                             id="city"
                             class="form-control"
                             name="city"
-                            value="<%= userAdd.address[0].city %>"
+                            value="<%= address.city %>"
                             required
                             readonly
                           />
@@ -327,7 +336,7 @@
                           <label class="form-label" for="state">State</label>
                           <select id="state" name="state" class="form-select" required>
                             <option value="" disabled selected>
-                              <%= userAdd.address[0].state %>
+                              <%= address.state %>
                             </option>
                             <option value="Andhra Pradesh">Andhra Pradesh</option>
                             <option value="Arunachal Pradesh">
@@ -381,6 +390,9 @@
                       <a href="/profile/address/edit/<%= userAdd._id %>" class="btn btn-primary">Edit</a>
                     </div>
                   </form>
+                  <% }) %>
+                  <% }) %>
+                  
               
               </div>
             </div>

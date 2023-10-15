@@ -19,20 +19,21 @@ exports.getAddressAdd = (req, res) => {
 exports.postProfilePage = async (req, res) => {
   try {
     const filter = { email: req.body.email };
-    userAddress = {
-      address: [
-        {
-          pincode: req.body.pincode,
-          locality: req.body.locality,
-          fullAddress: req.body.fullAddress,
-          city: req.body.city,
-          state: req.body.state,
-        },
-      ],
+    const userAddress = {
+      pincode: req.body.pincode,
+      locality: req.body.locality,
+      fullAddress: req.body.fullAddress,
+      city: req.body.city,
+      state: req.body.state,
     };
-    const option = { upsert: true };
+    const update = {
+      $push: {
+        address: userAddress,
+      },
+    };
+
     console.log(userAddress);
-    await userCollection.updateOne(filter, userAddress, option);
+    await userCollection.updateOne(filter, update);
 
     res.redirect("/profile");
   } catch (error) {
@@ -43,7 +44,9 @@ exports.postProfilePage = async (req, res) => {
 // router to show the address page
 exports.getAddressPage = async (req, res) => {
   const address = req.session.user;
-  const userAdd = await userCollection.findOne({ email: address });
+  console.log(address);
+  const userAdd = await userCollection.find({ email: address });
+  console.log(userAdd);
   res.render("user/showAddress", { address, userAdd });
 };
 
@@ -71,14 +74,12 @@ exports.postProfileEdit = async (req, res) => {
     let id = req.params.id;
 
     const updateProfile = await userCollection.findByIdAndUpdate(id, {
-      
       first_name: req.body.first_name,
-      email : req.body.email,
+      email: req.body.email,
       phone: req.body.phone,
-      gender:req.body.gender
-     
+      gender: req.body.gender,
     });
-    
+
     console.log(updateProfile);
     res.redirect("/profile");
   } catch (error) {
@@ -104,3 +105,48 @@ exports.getAddressEdit = (req, res) => {
       res.redirect("/profile");
     });
 };
+
+exports.postNewAddress = async (req, res) => {
+  try {
+    // Extract the address data from the request body
+    const { fullAddress, city, locality, state, pincode } = req.body;
+
+    // Get the user's email from the session (you need to implement this)
+    const userEmail = req.session.user;
+
+    // Find the user by their email
+    const user = await userCollection.findOne({ email: userEmail });
+
+    if (user) {
+      // Initialize the address array if it's undefined
+      if (!user.address) {
+        user.address = [];
+      }
+
+      // Create an address object
+      const newAddress = {
+        fullAddress,
+        city,
+        locality,
+        state,
+        pincode,
+      };
+
+      // Add the new address to the user's address array
+      user.address.push(newAddress);
+
+      // Save the user's updated information
+      await user.save();
+
+      res.json({ success: true });
+    } else {
+      res.json({ success: false, message: "User not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.json({
+      success: false,
+      message: "An error occurred while saving the address",
+    });
+  }
+}

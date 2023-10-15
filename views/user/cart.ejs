@@ -118,26 +118,34 @@
                       <div
                         class="d-flex justify-content-between align-items-center mb-5"
                       >
+                      
                         <h1 class="fw-bold mb-0 text-black">Shopping Cart</h1>
                       </div>
+                     
+                       
                       <hr class="my-4" />
-                      <% cartPage.forEach((cartItem) => { %>
+                      
+                      <% cartItems.forEach((cartItem) => { %>
                         
                       <div
                         class="row mb-4 d-flex justify-content-between align-items-center"
                       >
                       
                         <div class="col-md-2 col-lg-2 col-xl-2">
+                          <% if (cartItem.product && cartItem.product.image && cartItem.product.image[0]) { %>
                           <img
                             src="/<%= cartItem.product.image[0] %>"
                             class="img-fluid rounded-3"
                             alt="Cotton T-shirt"
                           />
+                          <% }else { %>
+                            <h4>image not found</h4>
+                            <% } %>
                         </div>
                                         
                           <div class="col-md-3 col-lg-3 col-xl-3">
                             <h6 class="text-muted"><%= cartItem.product.name %></h6> 
-                            <h6 class="text-muted">stock availability:<%= cartItem.product.stock %></h6>
+                            <!-- <h6 class="text-muted">stock availability:<%= cartItem.product.stock %></h6> -->
                             <h6 class="text-black mb-0"> &#8377 <%= cartItem.product.price %></h6>
                             <!-- Add more details as needed -->
                           </div>
@@ -185,6 +193,7 @@
 
                       <hr class="my-4" />
                       <% }); %>
+                      
                       <div class="pt-5">
                         <h6 class="mb-0">
                           <a href="/product" class="text-body"
@@ -207,7 +216,8 @@
                       </div>
                       
                       <% let totalPrice = 0; %>
-                      <% cartPage.forEach((cartItem) => { %>
+                      
+                      <% cartItems.forEach((cartItem) => { %>
                         <div class="d-flex justify-content-between mb-4">
                           <h5 style="max-width: 120px; word-wrap: break-word;"><%= cartItem.product.name %></h5>
                           <h5><%= cartItem.quantity %></h5>

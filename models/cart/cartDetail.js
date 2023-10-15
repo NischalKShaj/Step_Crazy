@@ -10,6 +10,7 @@ const stepCrazy = new mongoose.Schema({
     ref: "userCollection",
     required: true,
   },
+
   product: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "product",
@@ -18,7 +19,6 @@ const stepCrazy = new mongoose.Schema({
   quantity: {
     type: Number,
     default: 1,
-  
   },
 });
 

@@ -74,6 +74,9 @@ router.get("/profile/address", ProfileController.getAddressPage);
 // router for editing the address of the user
 router.get("/profile/address/edit/:id", ProfileController.getAddressEdit);
 
+// router for adding new address
+router.post("/profile/save_address", ProfileController.postNewAddress);
+
 // router for showing the eidt user profile
 router.get("/profile/edit-profile/:id", ProfileController.getProfileEdit);
 
@@ -85,6 +88,9 @@ router.get("/product/cart/checkout", cartController.getCheckout);
 
 // router for adding new product to the cart
 router.get("/product/cart/:id", cartController.addProducts);
+
+// router for getting the cart
+router.get("/cart", cartController.getCart);
 
 // router for increasing and decreasing the stock
 router.post("/product/cart/update/:productId", cartController.putStock);
