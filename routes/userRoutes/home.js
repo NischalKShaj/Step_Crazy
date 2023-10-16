@@ -98,5 +98,8 @@ router.post("/product/cart/update/:productId", cartController.putStock);
 // router for posting the order page
 router.get("/product/order", orderController.postOrderPage);
 
+// router for getting the order History page and the order status
+router.get("/order", orderController.getOrderDetails);
+
 // exporting the module to app.js
 module.exports = router;

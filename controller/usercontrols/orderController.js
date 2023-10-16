@@ -32,6 +32,11 @@ exports.postOrderPage = async (req, res) => {
       cart: Array.isArray(cart) ? cart : [cart],
     };
 
+    const cartItemsCopy = Array.isArray(order.cart)
+      ? [...order.cart]
+      : [order.cart];
+
+
     for (const cartItem of order.cart) {
       const { quantity, product: productID } = cartItem;
 
@@ -72,21 +77,20 @@ exports.postOrderPage = async (req, res) => {
 
     console.log("Order", order);
     // Add the order to the user collection
-    user.order.push(order);
+    user.order.push({ cart: cartItemsCopy });
 
     // Remove the content from the cart
-    await cartCollection.deleteOne({ user: user._id });
+    // await cartCollection.deleteOne({ user: user._id });
 
     // Save the contents in the user collection
     await user.save();
+
     console.log("Order details", orderDetail);
     async function removeAllData() {
       try {
-        // Assuming you have already established a connection to your MongoDB database
-
-        // Use the deleteMany method to remove all documents from the StepCrazy collection
         const result = await cartCollection.deleteMany({});
-        console.log("All documents removed from the StepCrazy collection.");
+        console.log("All documents removed from the cart collection.");
+        console.log("Order after push", user.order);
       } catch (error) {
         console.error("Error while deleting documents:", error);
       }
@@ -94,11 +98,58 @@ exports.postOrderPage = async (req, res) => {
 
     // Call the function to delete all documents from the StepCrazy collection
     removeAllData();
+
     res.render("user/thank-you", {
-      orderDetail,
+      orderDetail: cartItemsCopy,
     });
   } catch (error) {
     console.error("Error message", error);
     res.render("error/404");
+  }
+};
+
+// controller for rendering the order history page with status
+exports.getOrderDetails = async (req, res) => {
+  try {
+    const userEmail = req.session.user;
+    const user = await userCollection.findOne({ email: userEmail }).exec();
+
+    if (user) {
+      const orders = user.order;
+
+      const orderDetails = await userCollection
+        .find({ email: userEmail })
+        .populate({
+          path: "order",
+          populate: {
+            path: "cart",
+            populate: {
+              path: "product",
+              model: "product",
+            },
+          },
+        })
+        .exec();
+
+      if (orderDetails) {
+        // Process the data before rendering
+        const processedOrders = orderDetails.map((order) => ({
+          _id: order._id,
+          date: order.created, // Assuming date is stored in the 'created' field
+          cart: order.order[0].cart, // Assuming the order is in the first element of the order array
+        }));
+        console.log("processedOrders :-", processedOrders);
+        res.render("user/orderHistory", { orders: processedOrders });
+      } else {
+        console.log("Orders not found");
+        res.redirect("/"); // Redirect to a suitable page when orders are not found
+      }
+    } else {
+      console.log("User not found");
+      res.redirect("/"); // Redirect to a suitable page when the user is not found
+    }
+  } catch (error) {
+    console.error("Error while fetching order details:", error);
+    res.render("error/404"); // Redirect on error
   }
 };

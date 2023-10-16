@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order History</title>
+    <link rel="stylesheet" href="styles.css" />
+    <!-- You can link your CSS file here -->
+  </head>
+  <body>
+    <header>
+      <h1>Order History</h1>
+      <a href="profile.html">Back to Profile</a>
+    </header>
+
+    <main>
+      <section class="order-list">
+        <h2>Your Orders</h2>
+        <ul>
+          <li>
+            <div class="order-details">
+              <h3>Order #1</h3>
+              <p>Date: July 10, 2023</p>
+              <p>Total: $50.00</p>
+            </div>
+            <button class="view-order">View Order</button>
+          </li>
+          <li>
+            <div class="order-details">
+              <h3>Order #2</h3>
+              <p>Date: June 25, 2023</p>
+              <p>Total: $30.00</p>
+            </div>
+            <button class="view-order">View Order</button>
+          </li>
+          <!-- Add more order entries as needed -->
+        </ul>
+      </section>
+
+      <section class="order-details">
+        <h2>Order Details</h2>
+        <div class="order-summary">
+          <h3>Order #1</h3>
+          <p>Date: July 10, 2023</p>
+          <p>Total: $50.00</p>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Product A</td>
+              <td>$10.00</td>
+              <td>2</td>
+              <td>$20.00</td>
+            </tr>
+            <tr>
+              <td>Product B</td>
+              <td>$15.00</td>
+              <td>1</td>
+              <td>$15.00</td>
+            </tr>
+            <!-- Add more product entries as needed -->
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="2"></td>
+              <td>Order Total:</td>
+              <td>$50.00</td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2023 YourCompany</p>
+    </footer>
+  </body>
+</html>
