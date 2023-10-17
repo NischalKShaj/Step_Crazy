@@ -93,55 +93,6 @@ exports.addProducts = async (req, res) => {
   }
 };
 
-// exports.addProducts = async (req, res) => {
-//   try {
-//     const userEmail = req.session.user;
-//     const user = await userCollection.findOne({ email: userEmail });
-
-//     if (!user) {
-//       console.error("User not found for email: " + userEmail);
-//       return res.redirect("/login");
-//     }
-
-//     const userId = user._id;
-//     const productId = new mongoose.Types.ObjectId(req.params.id);
-
-//     // Verify that the product exists in the product collection
-//     const existingProduct = await productCollection.findOne({ _id: productId });
-
-//     if (!existingProduct) {
-//       console.log("Product not found.");
-//       return res.redirect("/product");
-//     }
-
-//     // Declare cartItems outside the if-else block
-//     let cartItems;
-
-//     // Now you can add the product to the cart
-//     const existingCartItem = await cartCollection.findOne({
-//       user: userId,
-//       product: productId,
-//     });
-
-//     if (existingCartItem) {
-//       console.log("Product already available in the cart");
-//     } else {
-//       cartItems = new cartCollection({
-//         user: userId,
-//         product: productId,
-//         quantity: req.body.quantity,
-//       });
-//       await cartItems.save();
-//       console.log("Product added to the cart successfully");
-//     }
-
-//     res.render("user/cart", { cartItems }); // Redirect to the cart page after adding the product.
-//   } catch (error) {
-//     console.error("Error adding the product to the cart:", error);
-//     res.redirect("/product");
-//   }
-// };
-
 // function to increase the quantity and decrease the stock
 async function increamentQuantity(productId) {
   try {
@@ -214,22 +165,6 @@ exports.putStock = async (req, res) => {
   }
 };
 
-// route for the cart page uncomment at the time of redirecting
-// exports.getCartProduct = async (req, res) => {
-//   try {
-//     const id = req.params.id;
-//     console.log(id);
-//     const cartPage = await cartCollection
-//       .findOne({ user: id })
-//       .populate("product")
-//       .exec();
-//     console.log(cartPage);
-//     res.render("user/cart", { cartPage });
-//   } catch (error) {
-//     console.log("There is an error while rendering the cart page");
-//   }
-// };
-
 // router for checkoutpage
 exports.getCheckout = async (req, res) => {
   const address = req.session.user;
@@ -267,33 +202,3 @@ exports.getCheckout = async (req, res) => {
     res.redirect("/product");
   }
 };
-
-// exports.getCheckout = async (req, res) => {
-//   const address = req.session.user;
-
-//   if (!address) {
-//     console.log("User email not found in session.");
-//     return res.redirect("/login");
-//   }
-
-//   try {
-//     const user = await userCollection.findOne({ email: address });
-
-//     if (!user) {
-//       console.log("User not found in the database.");
-//       throw new Error("User not found");
-//     }
-
-//     const userId = user._id;
-//     const cartItem = await cartCollection
-//       .find({ user: userId })
-//       .populate({ path: "product", model: "product" });
-
-//     const useAdd = await userCollection.find({ email: address });
-
-//     res.render("user/checkout", { address, useAdd, cartItem });
-//   } catch (error) {
-//     console.error("Error while loading the checkout page:", error);
-//     res.redirect("/product");
-//   }
-// };

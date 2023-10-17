@@ -32,7 +32,7 @@ exports.getAddProduct = async (req, res) => {
 
 // for adding the values in the database
 exports.postProductPage = async (req, res) => {
-  console.log( req.body.name, req.body.description, req.body.price);
+  console.log(req.body.name, req.body.description, req.body.price);
   const imageArray = [];
 
   for (const file of req.files) {
@@ -66,7 +66,7 @@ exports.getEditProduct = async (req, res) => {
       }
     })
     .catch((error) => {
-      console.log("Error finding the product....");
+      console.log("Error finding the product....",error);
       res.redirect("admin/dashboard/product");
     });
 };
@@ -97,7 +97,7 @@ exports.postUpdateProduct = async (req, res) => {
     res.redirect("/admin/dashboard/product");
     console.log("value updated successfully...");
   } catch (error) {
-    console.log("The value is not inserted properly...");
+    console.log("The value is not inserted properly...",error);
     res.redirect("/admin/dashboard/product");
   }
 };
@@ -109,7 +109,7 @@ exports.putDeactivate = async (req, res) => {
 
     const deactivate = await collection.findByIdAndUpdate(
       productId,
-      {$set:{ status: false }},
+      { $set: { status: false } },
       { new: true }
     );
     if (!deactivate) {
@@ -129,7 +129,7 @@ exports.putActivate = async (req, res) => {
     const productId = req.params.productId;
     const activate = await collection.findByIdAndUpdate(
       productId,
-      {$set:{ status: true }},
+      { $set: { status: true } },
       { new: true }
     );
     if (!activate) {
@@ -145,22 +145,20 @@ exports.putActivate = async (req, res) => {
 
 // for deleting the image from the product
 exports.deleteImage = async (req, res) => {
-  
   try {
     const image = req.params.image;
     const ProductId = req.params.ProductId;
     console.log(image);
     console.log(ProductId);
     const updatedProduct = await collection.findByIdAndUpdate(
-        ProductId,
-        { $pull: { image: image } },
-        { new: true }
+      ProductId,
+      { $pull: { image: image } },
+      { new: true }
     );
-    console.log('Image removed successfully:', updatedProduct);
+    console.log("Image removed successfully:", updatedProduct);
     res.redirect(`/admin/dashboard/product/edit/${ProductId}`);
-} catch (error) {
-    console.error('Error removing image:', error);
-    res.status(500).send('Error removing image');
-} 
-
+  } catch (error) {
+    console.error("Error removing image:", error);
+    res.status(500).send("Error removing image");
+  }
 };

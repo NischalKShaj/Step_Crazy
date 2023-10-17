@@ -10,6 +10,7 @@
       integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   </head>
   <body>
     <!-- header for the user profile -->
@@ -22,7 +23,7 @@
             
           </a> -->
           <a href="/">
-            <img src="../Img/login/logo.png" alt="logo" class="img-fluid w-50"
+            <img src="../../Img/login/logo.png" alt="logo" class="img-fluid w-50"
           /></a>
           <button
             class="navbar-toggler border-0"
@@ -129,7 +130,7 @@
                   <li
                     class="list-group-item d-flex justify-content-between align-items-center p-3"
                   >
-                    <i class="fas fa-globe fa-lg text-warning"></i>
+                  <i class="fas fa-plus"></i>
                     <a class="text text-decoration-none" href="/profile/add-adderss">Add address</a>
                   </li><picture>
                     <source media="(
@@ -140,33 +141,17 @@
                   <li
                     class="list-group-item d-flex justify-content-between align-items-center p-3"
                   >
-                    <i class="fab fa-github fa-lg" style="color: #333333"></i>
-                    <a class="text text-decoration-none" href="/profile/edit-profile/<%= userProfile._id %>">Edit</a>
+                    <i class="fas fa-user-edit" style="color: #333333"></i>
+                    
+                    <a class="text text-decoration-none" href="/profile/edit-profile/<%= userProfile._id %>">Edit profile</a>
                   </li>
                   <li
                     class="list-group-item d-flex justify-content-between align-items-center p-3"
                   >
-                    <i class="fab fa-twitter fa-lg" style="color: #55acee"></i>
-                    <a class="text text-decoration-none" href="/profile/address/">Address</a>
+                  <i class="fas fa-address-card" style="color: #55acee;"></i>
+                    <a class="text text-decoration-none" href="/profile/address">Address</a>
                   </li>
-                  <li
-                    class="list-group-item d-flex justify-content-between align-items-center p-3"
-                  >
-                    <i
-                      class="fab fa-instagram fa-lg"
-                      style="color: #ac2bac"
-                    ></i>
-                    <p class="mb-0">mdbootstrap</p>
-                  </li>
-                  <li
-                    class="list-group-item d-flex justify-content-between align-items-center p-3"
-                  >
-                    <i
-                      class="fab fa-facebook-f fa-lg"
-                      style="color: #3b5998"
-                    ></i>
-                    <p class="mb-0">mdbootstrap</p>
-                  </li>
+                  
                 </ul>
               </div>
             </div>

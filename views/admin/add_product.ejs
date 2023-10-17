@@ -38,6 +38,7 @@
                 action="/admin/dashboard/product"
                 method="post"
                 id="add-form"
+                onsubmit="return validateForm()"
                 enctype="multipart/form-data"
               >
                 
@@ -127,6 +128,19 @@
         "sha512-X/YkDZyjTf4wyc2Vy16YGCPHwAY8rZJY+POgokZjQB2mhIRFJCckEGc6YyX9eNsPfn0PzThEuNs+uaomE5CO6A==";
       crossorigin = "anonymous";
       referrerpolicy = "no-referrer";
+    </script>
+    <script>
+       function validateForm() {
+    const nameInput = document.querySelector('input[name="name"]');
+    const descriptionTextarea = document.querySelector('textarea[name="description"]');
+    
+    if (nameInput.value.trim() === '' || descriptionTextarea.value.trim() === '') {
+      alert("Both the name and description must be filled out.");
+      return false;
+    }
+    
+    return true;
+  }
     </script>
   </body>
 </html>

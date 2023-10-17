@@ -2,12 +2,25 @@
 // modules required for the user profile
 const userCollection = require("../../models/user/userDatabase");
 
+// middleware to check the session for the profile
+exports.reqAuth = (req, res, next) => {
+  if (req.session.user) {
+    next();
+  } else {
+    res.redirect("/login");
+  }
+};
+
 let userAddress;
 // rendring the profile page of the user
 exports.getProfilePage = async (req, res) => {
   const user = req.session.user;
-  const userProfile = await userCollection.findOne({ email: user });
-  res.render("user/profile", { user, userProfile });
+  if (user) {
+    const userProfile = await userCollection.findOne({ email: user });
+    res.render("user/profile", { user, userProfile });
+  } else {
+    res.redirect("/login");
+  }
 };
 
 // rendering the page for adding the address
@@ -44,6 +57,8 @@ exports.postProfilePage = async (req, res) => {
 // router to show the address page
 exports.getAddressPage = async (req, res) => {
   const address = req.session.user;
+  id = req.params.id;
+
   console.log(address);
   const userAdd = await userCollection.find({ email: address });
   console.log(userAdd);
@@ -52,7 +67,8 @@ exports.getAddressPage = async (req, res) => {
 
 // router for editing the user profile
 exports.getProfileEdit = (req, res) => {
-  let id = req.params.id;
+  const id = req.params.id;
+
   userCollection
     .findById(id)
     .then((user) => {
@@ -70,42 +86,98 @@ exports.getProfileEdit = (req, res) => {
 
 // router for updating the user profile
 exports.postProfileEdit = async (req, res) => {
+  const userId = req.session.user;
   try {
-    let id = req.params.id;
+    if (userId) {
+      const id = req.params.id;
 
-    const updateProfile = await userCollection.findByIdAndUpdate(id, {
-      first_name: req.body.first_name,
-      email: req.body.email,
-      phone: req.body.phone,
-      gender: req.body.gender,
-    });
+      const updateProfile = await userCollection.findByIdAndUpdate(id, {
+        first_name: req.body.first_name,
+        email: req.body.email,
+        phone: req.body.phone,
+        gender: req.body.gender,
+      });
 
-    console.log(updateProfile);
-    res.redirect("/profile");
+      console.log(updateProfile);
+      res.redirect("/profile");
+    } else {
+      // If the session does not exist, redirect the user to a login or access-denied page.
+      res.redirect("/login"); // or res.redirect("/access-denied");
+    }
   } catch (error) {
+    console.log("There is an error while updating the values....", error);
     res.redirect("/profile/edit-profile/");
-    console.log("There is an error while updating the values....");
   }
 };
 
 // router for editing the address of the user
-exports.getAddressEdit = (req, res) => {
-  let id = req.params.id;
-  userCollection
-    .findById(id)
-    .then((address) => {
-      if (!address) {
-        res.redirect("/profile");
-      } else {
-        res.render("user/editAddress", { address: address });
-      }
-    })
-    .catch((error) => {
-      console.log("Error finding the user....");
-      res.redirect("/profile");
-    });
+exports.getAddressEdit = async (req, res) => {
+  const user = req.session.user; // Session data
+
+  if (user) {
+    const addressId = req.params.id; // Assuming the address ID is passed in the URL
+
+    await userCollection
+      .findOne({ email: user }) // Find a user by their email
+      .then((userAddress) => {
+        if (!userAddress) {
+          console.log("User not found");
+          res.redirect("/login");
+        } else {
+          // Find the specific address based on the addressId
+          const address = userAddress.address.find(
+            (addr) => addr.id === addressId
+          );
+
+          if (!address) {
+            console.log("Address not found");
+            res.redirect("/login");
+          } else {
+            console.log(address);
+            res.render("user/editAddress", { userAddress, address });
+          }
+        }
+      })
+      .catch((error) => {
+        console.log("Error finding the user....", error);
+        res.redirect("/login");
+      });
+  } else {
+    console.log("User not authenticated");
+    res.redirect("/login");
+  }
 };
 
+// controller for updating the edited address of the user
+exports.postAddressEdit = async (req, res) => {
+  const userId = req.session.user;
+  try {
+    if (userId) {
+      const addressId = req.params.id;
+      console.log(addressId);
+      const filter = { "address._id": addressId };
+      const update = {
+        $set: {
+          "address.$.pincode": req.body.pincode,
+          "address.$.locality": req.body.locality,
+          "address.$.fullAddress": req.body.fullAddress,
+          "address.$.city": req.body.city,
+          "address.$.state": req.body.state,
+        },
+      };
+      const result = await userCollection.updateOne(filter, update);
+
+      res.redirect("/profile/address");
+    } else {
+      res.redirect("/login");
+    }
+  } catch (error) {
+    console.error("There is an error while updating the address", error);
+    res.redirect("/profile");
+  }
+};
+
+// for adding the new address to the user
 exports.postNewAddress = async (req, res) => {
   try {
     // Extract the address data from the request body
@@ -149,4 +221,4 @@ exports.postNewAddress = async (req, res) => {
       message: "An error occurred while saving the address",
     });
   }
-}
+};

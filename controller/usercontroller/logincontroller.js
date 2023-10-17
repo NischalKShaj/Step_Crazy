@@ -158,8 +158,8 @@ exports.postForgotLogin = async (req, res) => {
     } else {
       res.redirect("/login");
     }
-  }catch{
-    res.send("eror updating the value")
+  }catch(error){
+    res.send("eror updating the value",error)
   }
 };
 
@@ -168,51 +168,3 @@ exports.getOTP = (req, res) => {
   res.redirect("/login");
 };
 
-// exports.postForgotLogin = async (req, res) => {
-//   const OTP = req.body.otp;
-//   console.log(OTP, otp);
-//   if (otp === OTP) {
-//     console.log(userDetails);
-
-//     try {
-//       // Update the password in the database and capture the updated document
-//       const updatedUser = await collection.findOneAndUpdate(
-//         { email: req.body.email },
-//         { $set: { password: req.body.password } },
-//         { returnOriginal: false }
-//       );
-
-//       if (updatedUser.value) {
-//         console.log(updatedUser.value.email, updatedUser.value.password);
-
-//         // sending the confirmation mail to the user
-//         const mailContent = {
-//           from: "nischalkshaj5@gmail.com",
-//           to: updatedUser.value.email,
-//           subject: "User password is changed successfully",
-//           text: "Your password is changed successfully. You can now use the changed password while logging in.",
-//         };
-
-//        // sending the email to the specified email address
-//         transporter.sendMail(mailContent, (error, info) => {
-//           if (error) {
-//             console.log(error);
-//             res.status(500).json({ message: "Failed to send confirmation email" });
-//           } else {
-//             console.log("Confirmation email sent");
-//             res.status(200).json({ message: "Password updated successfully" });
-//           }
-//         });
-//         res.redirect("/login/passwordOTP");
-//       } else {
-//         // Handle the case where the email was not found in the database
-//         res.status(404).json({ message: "User not found" });
-//       }
-//     } catch (error) {
-//       console.error(error);
-//       res.status(500).json({ message: "Error updating password" });
-//     }
-//   } else {
-//     res.redirect("/login");
-//   }
-// };

@@ -6,22 +6,17 @@ const collection = require("../../models/admin/adminDatabase");
 exports.getAdminPage = (req, res) => {
   const admin = req.session.admin;
   console.log(admin);
-  if(admin){
-    
+  if (admin) {
     res.render("admin/admindashboard");
- 
   } else {
     const invalid = req.query.success;
     console.log(invalid);
-    res.render("admin/admin",{invalid});
+    res.render("admin/admin", { invalid });
   }
 };
 
 // for redirecting to the loginpage
 exports.Logout = (req, res) => {
- 
   req.session.admin = null;
-  res.redirect("/admin")
-  
-  
+  res.redirect("/admin");
 };

@@ -87,9 +87,9 @@ try {
     
   
   };
-} catch {
+} catch(error) {
   // res.redirect("/signup");
-  console.log("error occured while entering the values in the database");
+  console.log("error occured while entering the values in the database",error);
 }
 
 // inserting the value to the database if the otp is valid

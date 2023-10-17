@@ -104,7 +104,7 @@
                 <% category.forEach((row, index) => { %>
                 <tr>
                   <td><%= index+1 %></td>
-                  <td><%= row.category %></td>
+                  <td style="max-width: 80px; overflow-wrap: break-word;"><%= row.category %></td>
                   
                   <td>
                     <a
