@@ -76,7 +76,11 @@ router.get("/profile/address", ProfileController.getAddressPage);
 router.get("/profile/address/edit/:id", ProfileController.getAddressEdit);
 
 // router for showing the edited address of the user
-router.post("/profile/address/update/:id", ProfileController.reqAuth, ProfileController.postAddressEdit);
+router.post(
+  "/profile/address/update/:id",
+  ProfileController.reqAuth,
+  ProfileController.postAddressEdit
+);
 
 // router for adding new address
 router.post("/profile/save_address", ProfileController.postNewAddress);
@@ -99,6 +103,12 @@ router.get("/product/cart/:id", cartController.addProducts);
 
 // router for getting the cart
 router.get("/cart", cartController.getCart);
+
+// router for posting the cart
+router.post("/cart", cartController.postCart);
+
+// router for deleting the items in the cart
+router.get("/cart/remove/:id", cartController.deleteProduct);
 
 // router for increasing and decreasing the stock
 router.post("/product/cart/update/:productId", cartController.putStock);

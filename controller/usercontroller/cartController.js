@@ -33,6 +33,7 @@ exports.getCart = async (req, res) => {
   }
 };
 
+// controller for posting the products
 exports.addProducts = async (req, res) => {
   try {
     const userEmail = req.session.user;
@@ -86,7 +87,7 @@ exports.addProducts = async (req, res) => {
       .populate("product")
       .exec();
     console.log("cartItems", cartItems);
-    res.render("user/cart", { cartItems });
+    res.redirect("/cart");
   } catch (error) {
     console.error("Error adding the product to the cart:", error);
     res.redirect("/product");
@@ -127,6 +128,11 @@ async function decrementQuantity(productId, userId) {
     console.error("Error while increasing the stock", error);
   }
 }
+
+// controleller for posting the cart
+exports.postCart = (req, res) => {
+  res.redirect("/cart");
+};
 
 // router for increasing and decreasing the product and decreasing the stock
 exports.putStock = async (req, res) => {
@@ -200,5 +206,34 @@ exports.getCheckout = async (req, res) => {
   } catch (error) {
     console.error("Error while loading the checkout page:", error);
     res.redirect("/product");
+  }
+};
+
+// controller for removing the content from the cart
+exports.deleteProduct = async (req, res) => {
+  try {
+    const cartId = req.params.id;
+    // const userId = req.session.user; // Assuming you have a user object in your request
+    console.log(cartId);
+    // Use the model to find the cart item that matches the user, product ID, and remove it
+    const removedCartItem = await cartCollection.findOneAndRemove({
+      _id: cartId,
+      
+    });
+    console.log(cartId);
+    console.log(removedCartItem);
+    if (removedCartItem) {
+      // The product was successfully removed from the cart
+      console.log("Product successfully removed from the cart");
+      console.log(removedCartItem); // You can log the removed cart item if needed
+    } else {
+      // The product wasn't found in the cart
+      console.log("Product not found in the cart");
+    }
+
+    res.redirect("/cart");
+  } catch (error) {
+    console.error("Error while removing the product", error);
+    res.redirect("/cart");
   }
 };

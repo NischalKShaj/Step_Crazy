@@ -65,6 +65,13 @@ const stepCrazy = new mongoose.Schema({
           required: true,
         },
       ],
+      products: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "product", 
+          required: true,
+        },
+      ],
     },
   ],
   blocked: {

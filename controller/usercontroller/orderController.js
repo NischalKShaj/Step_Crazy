@@ -6,107 +6,164 @@ const userCollection = require("../../models/user/userDatabase");
 const productCollection = require("../../models/product/productDetails");
 
 // router for gettting the order confirmation page
+// exports.postOrderPage = async (req, res) => {
+//   const userId = req.session.user;
+
+//   try {
+//     const user = await userCollection.findOne({ email: userId });
+//     if (!user) {
+//       console.log("User not found");
+//       return res.render("error/404");
+//     }
+
+//     const cart = await cartCollection.find({ user: user._id });
+
+//     if (!cart || cart.length === 0) {
+//       console.log("Cart is empty");
+//       return res.render("error/404");
+//     }
+
+//     const orderItems = [];
+
+//     for (const cartItem of cart) {
+//       const { quantity, product } = cartItem;
+
+//       // Retrieve the current stock for the product
+//       const existingProduct = await productCollection.findOne({
+//         _id: product,
+//       });
+
+//       if (!existingProduct) {
+//         console.log(`Product with ID ${product} not found.`);
+//         continue;
+//       }
+
+//       const currentStock = existingProduct.stock;
+//       const newStock = currentStock - quantity;
+
+//       if (newStock >= 0 && quantity <= currentStock) {
+//         await productCollection.updateOne(
+//           { _id: product },
+//           { $set: { stock: newStock } }
+//         );
+
+//         // Add the cart and product details to orderItems
+//         orderItems.push({
+//           cart: cartItem._id,
+//           product,
+//           quantity,
+//         });
+//         console.log("orderItems.push",orderItems);
+//       } else {
+//         res.status(400).json({ message: "Out of stock", type: "danger" });
+//         return;
+//       }
+
+//       console.log(
+//         `Stock for product with ID ${product} updated to ${newStock}.`
+//       );
+//     }
+
+//     // Create the order document
+//     const order = {
+//       cart:cart._id,
+//       product,
+//     };
+
+//     console.log("order", order);
+
+//     // Add the order to the user collection
+//     user.order.push(order);
+
+//     console.log("user.order",user.order);
+
+//     // Save the contents in the user collection
+//     await user.save();
+
+//     // Remove the cart items
+//     await cartCollection.deleteMany({ user: user._id });
+
+//     // Render the thank-you page with order details
+//     res.render("user/thank-you", {
+//       orderDetail: orderItems,
+//     });
+//   } catch (error) {
+//     console.error("Error message", error);
+//     res.render("error/404");
+//   }
+// };
+
 exports.postOrderPage = async (req, res) => {
   const userId = req.session.user;
 
   try {
     const user = await userCollection.findOne({ email: userId });
     if (!user) {
-      console.log("inside the user error");
+      console.log("User not found");
       return res.render("error/404");
     }
 
-    // Retrieve the user's cart
-    const cart = await cartCollection
-      .findOne({ user: user._id })
-      .populate({ path: "product", populate: { path: "image" } });
+    const cart = await cartCollection.find({ user: user._id });
 
-    console.log("Cart of the products", cart);
-    if (!cart) {
-      console.log("inside the cart error");
+    if (!cart || cart.length === 0) {
+      console.log("Cart is empty");
       return res.render("error/404");
     }
 
-    // Create the order document
-    const order = {
-      cart: Array.isArray(cart) ? cart : [cart],
-    };
-
-    const cartItemsCopy = Array.isArray(order.cart)
-      ? [...order.cart]
-      : [order.cart];
-
-
-    for (const cartItem of order.cart) {
-      const { quantity, product: productID } = cartItem;
+    for (const cartItem of cart) {
+      const { quantity, product } = cartItem;
 
       // Retrieve the current stock for the product
       const existingProduct = await productCollection.findOne({
-        _id: productID,
+        _id: product,
       });
+
       if (!existingProduct) {
-        console.log(`Product with ID ${productID} not found.`);
+        console.log(`Product with ID ${product} not found.`);
         continue;
       }
 
       const currentStock = existingProduct.stock;
-
-      // Calculate the new stock after subtracting the quantity
       const newStock = currentStock - quantity;
 
-      // Check if the stock is not negative and the requested quantity is available
       if (newStock >= 0 && quantity <= currentStock) {
         await productCollection.updateOne(
-          { _id: productID },
+          { _id: product },
           { $set: { stock: newStock } }
         );
+
+        // Add the cart and product details to the user's order
+        user.order.push({
+          cart: cartItem._id,
+          products: product,
+          quantity,
+        });
+
+        console.log("user.ordre",user.order);
       } else {
         res.status(400).json({ message: "Out of stock", type: "danger" });
         return;
       }
 
-      console.log(
-        `Stock for product with ID ${productID} updated to ${newStock}.`
-      );
+      console.log(`Stock for product with ID ${product} updated to ${newStock}.`);
     }
 
-    // Get the product details from the populated order
-    const orderDetail = Array.isArray(order.cart)
-      ? [...order.cart]
-      : [order.cart];
-
-    console.log("Order", order);
-    // Add the order to the user collection
-    user.order.push({ cart: cartItemsCopy });
-
-    // Remove the content from the cart
-    // await cartCollection.deleteOne({ user: user._id });
-
-    // Save the contents in the user collection
+    // Save the updated user document with the order details
     await user.save();
 
-    console.log("Order details", orderDetail);
-    async function removeAllData() {
-      try {
-        const result = await cartCollection.deleteMany({});
-        console.log("All documents removed from the cart collection.");
-        console.log("Order after push", user.order);
-      } catch (error) {
-        console.error("Error while deleting documents:", error);
-      }
-    }
+    // Remove the cart items
+    await cartCollection.deleteMany({ user: user._id });
 
-    // Call the function to delete all documents from the StepCrazy collection
-    removeAllData();
-
+    // Render the thank-you page with order details
     res.render("user/thank-you", {
-      orderDetail: cartItemsCopy,
+      orderDetail: user.order,
     });
   } catch (error) {
     console.error("Error message", error);
     res.render("error/404");
   }
 };
+
 
 // controller for rendering the order history page with status
 exports.getOrderDetails = async (req, res) => {
@@ -117,32 +174,12 @@ exports.getOrderDetails = async (req, res) => {
     if (user) {
       const orders = user.order;
 
-      const orderDetails = await userCollection
-        .find({ email: userEmail })
-        .populate({
-          path: "order",
-          populate: {
-            path: "cart",
-            populate: {
-              path: "product",
-              model: "product",
-            },
-          },
-        })
-        .exec();
-
-      if (orderDetails) {
-        // Process the data before rendering
-        const processedOrders = orderDetails.map((order) => ({
-          _id: order._id,
-          date: order.created, // Assuming date is stored in the 'created' field
-          cart: order.order[0].cart, // Assuming the order is in the first element of the order array
-        }));
-        console.log("processedOrders :-", processedOrders);
-        res.render("user/orderHistory", { orders: processedOrders });
+      if (orders && orders.length > 0) {
+        // Assuming you want to show all orders for the user
+        res.render("user/orderHistory", { orders: orders });
       } else {
-        console.log("Orders not found");
-        res.redirect("/"); // Redirect to a suitable page when orders are not found
+        console.log("No orders found for the user");
+        res.redirect("/"); // Redirect to a suitable page when no orders are found
       }
     } else {
       console.log("User not found");

@@ -134,9 +134,8 @@
                       <li>
                         <strong>Order ID:</strong> <%= order._id %><br>
                         <strong>Order Date:</strong> <%= order.date %><br>
-                        <% if (order.cart.length === 0) { %>
-                          <p>No items in the cart</p>
-                        <% } else { %>
+                
+                        <% if (order.cart && order.cart.length > 0) { %>
                           <ul>
                             <% order.cart.forEach(cartItem => { %>
                               <li>
@@ -145,13 +144,13 @@
                                   <strong>Quantity:</strong> <%= cartItem.quantity %><br>
                                   <strong>Price:</strong> <%= cartItem.product.price %><br>
                                 <% } else { %>
-                                  <strong>Product Name:</strong> Product not available<br>
-                                  <strong>Quantity:</strong> <%= cartItem.quantity %><br>
-                                  <strong>Price:</strong> Price not available<br>
+                                  <p>Product details not available</p>
                                 <% } %>
                               </li>
                             <% }); %>
                           </ul>
+                        <% } else { %>
+                          <p>No items in the cart</p>
                         <% } %>
                       </li>
                     <% }); %>
@@ -159,6 +158,9 @@
                 <% } else { %>
                   <p>No orders found.</p>
                 <% } %>
+                
+                
+                
                 
                 
           

@@ -167,4 +167,3 @@ exports.postForgotLogin = async (req, res) => {
 exports.getOTP = (req, res) => {
   res.redirect("/login");
 };
-
