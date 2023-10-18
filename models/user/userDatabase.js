@@ -68,7 +68,13 @@ const stepCrazy = new mongoose.Schema({
       products: [
         {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "product", 
+          ref: "product",
+          required: true,
+        },
+      ],
+      quantity: [
+        {
+          type: String,
           required: true,
         },
       ],
