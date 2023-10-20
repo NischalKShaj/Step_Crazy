@@ -8,7 +8,7 @@ const productCollection = require("../../models/product/productDetails");
 // router for gettting the order confirmation page
 exports.postOrderPage = async (req, res) => {
   const userId = req.session.user;
-
+  const status = "Pending";
   try {
     const user = await userCollection.findOne({ email: userId });
     if (!user) {
@@ -50,6 +50,7 @@ exports.postOrderPage = async (req, res) => {
           cart: cartItem._id,
           products: product,
           quantity,
+          status : status,
         });
 
         console.log("user.order", user.order);
@@ -125,6 +126,24 @@ exports.getOrderDetails = async (req, res) => {
     }
   } catch (error) {
     console.error("Error while fetching order details:", error);
+    res.render("error/404");
+  }
+};
+
+// controller for cancelling the order
+exports.postCancelOrder = async (req, res) => {
+  const orderId = req.params.id;
+  try {
+    const filter = { "order._id": orderId };
+
+    const update = { $set: { "order.$.status": "Cancel" } }; // Set the status to "Cancel"
+
+    const result = await userCollection.updateOne(filter, update);
+
+    console.log("Order status updated to Cancel successfully");
+    res.redirect("/order");
+  } catch (error) {
+    console.error("An unexpected error occurred", error);
     res.render("error/404");
   }
 };

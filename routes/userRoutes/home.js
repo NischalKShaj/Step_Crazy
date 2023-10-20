@@ -119,5 +119,8 @@ router.get("/product/order", orderController.postOrderPage);
 // router for getting the order History page and the order status
 router.get("/order", orderController.getOrderDetails);
 
+// router for canceling the order
+router.post("/order/:id", orderController.postCancelOrder);
+
 // exporting the module to app.js
 module.exports = router;

@@ -119,8 +119,9 @@
                               <select name="status" class="form-select" style="padding: 5px; border: 1px solid #ced4da; border-radius: 0.25rem;">
                                 <option value="Pending" <%= orders[i].status === "Pending" ? 'selected' : '' %>>Pending</option>
                                 <option value="Shipped" <%= orders[i].status === "Shipped" ? 'selected' : '' %>>Shipped</option>
-                                <option value="Out for Delivery" <%= orders[i].status === "Out for Delivery" ? 'selected' : '' %>>Out for Delivery</option>
+                                <option value="Out for delivery" <%= orders[i].status === "Out for delivery" ? 'selected' : '' %>>Out for delivery</option>
                                 <option value="Delivered" <%= orders[i].status === "Delivered" ? 'selected' : '' %>>Delivered</option>
+                                <option value="Cancel" <%= orders[i].status === "Cancel" ? 'selected' : '' %>>Cancel</option>
                               </select>
                               
                               <button type="submit" class="btn btn-primary ml-2">Update</button>

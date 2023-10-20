@@ -153,7 +153,7 @@
                                         progressBarWidth = '50%';
                                       } else if (orders[i].status === 'Out for Delivery') {
                                         progressBarWidth = '75%';
-                                      } else if (orders[i].status === 'Delivered') {
+                                      } else if (orders[i].status === 'Delivered' || orders[i].status === 'Cancel') {
                                         progressBarWidth = '100%';
                                       } %>
                                       <div class="progress-bar"
@@ -174,14 +174,22 @@
                                 ></div>                                
                               </div>
                                 <div class="d-flex justify-content-around mb-1">
-                                  <p class="text-muted mt-1 mb-0 small ms-xl-5">Pending</p>
-                                  <p class="text-muted mt-1 mb-0 small ms-xl-5">Shipped</p>
-                                  <p class="text-muted mt-1 mb-0 small ms-xl-5">Out for Delivery</p>
-                                  <p class="text-muted mt-1 mb-0 small ms-xl-5">Delivered</p>
-                                  <button class="btn btn-danger mt-3">cancel</button>
+                                  <% if (orders[i].status === 'Cancel') { %>
+                                    <p class="text-muted mt-1 mb-0 small ms-xl-5">Canceled</p>
+                                    <% } else { %>
+                                    <p class="text-muted mt-1 mb-0 small ms-xl-5">Pending</p>
+                                    <p class="text-muted mt-1 mb-0 small ms-xl-5">Shipped</p>
+                                    <p class="text-muted mt-1 mb-0 small ms-xl-5">Out for Delivery</p>
+                                    <p class="text-muted mt-1 mb-0 small ms-xl-5">Delivered</p>
+                                  <% } %>
+                                  <form action="/order/<%= orders[i]._id %>" method="post">
+                                    <% if (orders[i].status !== 'Delivered' && orders[i].status !== 'Cancel') { %>
+                                      <button class="btn btn-danger mt-3" onclick="confirmCancel()">Cancel</button>
+                                    <% } %>
+                                  </form>
                                 </div>
                               </div>
-                           
+                           </div> 
                           </ul>
                           <% } %>
                         </div>
@@ -191,22 +199,7 @@
                 <% } else { %>
                   <p>No orders found.</p>
                 <% } %>
-                
-                
-                
-
-                
-              </div>
-              
-          
-          
-          
-          
-          
-          
-                
-                    
-              
+                </div>              
               </div>
             </div>
           </div>
@@ -214,6 +207,12 @@
       
     </section>
     
+    <script>
+      function confirmCancel(){
+        if(confirm("Are you sure you want to cancel the order"))
+        doucument.forms[0].submit;
+      }
+    </script>
     
     
   </body>
