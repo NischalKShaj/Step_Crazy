@@ -18,14 +18,14 @@ exports.getOrderPage = async (req, res) => {
 
       if (orders && orders.length > 0) {
         // Create an array to store all product details
-        const orderId = orders.id;
-        console.log("orderId", orderId);
+
         const allOrderDetails = [];
 
         for (const order of orders) {
           // Assuming each order has an array of product IDs in the "products" field
           const productIds = order.products;
-
+          const orderId = order._id;
+          console.log("orderId", orderId);
           console.log("productId", productIds);
 
           // Use populate to retrieve product details for each product ID
@@ -39,6 +39,7 @@ exports.getOrderPage = async (req, res) => {
         }
 
         console.log("allorderdetails", allOrderDetails);
+        console.log("orders", orders);
 
         res.render("admin/orderManagement", {
           orders: orders,
@@ -59,17 +60,21 @@ exports.getOrderPage = async (req, res) => {
 };
 
 // controller for updating the sataus of the order
-exports.updateStatus = async (req, res) => {
+exports.getUpdateStatus = async (req, res) => {
   const orderId = req.params.id;
-  console.log("orderId", orderId);
+  const newStatus = req.body.status;
+
   try {
-    const updatedStatus = await userCollection.findByIdAndUpdate(id, {
-      status: req.body.status,
-    });
-    console.log("updatedStatus", updatedStatus);
-    res.redirect("/dashboard/user");
+    const filter = { "order._id": orderId };
+
+    const update = { $set: { "order.$.status": newStatus } };
+
+    const result = await userCollection.updateOne(filter, update);
+
+    console.log("Order status updated successfully");
+    res.redirect("/admin/dashboard/user");
   } catch (error) {
-    console.error("There was an error while updating the order status", error);
+    console.error("An unexpected error occurred", error);
     res.render("error/404");
   }
 };

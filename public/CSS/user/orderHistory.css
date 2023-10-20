@@ -1,0 +1,34 @@
+/* Style for the Pending status */
+.progress-pending {
+    width: 0%; /* Change this to the desired width */
+    background-color: #FFD700; /* Change this to the desired background color */
+    /* Add any other styles you want for the Pending status */
+  }
+  
+  /* Style for the Shipped status */
+  .progress-shipped {
+    width: 20%; /* Change this to the desired width */
+    background-color: #00FF00; /* Change this to the desired background color */
+    /* Add any other styles you want for the Shipped status */
+  }
+  
+  /* Style for the Out for Delivery status */
+  .progress-out-for-delivery {
+    width: 50%; /* Change this to the desired width */
+    background-color: #FFA500; /* Change this to the desired background color */
+    /* Add any other styles you want for the Out for Delivery status */
+  }
+  
+  /* Style for the Delivered status */
+  .progress-delivered {
+    width: 100%; /* Change this to the desired width */
+    background-color: #008000; /* Change this to the desired background color */
+    /* Add any other styles you want for the Delivered status */
+  }
+  
+  /* Add any common styles for all progress bars here, e.g., border-radius, height */
+  .progress-bar {
+    height: 6px; /* Change this to the desired height */
+    border-radius: 16px; /* Change this to the desired border radius */
+  }
+  

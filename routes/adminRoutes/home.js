@@ -118,6 +118,6 @@ router.delete(
 router.get("/dashboard/order/:id", orderController.getOrderPage);
 
 // router for updating the order status
-router.put("/admin/dashboard/order/status/:id", orderController.updateStatus);
+router.post("/dashboard/order/status/:id", orderController.getUpdateStatus);
 
 module.exports = router;

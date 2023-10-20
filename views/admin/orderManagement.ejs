@@ -86,7 +86,7 @@
     <!-- contents of the order management page -->
     <div class="container">
       <div class="row my-4">
-        <div class="col-lg-14">
+        <div class="col-lg-12">
           <div class="table-responsive">
             <table class="table table-striped text-center">
               <thead>
@@ -103,64 +103,45 @@
               <tbody>
                 <% if (orders.length > 0) { %>
                   <% for (let i = 0; i < orders.length; i++) { %>
-                    <% let totalPrice = 0; %>
-                    <% for (let j = 0; j < orderDetails[i].length; j++) { %>
-                      <tr>
-                        <td><%= i + 1 %></td>
-                        <td><%= orderDetails[i][j].name %></td> <!-- Product Name -->
-                        <td><%= orders[i].quantity[j] %></td> <!-- Quantity -->
-                        <td><%= orderDetails[i][j].price %></td> <!-- Price -->
-                        <td>
-                          <select
-                            name="status"
-                            class="form-select"
-                            style="padding: 5px; border: 1px solid #ced4da; border-radius: 0.25rem;"
-                            onchange="updateStatus(this,  '<%= orders[i].id %>')" 
-                          >
-                            <option value="Pending" <%= orders[i].status === "Pending" ? 'selected' : '' %>>Pending</option>
-                            <option value="Shipped" <%= orders[i].status === "Shipped" ? 'selected' : '' %>>Shipped</option>
-                            <option value="Out of Delivery" <%= orders[i].status === "Out of Delivery" ? 'selected' : '' %>>Out of Delivery</option>
-                            <option value="Delivered" <%= orders[i].status === "Delivered" ? 'selected' : '' %>>Delivered</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <% totalPrice += orderDetails[i][j].price * orders[i].quantity[j]; %>
-                    <% } %>
+                    <tr>
+                      <td><%= i + 1 %></td>
+                      <td><%= orderDetails[i][0].name %></td> <!-- Product Name -->
+                      <td><%= orders[i].quantity[0] %></td> <!-- Quantity -->
+                      <td><%= orderDetails[i][0].price %></td> <!-- Price -->
+                      
+                     
+                      <td>
+                        
+                        <div class="row">
+                          <div class="col-6">
+                            <form action="/admin/dashboard/order/status/<%= orders[i]._id %>" method="post" class="d-flex">
+                              
+                              <select name="status" class="form-select" style="padding: 5px; border: 1px solid #ced4da; border-radius: 0.25rem;">
+                                <option value="Pending" <%= orders[i].status === "Pending" ? 'selected' : '' %>>Pending</option>
+                                <option value="Shipped" <%= orders[i].status === "Shipped" ? 'selected' : '' %>>Shipped</option>
+                                <option value="Out for Delivery" <%= orders[i].status === "Out for Delivery" ? 'selected' : '' %>>Out for Delivery</option>
+                                <option value="Delivered" <%= orders[i].status === "Delivered" ? 'selected' : '' %>>Delivered</option>
+                              </select>
+                              
+                              <button type="submit" class="btn btn-primary ml-2">Update</button>
+                            </form>
+                          </div>
+                        </div>
+                        
+                        
+                      </td>
+                    </tr>
                   <% } %>
                 <% } else { %>
                   <tr>
                     <td colspan="6">No orders found.</td>
                   </tr>
                 <% } %>
-                
-                
-                
               </tbody>
-              
             </table>
           </div>
         </div>
       </div>
     </div>
   </body>
-  <script>
-    // script tag for changing the order status
-    function updateStatus(selectElement, orderId){
-      const newStatus = selectElement.value;
-      fetch(`/admin/dashboard/order/status/${orderId}`,{
-        method:"put",
-        headers:{"Content-Type":"application/JSON"}
-      })
-      .then((response)=>{
-        if(response.ok){
-          console.log("The status of the order is changed successfully...");
-        } else {
-          console.log("There was an error while updating..");
-        }
-      })
-      .catch((error)=>{
-        console.error("Unexpected error took place while updating the orders...", error);
-      })
-    }
-  </script>
 </html>
