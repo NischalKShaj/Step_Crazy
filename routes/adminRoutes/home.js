@@ -8,6 +8,7 @@ const loginController = require("../../controller/admincontroller/homecontroller
 const productController = require("../../controller/admincontroller/productController");
 const userController = require("../../controller/admincontroller/userController");
 const categoryController = require("../../controller/admincontroller/categoryController");
+const orderController = require("../../controller/admincontroller/orderController");
 
 // router for getting the admin login page
 router.get("/", homecontroller.getAdminPage);
@@ -84,7 +85,10 @@ router.put(
 );
 
 // router for deleting the product
-router.get("/dashboard/product/delete/:image/:ProductId", productController.deleteImage)
+router.get(
+  "/dashboard/product/delete/:image/:ProductId",
+  productController.deleteImage
+);
 
 // router for getting the category page
 router.get("/dashboard/category", categoryController.getCategoryPage);
@@ -109,5 +113,11 @@ router.delete(
   "/dashboard/category/delete/:categoryId",
   categoryController.deleteCategory
 );
+
+// router for getting the order management page
+router.get("/dashboard/order/:id", orderController.getOrderPage);
+
+// router for updating the order status
+router.put("/admin/dashboard/order/status/:id", orderController.updateStatus);
 
 module.exports = router;

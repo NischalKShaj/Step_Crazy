@@ -1,11 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Step-Crazy/order-management</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/css/bootstrap-utilities.rtl.min.css"
+      integrity="sha512-g/9zc34RrAHk9cSFEodVsDR+TjDAhw9+VjWHnbK6kZe6sK4xTpPJ6cqJYd3WXfFmQuNLIkhDetQdm6fOOzj/nQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <!-- navbar for the order management page -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a href="/admin/dashboard">
+          <img
+            src="/Img/product/logo.png"
+            alt="logo"
+            class="img-fluid w-25"
+        /></a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a
+              class="nav-link active"
+              aria-current="page"
+              href="/admin/dashboard"
+              >Dashboard</a
+            >
+            <a
+              class="nav-link active"
+              aria-current="page"
+              href="/admin/dashboard/admins"
+              >Admins</a
+            >
+            <a
+              class="nav-link active"
+              aria-current="page"
+              href="/admin/dashboard/user"
+              >Users</a
+            >
+            <a
+              class="nav-link active"
+              aria-current="page"
+              href="/admin/dashboard/product"
+              >Product</a
+            >
+            <a
+              class="nav-link active"
+              aria-current="page"
+              href="/admin/dashboard/category"
+              >Category</a
+            >
+            
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- contents of the order management page -->
+    <div class="container">
+      <div class="row my-4">
+        <div class="col-lg-14">
+          <div class="table-responsive">
+            <table class="table table-striped text-center">
+              <thead>
+                <tr class="table-dark">
+                  <th>No.</th>
+                  
+                  
+                  <th>Product Name</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (orders.length > 0) { %>
+                  <% for (let i = 0; i < orders.length; i++) { %>
+                    <% let totalPrice = 0; %>
+                    <% for (let j = 0; j < orderDetails[i].length; j++) { %>
+                      <tr>
+                        <td><%= i + 1 %></td>
+                        <td><%= orderDetails[i][j].name %></td> <!-- Product Name -->
+                        <td><%= orders[i].quantity[j] %></td> <!-- Quantity -->
+                        <td><%= orderDetails[i][j].price %></td> <!-- Price -->
+                        <td>
+                          <select
+                            name="status"
+                            class="form-select"
+                            style="padding: 5px; border: 1px solid #ced4da; border-radius: 0.25rem;"
+                            onchange="updateStatus(this,  '<%= orders[i].id %>')" 
+                          >
+                            <option value="Pending" <%= orders[i].status === "Pending" ? 'selected' : '' %>>Pending</option>
+                            <option value="Shipped" <%= orders[i].status === "Shipped" ? 'selected' : '' %>>Shipped</option>
+                            <option value="Out of Delivery" <%= orders[i].status === "Out of Delivery" ? 'selected' : '' %>>Out of Delivery</option>
+                            <option value="Delivered" <%= orders[i].status === "Delivered" ? 'selected' : '' %>>Delivered</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <% totalPrice += orderDetails[i][j].price * orders[i].quantity[j]; %>
+                    <% } %>
+                  <% } %>
+                <% } else { %>
+                  <tr>
+                    <td colspan="6">No orders found.</td>
+                  </tr>
+                <% } %>
+                
+                
+                
+              </tbody>
+              
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    // script tag for changing the order status
+    function updateStatus(selectElement, orderId){
+      const newStatus = selectElement.value;
+      fetch(`/admin/dashboard/order/status/${orderId}`,{
+        method:"put",
+        headers:{"Content-Type":"application/JSON"}
+      })
+      .then((response)=>{
+        if(response.ok){
+          console.log("The status of the order is changed successfully...");
+        } else {
+          console.log("There was an error while updating..");
+        }
+      })
+      .catch((error)=>{
+        console.error("Unexpected error took place while updating the orders...", error);
+      })
+    }
+  </script>
 </html>

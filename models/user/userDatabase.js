@@ -78,6 +78,18 @@ const stepCrazy = new mongoose.Schema({
           required: true,
         },
       ],
+      status: {
+        type: String,
+        enum: [
+          "pending",
+          "shipped",
+          "out for delivery",
+          "deliverd",
+          "canceled",
+        ],
+        default: "pending",
+        required: true,
+      },
     },
   ],
   blocked: {

@@ -96,6 +96,7 @@
                   <th>Email</th>
                   <th>Phone</th>
                   <th>Action</th>
+                  <th>Orders</th>
                 </tr>
               </thead>
               <tbody>
@@ -128,6 +129,14 @@
 
                     <% } %>
                     <!-- Unblock Button (initially hidden) -->
+                  </td>
+                  <td>
+                    <a
+                      class="btn btn-primary active"
+                      href="/admin/dashboard/order/<%= row._id %>"
+                      role="button"
+                      >Order</a
+                    >
                   </td>
                   <% }) %>
                 </tr>
