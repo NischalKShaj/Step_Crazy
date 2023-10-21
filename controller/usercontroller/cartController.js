@@ -103,7 +103,7 @@ async function increamentQuantity(productId) {
       product.stock -= 1;
       await product.save();
       const cartItem = await cartCollection.findOne({
-        user: userId,
+        // user: userId,
         product: productId,
       });
     }
@@ -213,7 +213,7 @@ exports.getCheckout = async (req, res) => {
 exports.deleteProduct = async (req, res) => {
   try {
     const cartId = req.params.id;
-    // const userId = req.session.user; // Assuming you have a user object in your request
+    
     console.log(cartId);
     // Use the model to find the cart item that matches the user, product ID, and remove it
     const removedCartItem = await cartCollection.findOneAndRemove({
@@ -225,7 +225,7 @@ exports.deleteProduct = async (req, res) => {
     if (removedCartItem) {
       // The product was successfully removed from the cart
       console.log("Product successfully removed from the cart");
-      console.log(removedCartItem); // You can log the removed cart item if needed
+      console.log(removedCartItem); 
     } else {
       // The product wasn't found in the cart
       console.log("Product not found in the cart");

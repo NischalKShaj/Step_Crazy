@@ -120,7 +120,7 @@ router.get("/product/order", orderController.postOrderPage);
 router.get("/order", orderController.getOrderDetails);
 
 // router for canceling the order
-router.post("/order/:id", orderController.postCancelOrder);
+router.get("/order/:id", orderController.postCancelOrder);
 
 // exporting the module to app.js
 module.exports = router;

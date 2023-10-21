@@ -185,7 +185,7 @@
                           <h6 class="mb-0"></h6>
                         </div>
                         <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                          <a href="/cart/remove/<%= cartItem._id %>"><button type="button" class="btn btn-danger removeButton" id="removeButton_<%= cartItem._id %>">
+                          <a href="/cart/remove/<%= cartItem._id %>"><button type="button" class="btn btn-danger removeButton" id="removeButton_<%= cartItem._id %>" >
                             Remove
                           </button></a>
                           
@@ -338,6 +338,11 @@
           decrementQuantity(productId,userId,cartId)
         })
       })    
+
+      
+      
+
+
     </script>
   </body>
 </html>

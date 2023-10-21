@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Step-Crazy/Admindashboard</title>
   </head>
+  <link rel="stylesheet" href="../../CSS/admin/style.css">
+  <link rel="stylesheet" href="../.../CSS/admin/bootstrap.min.css">
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
     rel="stylesheet"
@@ -24,6 +26,12 @@
     integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
     crossorigin="anonymous"
     referrerpolicy="no-referrer"
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
   />
   <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -77,10 +85,9 @@
               href="/admin/dashboard/category"
               >Category</a
             >
-            
-            <a href="/admin/logout">
 
-              <button  class="btn btn-danger">
+            <a href="/admin/logout">
+              <button class="btn btn-danger">
                 <i class="fas fa-sign-out-alt"></i> Logout
               </button>
             </a>
@@ -89,7 +96,48 @@
       </div>
     </nav>
     <h1>welcome to the admin panel</h1>
+    <div class="container-fluid pt-4 px-4">
+      <div class="row g-4">
+        <div class="col-sm-12 col-xl-6">
+          <div class="bg-light rounded h-100 p-4">
+            <h6 class="mb-4">Single Line Chart</h6>
+            <canvas id="line-chart"></canvas>
+          </div>
+        </div>
+        <div class="col-sm-12 col-xl-6">
+          <div class="bg-light rounded h-100 p-4">
+            <h6 class="mb-4">Multiple Line Chart</h6>
+            <canvas id="salse-revenue"></canvas>
+          </div>
+        </div>
+        <div class="col-sm-12 col-xl-6">
+          <div class="bg-light rounded h-100 p-4">
+            <h6 class="mb-4">Single Bar Chart</h6>
+            <canvas id="bar-chart"></canvas>
+          </div>
+        </div>
+        <div class="col-sm-12 col-xl-6">
+          <div class="bg-light rounded h-100 p-4">
+            <h6 class="mb-4">Multiple Bar Chart</h6>
+            <canvas id="worldwide-sales"></canvas>
+          </div>
+        </div>
+        <div class="col-sm-12 col-xl-6">
+          <div class="bg-light rounded h-100 p-4">
+            <h6 class="mb-4">Pie Chart</h6>
+            <canvas id="pie-chart"></canvas>
+          </div>
+        </div>
+        <div class="col-sm-12 col-xl-6">
+          <div class="bg-light rounded h-100 p-4">
+            <h6 class="mb-4">Doughnut Chart</h6>
+            <canvas id="doughnut-chart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
+  <script src="../../js/chart.min.js"></script>
   <script>
     src =
       "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/js/bootstrap.bundle.min.js";

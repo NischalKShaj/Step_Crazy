@@ -7,55 +7,61 @@ const cartCollection = require("../../models/cart/cartDetail");
 
 // controller for getting the ordermanagement page
 exports.getOrderPage = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const user = await userCollection.findOne({ _id: id }).exec();
+  const admin = req.session.admin;
+  if(admin){
 
-    if (user) {
-      const orders = user.order;
-
-      console.log("user.order", user.order);
-
-      if (orders && orders.length > 0) {
-        // Create an array to store all product details
-
-        const allOrderDetails = [];
-
-        for (const order of orders) {
-          // Assuming each order has an array of product IDs in the "products" field
-          const productIds = order.products;
-          const orderId = order._id;
-          console.log("orderId", orderId);
-          console.log("productId", productIds);
-
-          // Use populate to retrieve product details for each product ID
-          const orderDetails = await productCollection
-            .find({ _id: { $in: productIds } })
-
-            .exec();
-          console.log("orderdetails", orderDetails);
-
-          allOrderDetails.push(orderDetails);
+    try {
+      const id = req.params.id;
+      const user = await userCollection.findOne({ _id: id }).exec();
+  
+      if (user) {
+        const orders = user.order;
+  
+        console.log("user.order", user.order);
+  
+        if (orders && orders.length > 0) {
+          // Create an array to store all product details
+  
+          const allOrderDetails = [];
+  
+          for (const order of orders) {
+            // Assuming each order has an array of product IDs in the "products" field
+            const productIds = order.products;
+            const orderId = order._id;
+            console.log("orderId", orderId);
+            console.log("productId", productIds);
+  
+            // Use populate to retrieve product details for each product ID
+            const orderDetails = await productCollection
+              .find({ _id: { $in: productIds } })
+  
+              .exec();
+            console.log("orderdetails", orderDetails);
+  
+            allOrderDetails.push(orderDetails);
+          }
+  
+          console.log("allorderdetails", allOrderDetails);
+          console.log("orders", orders);
+  
+          res.render("admin/orderManagement", {
+            orders: orders,
+            orderDetails: allOrderDetails,
+          });
+        } else {
+          console.log("No orders found for the user");
+          res.render("error/404")
         }
-
-        console.log("allorderdetails", allOrderDetails);
-        console.log("orders", orders);
-
-        res.render("admin/orderManagement", {
-          orders: orders,
-          orderDetails: allOrderDetails,
-        });
       } else {
-        console.log("No orders found for the user");
-        res.redirect("/admin/dashboard/user");
+        console.log("User not found");
+        res.render("error/404")
       }
-    } else {
-      console.log("User not found");
-      res.redirect("/dashboard/user");
+    } catch (error) {
+      console.error("Error while fetching order details:", error);
+      res.render("error/404");
     }
-  } catch (error) {
-    console.error("Error while fetching order details:", error);
-    res.render("error/404");
+  } else {
+    res.redirect("/admin");
   }
 };
 

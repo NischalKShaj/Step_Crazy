@@ -174,7 +174,7 @@
                     </form>
                     <input
                       style="margin-left: 1px"
-                      class="form-check-input"
+                      class="form-check-input address-checkbox"
                       type="radio"
                       name="flexRadioDefault"
                       id="flexRadioDefault"
@@ -540,8 +540,10 @@
 
       const payment = document.getElementById("check-payment");
       const orderLink = document.getElementById("order-link");
+      const addressCheckboxes = document.querySelectorAll(".address-checkbox");
       orderLink.addEventListener("click", (e) => {
-        if (payment.checked) {
+        const addressSelected = Array.from(addressCheckboxes).some((checkbox) => checkbox.checked);
+        if (payment.checked && addressSelected) {
           orderLink.href = "/product/order";
         } else {
           e.preventDefault();

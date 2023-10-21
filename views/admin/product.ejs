@@ -191,19 +191,22 @@
         e.preventDefault();
 
         const productId = this.id.split("_")[1];
+        const confirmation = confirm("Are you sure you want to deactivate this product?");
+        if(confirmation){
 
-        // fetching the api for deactivating the product
-        fetch(`/admin/dashboard/product/deactivate/${productId}`, {
-          method: "put",
-        })
-          .then((response) => {
-            if (response.ok) {
-              window.location.href = "/admin/dashboard/product"
-            }
+          fetch(`/admin/dashboard/product/deactivate/${productId}`, {
+            method: "put",
           })
-          .catch((error) => {
-            console.error("Network error", error);
-          });
+            .then((response) => {
+              if (response.ok) {
+                window.location.href = "/admin/dashboard/product"
+              }
+            })
+            .catch((error) => {
+              console.error("Network error", error);
+            });
+        }
+        // fetching the api for deactivating the product
       });
     });
 
@@ -212,19 +215,22 @@
       activateProduct.addEventListener("click", function (e) {
         e.preventDefault();
         const productId = this.id.split("_")[1];
-
+        const activation = confirm("Are you sure you want to activate the product?")
         // fetching the api for activating the product
-        fetch(`/admin/dashboard/product/activate/${productId}`, {
-          method: "PUT", 
-        })
-          .then((response) => {
-            if (response.ok) {
-              window.location.href = "/admin/dashboard/product"
-            }
+        if(activation){
+
+          fetch(`/admin/dashboard/product/activate/${productId}`, {
+            method: "PUT", 
           })
-          .catch((error) => {
-            console.error("Network error", error);
-          });
+            .then((response) => {
+              if (response.ok) {
+                window.location.href = "/admin/dashboard/product"
+              }
+            })
+            .catch((error) => {
+              console.error("Network error", error);
+            });
+        }
       });
     });
   </script>

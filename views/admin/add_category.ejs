@@ -25,11 +25,11 @@
                         <h3 class="text-light">Add Category</h3>
                     </div>
                     <div class="card-body p-4">
-                        <form action="/admin/dashboard/category" method="post" id="add-form">
+                        <form action="/admin/dashboard/category" method="post" id="add-form" onsubmit="return validateForm()">
                             
                             <div class="form-outline mb-2">
                                 <label  for="category">Category Name</label>
-                                <input  type="text" name="category">
+                                <input  type="text" name="category" id="categoryInput">
                                 
 
                             </div>
@@ -51,6 +51,22 @@
             "sha512-X/YkDZyjTf4wyc2Vy16YGCPHwAY8rZJY+POgokZjQB2mhIRFJCckEGc6YyX9eNsPfn0PzThEuNs+uaomE5CO6A==";
         crossorigin = "anonymous";
         referrerpolicy = "no-referrer";
+    </script>
+    <script>
+        function validateForm() {
+            var categoryInput = document.getElementById("categoryInput");
+            var categoryValue = categoryInput.value.trim(); // Remove leading/trailing spaces
+
+            if (categoryValue === "") {
+                alert("Category Name cannot be empty. Please enter a value.");
+                categoryInput.focus(); // Focus on the empty input field
+                return false; // Prevent form submission
+            }
+
+ 
+            return true;
+        }
+
     </script>
 </body>
 
