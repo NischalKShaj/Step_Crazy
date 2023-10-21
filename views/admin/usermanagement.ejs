@@ -161,36 +161,45 @@
 
   <script>
     // Function to handle blocking a user
+    
     function blockUser(userId) {
-      fetch(`/admin/dashboard/user/block-user/${userId}`, {
-        method: "POST",
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            // Update the UI to reflect the user is blocked
-            window.location.href = "/admin/dashboard/user";
-          }
+      const confirmation = confirm("Are you sure you want to block this user?");
+      if(confirmation){
+
+        fetch(`/admin/dashboard/user/block-user/${userId}`, {
+          method: "POST",
         })
-        .catch((error) => {
-          console.error("Error blocking user:", error);
-        });
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              // Update the UI to reflect the user is blocked
+              window.location.href = "/admin/dashboard/user";
+            }
+          })
+          .catch((error) => {
+            console.error("Error blocking user:", error);
+          });
+      }
     }
 
     // Function to handle unblocking a user
     function unblockUser(userId) {
-      fetch(`/admin/dashboard/user/unblock-user/${userId}`, {
-        method: "POST",
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            window.location.href = "/admin/dashboard/user";
-          }
+      const confirmation = confirm("Are you sure you want to unblock this user?");
+      if(confirmation){
+        
+        fetch(`/admin/dashboard/user/unblock-user/${userId}`, {
+          method: "POST",
         })
-        .catch((error) => {
-          console.error("Error unblocking user:", error);
-        });
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              window.location.href = "/admin/dashboard/user";
+            }
+          })
+          .catch((error) => {
+            console.error("Error unblocking user:", error);
+          });
+      }
     }
 
     // Get all block buttons
