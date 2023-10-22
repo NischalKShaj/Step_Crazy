@@ -174,6 +174,10 @@ https://templatemo.com/tm-559-zay-shop
               </li>
               <li><hr class="dropdown-divider" /></li>
               <li style="text-align: center">
+                <i class="fas fa-heart"></i> <a class="wishlist" href="/wishlist">Wishlist</a>
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li style="text-align: center">
                 <i class="fas fa-sign-out-alt"></i> <a class="logout" href="/logout">Logout</a>
               </li>
             </ul>
@@ -204,7 +208,21 @@ https://templatemo.com/tm-559-zay-shop
             </ul>
           </div>
           <% } %>
-          <a href="/cart"><i class="fas fa-shopping-cart"></i></a>
+         
+          <a href="/cart" style="position: relative; text-decoration: none; display: inline-block;">
+            <i class="fas fa-shopping-cart" style="z-index: 1;"></i>
+            <span style="position: absolute; top: -20px; right: -14px; background-color: black; color: white; border-radius: 50%; padding: 6px 10px; font-size: 12px; z-index: 2;">
+              <% let totalQuantity = 0; %>
+              <% cart.forEach((item) => { %>
+                <% totalQuantity += item.quantity; %>
+              <% }); %>
+              <%= totalQuantity %>
+            </span>
+          </a>
+          
+          
+          
+          
           <!-- navbar begins here -->
           <div class="navbar align-self-center d-flex">
             <div

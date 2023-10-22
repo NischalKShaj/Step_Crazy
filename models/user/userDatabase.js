@@ -84,6 +84,11 @@ const stepCrazy = new mongoose.Schema({
         default: "Pending",
         required: true,
       },
+      date: {
+        type: Date,
+        required: true,
+        default: Date.now,
+      },
     },
   ],
   blocked: {

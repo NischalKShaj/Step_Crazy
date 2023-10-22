@@ -372,7 +372,7 @@ https://templatemo.com/tm-559-zay-shop
               <div class="card-body">
                 <h1 class="h2"><%= productDetail.name %></h1>
                 <h3>Price</h3>
-                <p class="h2 py-4"><strong><%= productDetail.price %></strong></p>
+                <p class="h2 py-4">&#8377<strong> <%= productDetail.price %></strong></p>
                 <p class="py-2">
                   <i class="fa fa-star text-warning"></i>
                   <i class="fa fa-star text-warning"></i>
@@ -457,16 +457,18 @@ https://templatemo.com/tm-559-zay-shop
                     </div>
                   </div> -->
                   <div class="row pb-3">
-                    <!-- <div class="col d-grid">
+                    <div class="col d-grid">
+                      <a href="/product/wishlist/<%= productDetail._id %>" style="color: white;text-decoration: none;">
                       <button
                         type="submit"
-                        class="btn btn-success btn-lg"
+                        class="btn btn-primary btn-lg"
                         name="submit"
-                        value="buy"
+                        value="Add to wishlist"
                       >
-                        Buy
+                        Add to wishlist</a>
                       </button>
-                    </div> -->
+                    </div>
+
                     <div class="col d-grid">
                       <a href="/product/cart/<%= productDetail._id %>" style="color: white;text-decoration: none;">
                       <button
@@ -474,6 +476,9 @@ https://templatemo.com/tm-559-zay-shop
                         class="btn btn-primary btn-lg"
                         name="submit"
                         value="addtocard"
+                        <% if (productDetail.stock == 0) { %>
+                         disabled
+                        <% } %>
                       >Add to cart</a>
                         
                       </button>

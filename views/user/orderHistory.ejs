@@ -129,6 +129,7 @@
                             <% for (let j = 0; j < orderDetails[i].length; j++) { %>
                               <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
+                                  <p class="text-muted mb-0 small">Date:  <%= orders[i].date.toLocaleDateString() %></p>
                                   <strong>Product Name:</strong> <%= orderDetails[i][j].name %><br>
                                   <strong>Quantity:</strong> <%= orders[i].quantity[j] %><br>
                                   <% totalPrice += orderDetails[i][j].price * orders[i].quantity[j]; %>
@@ -137,14 +138,13 @@
                                 <!-- Display the product image -->
                                 <img src="<%= orderDetails[i][j].image[0] %>" alt="<%= orderDetails[i][j].name %>" class="img-fluid" style="max-height: 80px;">
                               </li>
-                              
-                            
                             <!-- Progress Bars -->
                             <div class="row d-flex align-items-center">
                               <div class="col-md-2">
                                 
                                 <p class="text-muted mb-0 small">Track Order</p>
                               </div>
+                              
                               <div class="col-md-10">
                                 <div class="progress mt-4" style="height: 6px; border-radius: 16px">
                                   

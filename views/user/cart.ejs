@@ -176,6 +176,9 @@
                             class="btn btn-link px-2 increment-button"
                             data-product-id="<%= cartItem.product._id %>"
                             cart-id = "<%= cartItem._id %>"
+                            <% if (cartItem.quantity >= cartItem.product.stock) { %>
+                              disabled
+                            <% } %>
                             
                           >
                           <i class="fas fa-plus"></i>
@@ -340,8 +343,6 @@
       })    
 
       
-      
-
 
     </script>
   </body>

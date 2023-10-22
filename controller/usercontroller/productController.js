@@ -16,8 +16,13 @@ exports.getProductDetail = async (req, res) => {
   const id = req.params.id;
   console.log(id);
   const productDetail = await collection.findById(id);
-  const cartDetail = await cartCollection.findOne({product:id})
+  const cartDetail = await cartCollection.findOne({ product: id });
   console.log(cartDetail);
-  // console.log(productDetail);
-  res.render("user/single_product", { productDetail,cartDetail });
+  
+  res.render("user/single_product", { productDetail, cartDetail });
+};
+
+// controller for showing the product in the wishlist
+exports.getWishlist = (req, res) => {
+  res.render("user/wishlist");
 };
