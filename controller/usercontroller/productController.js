@@ -22,7 +22,4 @@ exports.getProductDetail = async (req, res) => {
   res.render("user/single_product", { productDetail, cartDetail });
 };
 
-// controller for showing the product in the wishlist
-exports.getWishlist = (req, res) => {
-  res.render("user/wishlist");
-};
+

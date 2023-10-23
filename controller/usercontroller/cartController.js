@@ -79,7 +79,7 @@ exports.addProducts = async (req, res) => {
       console.log("cartItem ", cartItem);
       await cartItem.save();
       console.log("Product added to the cart successfully");
-      // window.history.replaceState({}, document.title, window.location.pathname);
+      
     }
 
     const cartItems = await cartCollection

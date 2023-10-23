@@ -7,6 +7,7 @@ const productController = require("../../controller/usercontroller/productContro
 const ProfileController = require("../../controller/usercontroller/profileController");
 const cartController = require("../../controller/usercontroller/cartController");
 const orderController = require("../../controller/usercontroller/orderController");
+const wishlistController = require("../../controller/usercontroller/wishlistController")
 const userMiddleware = require("../../middleware/user/session");
 
 // setting the router for this page
@@ -122,8 +123,11 @@ router.get("/order", orderController.getOrderDetails);
 // router for canceling the order
 router.get("/order/:id", orderController.postCancelOrder);
 
+// router for getting the wishlist
+router.get("/wishlist", wishlistController.getWishlist);
+
 // router for adding the product in the wishlist
-router.get("/wishlist", productController.getWishlist);
+router.get("/product/wishlist/:id" , wishlistController.addToWishlist)
 
 // router for getting the invoice of the product
 router.get("/invoice/:id", orderController.getOrderInvoice)

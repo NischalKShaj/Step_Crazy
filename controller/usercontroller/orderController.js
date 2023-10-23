@@ -155,31 +155,21 @@ exports.postCancelOrder = async (req, res) => {
 exports.getOrderInvoice = async (req, res) => {
   try {
     const orderId = req.params.id;
-    const invoiceDetails = await userCollection.findOne({ "order._id": orderId });
+
+    const invoiceDetails = await userCollection
+      .findOne({ "order._id": orderId })
+      .populate({
+        path: "order.products",
+      });
+
     console.log("invoiceDetais", invoiceDetails);
+
     res.render("user/invoice", { invoiceDetails });
   } catch (error) {
     console.error(
       "An unexpected error occuerd while generating the invoice",
       error
     );
+    res.render("error/404");
   }
 };
-
-// exports.getOrderInvoice = async (req, res) => {
-//   try {
-//     const orderId = req.params.id;
-//     const invoiceDetails = await userCollection.findOne({ "order._id": orderId });
-//     if (invoiceDetails) {
-//       console.log("invoiceDetails", invoiceDetails);
-//       res.render("user/invoice", { invoice: invoiceDetails });
-//     } else {
-//       // Handle the case where invoiceDetails is not found
-//       res.status(404).send("Invoice not found");
-//     }
-//   } catch (error) {
-//     console.error("An unexpected error occurred while generating the invoice", error);
-//     // Handle the error
-//     res.status(500).send("An error occurred");
-//   }
-// };
