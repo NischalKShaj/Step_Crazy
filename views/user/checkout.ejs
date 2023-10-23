@@ -124,7 +124,7 @@
                     Address
                   </div>
                   <% useAdd.forEach((userAddress) => { %>
-                    <% userAddress.address.forEach((address) => { %>
+                    <% userAddress.address.forEach((address, index) => { %>
                   <div class="card-body">
                     <form class="row g-3">
                       <div style="margin-bottom: 30px" class="col-12">
@@ -177,13 +177,13 @@
                       class="form-check-input address-checkbox"
                       type="radio"
                       name="flexRadioDefault"
-                      id="flexRadioDefault"
-                      data-address=""
+                      id="flexRadio<%= index %>"
+                      data-address='<%= JSON.stringify(address) %>'
                     />
                     <label
                       style="margin-left: 20px"
                       class="form-check-label"
-                      for="flexRadioDefault"
+                      id="flexRadio<%= index %>"
                     >
                       Select
                     </label>
@@ -537,19 +537,39 @@
             alert('An error occurred while saving the address.');
         });
     });
+    const payment = document.getElementById("check-payment");
+    const orderLink = document.getElementById("order-link");
+    const addressCheckboxes = document.querySelectorAll(".address-checkbox");
 
-      const payment = document.getElementById("check-payment");
-      const orderLink = document.getElementById("order-link");
-      const addressCheckboxes = document.querySelectorAll(".address-checkbox");
-      orderLink.addEventListener("click", (e) => {
-        const addressSelected = Array.from(addressCheckboxes).some((checkbox) => checkbox.checked);
-        if (payment.checked && addressSelected) {
-          orderLink.href = "/product/order";
-        } else {
-          e.preventDefault();
-          console.log("select the payment cash on delivery");
+    orderLink.addEventListener("click", (e) => {
+      const selectedAddresses = [];
+
+      // Check each address checkbox
+      addressCheckboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+          // Get the data-address attribute value, which should contain the selected address data
+          const addressData = JSON.parse(checkbox.getAttribute("data-address"));
+
+          if (addressData) {
+            // Assuming addressData contains necessary information, you can access specific fields
+            const addressText = addressData.fullAddress;
+            selectedAddresses.push(addressText); // Add the selected address to the array
+          }
         }
       });
+
+      if (payment.checked && selectedAddresses.length > 0) {
+        console.log("Selected Addresses: ", selectedAddresses);
+
+        // Now, update the order link with selected addresses (you can adjust the format as needed)
+        orderLink.href = `/product/order?addresses=${selectedAddresses.join(",")}`;
+      } else {
+        e.preventDefault();
+        console.log("Select payment (cash on delivery) and at least one address.");
+      }
+    });
+
+
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
   </body>

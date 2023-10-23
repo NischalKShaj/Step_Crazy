@@ -23,6 +23,8 @@ exports.postOrderPage = async (req, res) => {
       return res.render("error/404");
     }
 
+    const selectedAddress = req.query.addresses.split(",");
+
     for (const cartItem of cart) {
       const { quantity, product } = cartItem;
 
@@ -50,7 +52,8 @@ exports.postOrderPage = async (req, res) => {
           cart: cartItem._id,
           products: product,
           quantity,
-          status : status,
+          status: status,
+          selectedAddress: selectedAddress,
         });
 
         console.log("user.order", user.order);
@@ -147,3 +150,36 @@ exports.postCancelOrder = async (req, res) => {
     res.render("error/404");
   }
 };
+
+// controller for getting the invoice of the product
+exports.getOrderInvoice = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const invoiceDetails = await userCollection.findOne({ "order._id": orderId });
+    console.log("invoiceDetais", invoiceDetails);
+    res.render("user/invoice", { invoiceDetails });
+  } catch (error) {
+    console.error(
+      "An unexpected error occuerd while generating the invoice",
+      error
+    );
+  }
+};
+
+// exports.getOrderInvoice = async (req, res) => {
+//   try {
+//     const orderId = req.params.id;
+//     const invoiceDetails = await userCollection.findOne({ "order._id": orderId });
+//     if (invoiceDetails) {
+//       console.log("invoiceDetails", invoiceDetails);
+//       res.render("user/invoice", { invoice: invoiceDetails });
+//     } else {
+//       // Handle the case where invoiceDetails is not found
+//       res.status(404).send("Invoice not found");
+//     }
+//   } catch (error) {
+//     console.error("An unexpected error occurred while generating the invoice", error);
+//     // Handle the error
+//     res.status(500).send("An error occurred");
+//   }
+// };

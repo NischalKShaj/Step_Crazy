@@ -129,7 +129,10 @@
                             <% for (let j = 0; j < orderDetails[i].length; j++) { %>
                               <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
-                                  <p class="text-muted mb-0 small">Date:  <%= orders[i].date.toLocaleDateString() %></p>
+                                  <p class="text-muted mb-0 small">Date: <%= orders[i].date.toLocaleDateString() %></p>
+.
+
+
                                   <strong>Product Name:</strong> <%= orderDetails[i][j].name %><br>
                                   <strong>Quantity:</strong> <%= orders[i].quantity[j] %><br>
                                   <% totalPrice += orderDetails[i][j].price * orders[i].quantity[j]; %>
@@ -187,6 +190,8 @@
                                       <button class="btn btn-danger mt-3" type="button">Cancel</button>
                                     <% } %>
                                   </form>
+                                  <a href="/invoice/<%= orders[i]._id %>"><button class="btn btn-secondary mt-3" type="button">Invoice</button></a>
+                                  
                                 </div>
                               </div>
                            </div> 

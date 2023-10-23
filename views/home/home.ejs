@@ -289,112 +289,38 @@ https://templatemo.com/tm-559-zay-shop
     </div>
 
     <!-- Start Banner Hero -->
-    <div
-      id="template-mo-zay-hero-carousel"
-      class="carousel slide"
-      data-bs-ride="carousel"
-    >
+   
+    <div id="template-mo-zay-hero-carousel" class="carousel slide" data-bs-ride="carousel">
       <ol class="carousel-indicators">
-        <li
-          data-bs-target="#template-mo-zay-hero-carousel"
-          data-bs-slide-to="0"
-          class="active"
-        ></li>
-        <li
-          data-bs-target="#template-mo-zay-hero-carousel"
-          data-bs-slide-to="1"
-        ></li>
-        <li
-          data-bs-target="#template-mo-zay-hero-carousel"
-          data-bs-slide-to="2"
-        ></li>
+        <% bannerData.forEach((banner, index) => { %>
+          <li
+            data-bs-target="#template-mo-zay-hero-carousel"
+            data-bs-slide-to="<%= index %>"
+            <% if (index === 0) { %>class="active"<% } %>
+          ></li>
+        <% }); %>
       </ol>
+      <div class="container">
       <div class="carousel-inner">
-        <div class="carousel-item active">
-          <div class="container">
-            <div class="row p-5">
-              <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-                <img class="img-fluid" src="../Img/home/casuals4.webp" alt="" />
-              </div>
-              <div class="col-lg-6 mb-0 d-flex align-items-center">
-                <div class="text-align-left align-self-center">
-                  <h1 class="h1 text-success"><b>Step Crazy</b></h1>
-                  <h3 class="h2">Step into style</h3>
-                  <h3>Every Shoe Tells a Story 👟✨</h3>
-
-                  <!-- <a
-                      rel="sponsored"
-                      class="text-success"
-                      href="https://templatemo.com"
-                      target="_blank"
-                      >TemplateMo</a
-                    >
-                    website. Image credits go to
-                    <a
-                      rel="sponsored"
-                      class="text-success"
-                      href="https://stories.freepik.com/"
-                      target="_blank"
-                      >Freepik Stories</a
-                    >,
-                    <a
-                      rel="sponsored"
-                      class="text-success"
-                      href="https://unsplash.com/"
-                      target="_blank"
-                      >Unsplash</a
-                    >
-                    and
-                    <a
-                      rel="sponsored"
-                      class="text-success"
-                      href="https://icons8.com/"
-                      target="_blank"
-                      >Icons 8</a
-                    >. -->
-                  <!-- </p> -->
-                </div>
-              </div>
-            </div>
+        <% bannerData.forEach((banner, index) => { %>
+          <div class="carousel-item<%= index === 0 ? ' active' : '' %>">
+            
+              
+                <!-- <div class="mx-auto col-md-8 col-lg-6 order-lg-last"> -->
+                  <img class="img-fluid" src="/Img/<%= banner.image %>" alt="<%= banner.alt %>" style="width: 100%; height: auto;" />
+                <!-- </div> -->
+              
+            <!-- </div> -->
           </div>
-        </div>
-        <div class="carousel-item">
-          <div class="container">
-            <div class="row p-5">
-              <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-                <img class="img-fluid" src="../Img/home/casuals8.webp" alt="" />
-              </div>
-              <div class="col-lg-6 mb-0 d-flex align-items-center">
-                <div class="text-align-left">
-                  <h1 class="h1 text-success"><b>Step Crazy</b></h1>
-                  <h3 class="h2">From Classic to Trendsetting</h3>
-                  <h3>Unleash Your Shoe Passion Here 👟❤️</h3>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <div class="container">
-            <div class="row p-5">
-              <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-                <img class="img-fluid" src="../Img/login/style6.webp" alt="" />
-              </div>
-              <div class="col-lg-6 mb-0 d-flex align-items-center">
-                <div class="text-align-left">
-                  <h1 class="h1 text-success"><b>Step Crazy</b></h1>
-                  <h3 class="h2">Walk with Confidence</h3>
-                  <h3>Find Your Perfect Fit and Style 👡👢</h3>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <% }); %>
       </div>
+      </div>
+      
       <a
         class="carousel-control-prev text-decoration-none w-auto ps-3"
         href="#template-mo-zay-hero-carousel"
         role="button"
+        style="background-color: white;"
         data-bs-slide="prev"
       >
         <i class="fas fa-chevron-left"></i>
@@ -403,11 +329,14 @@ https://templatemo.com/tm-559-zay-shop
         class="carousel-control-next text-decoration-none w-auto pe-3"
         href="#template-mo-zay-hero-carousel"
         role="button"
+        style="background-color: white;"
         data-bs-slide="next"
       >
         <i class="fas fa-chevron-right"></i>
       </a>
     </div>
+    
+    
     <!-- End Banner Hero -->
 
     <!-- Start Categories of The Month -->

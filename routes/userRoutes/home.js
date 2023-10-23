@@ -125,5 +125,8 @@ router.get("/order/:id", orderController.postCancelOrder);
 // router for adding the product in the wishlist
 router.get("/wishlist", productController.getWishlist);
 
+// router for getting the invoice of the product
+router.get("/invoice/:id", orderController.getOrderInvoice)
+
 // exporting the module to app.js
 module.exports = router;

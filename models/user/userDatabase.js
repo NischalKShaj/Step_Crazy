@@ -84,6 +84,10 @@ const stepCrazy = new mongoose.Schema({
         default: "Pending",
         required: true,
       },
+      selectedAddress:{
+        type:Array,
+        required:true,
+      },
       date: {
         type: Date,
         required: true,

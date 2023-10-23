@@ -62,7 +62,7 @@ exports.postCategoryUpdate = async (req, res) => {
       category: req.body.category,
     });
 
-    console.log(upateCategory);
+    console.log("upateCategory",upateCategory);
     res.redirect("/admin/dashboard/category");
   } catch (error) {
     res.redirect("/admin/dashboard/category/edit");
