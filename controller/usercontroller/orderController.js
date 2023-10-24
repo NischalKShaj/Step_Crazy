@@ -4,8 +4,18 @@
 const cartCollection = require("../../models/cart/cartDetail");
 const userCollection = require("../../models/user/userDatabase");
 const productCollection = require("../../models/product/productDetails");
+const razorPay = require("razorpay");
 
-// router for gettting the order confirmation page
+// for taking the id and key from the env files
+const { razorpayIdKey, razorpaySecretKey } = process.env;
+
+// creating an instance for the payment
+const rayzorPayInstance = new razorPay({
+  key_id: razorpayIdKey,
+  key_secret: razorpaySecretKey,
+});
+
+// controller for gettting the order confirmation page
 exports.postOrderPage = async (req, res) => {
   const userId = req.session.user;
   const status = "Pending";
