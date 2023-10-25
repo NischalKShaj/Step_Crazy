@@ -138,5 +138,11 @@ router.get("/wishlist/remove/:id", wishlistController.getRemoveProduct);
 // router for getting the invoice of the product
 router.get("/invoice/:id", orderController.getOrderInvoice);
 
+// router for onlinepayment
+router.post("/onlinepayment", orderController.postOnlinePayment);
+
+// router for posting the order confirmation page
+router.post("/product/order", orderController.postOnlineConfirm);
+
 // exporting the module to app.js
 module.exports = router;

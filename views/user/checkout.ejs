@@ -110,7 +110,6 @@
 
     <section class="checkout spad">
       <div class="container">
-        
         <div class="row">
           <div class="col-lg-8">
             <h2 class="mt-4">Billing detail</h2>
@@ -123,8 +122,9 @@
                   >
                     Address
                   </div>
-                  <% useAdd.forEach((userAddress) => { %>
-                    <% userAddress.address.forEach((address, index) => { %>
+                  <% useAdd.forEach((userAddress) => { %> 
+                
+                    <%userAddress.address.forEach((address, index) => { %>
                   <div class="card-body">
                     <form class="row g-3">
                       <div style="margin-bottom: 30px" class="col-12">
@@ -178,7 +178,7 @@
                       type="radio"
                       name="flexRadioDefault"
                       id="flexRadio<%= index %>"
-                      data-address='<%= JSON.stringify(address) %>'
+                      data-address="<%= JSON.stringify(address) %>"
                     />
                     <label
                       style="margin-left: 20px"
@@ -189,25 +189,22 @@
                     </label>
                   </div>
                 </div>
-                
 
-                <div class="card-header">
-                  <% }) %>
-                  <% }) %>
-
+                <div class="card-header"><% }) %> 
+                <% }) %>
+                  </div>
               </div>
-            </div>
-            
-            
-            
-            <button  type="button" class="btn btn-primary mt-3 mb-5" data-bs-toggle="modal" data-bs-target="#exampleModal">
-              Add address
-            </button>
-          </div>
-          </div>
-          
-          
 
+              <button
+                type="button"
+                class="btn btn-primary mt-3 mb-5"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+              >
+                Add address
+              </button>
+            </div>
+          </div>
 
           <div class="col-lg-4">
             <div class="card" style="margin-top: 75px">
@@ -243,8 +240,13 @@
                           <td class="text-center"><%= item.quantity %></td>
                           <td class="text-center font-weight-bold">
                             &#x20B9;<%= (item.product.price *
-                            item.quantity).toFixed(2) %>
+                            item.quantity).toFixed(2) %> 
+                            <% let totalAmount = (item.product.price * item.quantity).toFixed(2) %>
+                            
                           </td>
+                          <td hidden id="totalPrice"><%= (item.product.price *item.quantity).toFixed(2) %> </td>
+
+                          
                         </tr>
                         <% }) %>
                       </tbody>
@@ -300,10 +302,10 @@
                       </label>
                     </div>
                   </div>
-                  <a id="order-link" href="">
+                  
                     <button
                       style="margin-top: 20px"
-                      type="submit"
+                      type="button"
                       class="btn btn-primary"
                       data-toggle="modal"
                       data-target="#exampleModal"
@@ -311,8 +313,8 @@
                       id="confirmation"
                     >
                       Confirm Order
-                    </button></a
-                  >
+                    </button>
+                  
                 </div>
               </div>
             </div>
@@ -321,256 +323,232 @@
       </div>
     </section>
 
-
-
     <!-- Button trigger modal -->
 
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Add new address</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form class="row g-3">
-          <div style="margin-bottom: 30px" class="col-12">
-            <label for="inputAddress" class="form-label"
-              >Address</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="inputAddress"
-              placeholder="1234 Main St"
-              name="fullAddress"
-              required
-            />
-          </div>
-
-          <div class="col-md-6">
-            <label for="inputCity" class="form-label">City</label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputCity"
-              name="city"
-              required
-            />
-          </div>
-          <div class="col-md-6">
-            <label for="inputLocality" class="form-label">Locality</label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputLocality"
-              name="locality"
-              required
-            />
-          </div>
-          <div class="col-md-3">
-            <label for="inputCity" class="form-label">State</label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputState"
-              name="state"
-              required
-            />
-          </div>
-
-          <div class="col-md-3">
-            <label for="inputZip" class="form-label">pincode</label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputZip"
-              name="pincode"
-              required
-            />
-          </div>
-
-          <div style="margin-top: 20px;" class="col-12">
-                                <button id="saveButton"  type="submit"
-                                    class="btn btn-primary">Save</button>
-                            </div>
-        </form>
-      </div>
-      
-    </div>
-  </div>
-</div>
-
-
-    <!-- <button
-              style="margin-top: 20px"
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">
+              Add new address
+            </h1>
+            <button
               type="button"
-              class="btn btn-primary"
-              data-toggle="modal"
-              data-target="#exampleModal"
-              data-whatever="@mdo"
-            >
-              Add New Address
-            </button>
-
-            <div
-              class="modal fade"
-              id="exampleModal"
-              tabindex="-1"
-              role="dialog"
-              aria-labelledby="exampleModalLabel"
-              aria-hidden="true"
-            >
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">
-                      New Address
-                    </h5>
-                    <button
-                      type="button"
-                      class="close"
-                      data-dismiss="modal"
-                      aria-label="Close"
-                    >
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <form class="row g-3">
-                      <div style="margin-bottom: 30px" class="col-12">
-                        <label for="inputAddress" class="form-label"
-                          >Address</label
-                        >
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="inputAddress"
-                          placeholder="1234 Main St"
-                          required
-                        />
-                      </div>
-
-                      <div class="col-md-6">
-                        <label for="inputCity" class="form-label">City</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="inputCity"
-                          required
-                        />
-                      </div>
-                      <div class="col-md-3">
-                        <label for="inputCity" class="form-label">State</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="inputState"
-                          required
-                        />
-                      </div>
-
-                      <div class="col-md-3">
-                        <label for="inputZip" class="form-label">pincode</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="inputZip"
-                          required
-                        />
-                      </div>
-
-                      <div style="margin-top: 20px;" class="col-12">
-                                            <button id="button" onclick="done" type="submit"
-                                                class="btn btn-primary">Save</button>
-                                        </div>
-                    </form>
-                  </div>
-                </div>
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form class="row g-3">
+              <div style="margin-bottom: 30px" class="col-12">
+                <label for="inputAddress" class="form-label">Address</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputAddress"
+                  placeholder="1234 Main St"
+                  name="fullAddress"
+                  required
+                />
               </div>
-            </div> -->
 
+              <div class="col-md-6">
+                <label for="inputCity" class="form-label">City</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputCity"
+                  name="city"
+                  required
+                />
+              </div>
+              <div class="col-md-6">
+                <label for="inputLocality" class="form-label">Locality</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputLocality"
+                  name="locality"
+                  required
+                />
+              </div>
+              <div class="col-md-3">
+                <label for="inputCity" class="form-label">State</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputState"
+                  name="state"
+                  required
+                />
+              </div>
 
+              <div class="col-md-3">
+                <label for="inputZip" class="form-label">pincode</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputZip"
+                  name="pincode"
+                  required
+                />
+              </div>
 
+              <div style="margin-top: 20px" class="col-12">
+                <button id="saveButton" type="submit" class="btn btn-primary">
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
+      
+      const totalPrice = document.getElementById("totalPrice").innerHTML
+      document
+        .getElementById("saveButton")
+        .addEventListener("click", function () {
+          // Get the input values from the form
+          const fullAddress = document.getElementById("inputAddress").value;
+          const city = document.getElementById("inputCity").value;
+          const locality = document.getElementById("inputLocality").value;
+          const state = document.getElementById("inputState").value;
+          const pincode = document.getElementById("inputZip").value;
 
-        document.getElementById('saveButton').addEventListener('click', function () {
-        // Get the input values from the form
-        const fullAddress = document.getElementById('inputAddress').value;
-        const city = document.getElementById('inputCity').value;
-        const locality = document.getElementById('inputLocality').value;
-        const state = document.getElementById('inputState').value;
-        const pincode = document.getElementById('inputZip').value;
-
-        // Create an object with the address data
-        const addressData = {
+          // Create an object with the address data
+          const addressData = {
             fullAddress: fullAddress,
             city: city,
             locality: locality,
             state: state,
-            pincode: pincode
-        };
+            pincode: pincode,
+          };
 
-        // Send the address data to the server (you'll need an AJAX request for this)
-        // Here, we're assuming you're using the fetch API to make a POST request to your server
-        fetch('/profile/save_address', {
-            method: 'POST',
+          // Send the address data to the server (you'll need an AJAX request for this)
+          // Here, we're assuming you're using the fetch API to make a POST request to your server
+          fetch("/profile/save_address", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json'
+              "Content-Type": "application/json",
             },
-            body: JSON.stringify(addressData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Handle the response from the server (e.g., display a success message)
-            if (data.success) {
-                alert('Address saved successfully!');
-            } else {
-                alert('Address not saved. Please try again.');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while saving the address.');
+            body: JSON.stringify(addressData),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              // Handle the response from the server (e.g., display a success message)
+              if (data.success) {
+                alert("Address saved successfully!");
+              } else {
+                alert("Address not saved. Please try again.");
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("An error occurred while saving the address.");
+            });
         });
-    });
-    const payment = document.getElementById("check-payment");
-    const orderLink = document.getElementById("order-link");
-    const addressCheckboxes = document.querySelectorAll(".address-checkbox");
+      const payment = document.getElementById("check-payment");
+      const onlinePayment = document.getElementById("check-payment1");
+      const orderLink = document.getElementById("confirmation");
+      const addressCheckboxes = document.querySelectorAll(".address-checkbox");
 
-    orderLink.addEventListener("click", (e) => {
-      const selectedAddresses = [];
+      
+        // document.getElementById("confirmation").addEventListener("click", async (e) => {
+      orderLink.addEventListener("click", async (e) => {
+         const selectedAddresses = [];
 
-      // Check each address checkbox
-      addressCheckboxes.forEach((checkbox) => {
-        if (checkbox.checked) {
-          // Get the data-address attribute value, which should contain the selected address data
-          const addressData = JSON.parse(checkbox.getAttribute("data-address"));
+        // Check each address checkbox
+        addressCheckboxes.forEach((checkbox) => {
+          if (checkbox.checked) {
+            // Get the data-address attribute value, which should contain the selected address data
+            const addressData = JSON.parse(
+              checkbox.getAttribute("data-address")
+            );
 
-          if (addressData) {
-            // Assuming addressData contains necessary information, you can access specific fields
-            const addressText = addressData.fullAddress;
-            selectedAddresses.push(addressText); // Add the selected address to the array
+            if (addressData) {
+              // Assuming addressData contains necessary information, you can access specific fields
+              const addressText = addressData.fullAddress;
+              selectedAddresses.push(addressText); // Add the selected address to the array
+            }
           }
+        });
+
+        if (payment.checked && selectedAddresses.length > 0) {
+          console.log("Selected Addresses: ", selectedAddresses);
+
+          // Now, update the order link with selected addresses (you can adjust the format as needed)
+          window.location.href = `/product/order?addresses=${selectedAddresses.join(
+            ","
+          )}`;
+        } else if (onlinePayment.checked && selectedAddresses.length > 0) {
+         
+          // try {
+          console.log(totalPrice,selectedAddresses);
+          // Create a Razorpay order and obtain the order ID
+          const response = await fetch("/onlinepayment", {
+            method: "post",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ totalAmount: totalPrice }),
+          })
+          .then(response => response.json())
+            .then(data =>{
+              console.log(data);
+            
+                const options = {
+                "key": "rzp_test_DU7TaXOm4TiDTg", // Enter the Key ID generated from the Dashboard
+                "amount": data.order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                "currency": "INR",
+                "name": data.name, //your business name
+                "description": "Test Transaction",
+                "image": "",
+                "order_id": data.order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                "callback_url":`/product/order?addresses=${selectedAddresses.join(
+            ","
+          )}`,
+                "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+                    // "name": "Gaurav Kumar", //your customer's name
+                    // "email": "",
+                    // "contact": "" //Provide the customer's phone number for better conversion rates 
+                },
+                "notes": {
+                    "address": "Razorpay Corporate Office"
+                },
+                "theme": {
+                    "color": "#3399cc"
+                }
+            };
+            const rzp1 = new Razorpay(options);
+            rzp1.open();
+            })
+        //   } catch (error) {
+        //   console.error("Error initiating Razorpay payment:", error);
+        // }
+        } else {
+          e.preventDefault();
+          console.log(
+            "Select payment (cash on delivery) and at least one address."
+          );
         }
       });
-
-      if (payment.checked && selectedAddresses.length > 0) {
-        console.log("Selected Addresses: ", selectedAddresses);
-
-        // Now, update the order link with selected addresses (you can adjust the format as needed)
-        orderLink.href = `/product/order?addresses=${selectedAddresses.join(",")}`;
-      } else {
-        e.preventDefault();
-        console.log("Select payment (cash on delivery) and at least one address.");
-      }
-    });
-
-
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>
