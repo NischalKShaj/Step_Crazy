@@ -98,6 +98,7 @@
                   <th>Quantity</th>
                   <th>Price</th>
                   <th>Status</th>
+                  <th>Payment Mode</th>
                 </tr>
               </thead>
               <tbody>
@@ -108,12 +109,10 @@
                       <td><%= orderDetails[i][0].name %></td> <!-- Product Name -->
                       <td><%= orders[i].quantity[0] %></td> <!-- Quantity -->
                       <td><%= orderDetails[i][0].price %></td> <!-- Price -->
-                      
-                     
                       <td>
                         
                         <div class="row">
-                          <div class="col-6">
+                          <div class="col-8">
                             <form action="/admin/dashboard/order/status/<%= orders[i]._id %>" method="post" class="d-flex">
                               
                               <select name="status" class="form-select" style="padding: 5px; border: 1px solid #ced4da; border-radius: 0.25rem;">
@@ -128,9 +127,8 @@
                             </form>
                           </div>
                         </div>
-                        
-                        
                       </td>
+                      <td><%= orders[i].paymentMethod %></td>
                     </tr>
                   <% } %>
                 <% } else { %>

@@ -17,7 +17,7 @@ const razorpay = new Razorpay({
   key_secret: razorpaySecretKey,
 });
 
-// controller for gettting the order confirmation page
+// controller for validating the stock after cashondelivery
 exports.postOrderPage = async (req, res) => {
   const userId = req.session.user;
   const status = "Pending";
@@ -36,6 +36,8 @@ exports.postOrderPage = async (req, res) => {
     }
 
     const selectedAddress = req.query.addresses.split(",");
+    const paymentMethod = req.query.paymentMethod;
+    console.log("paymentmethod", paymentMethod);
 
     for (const cartItem of cart) {
       const { quantity, product } = cartItem;
@@ -66,6 +68,7 @@ exports.postOrderPage = async (req, res) => {
           quantity,
           status: status,
           selectedAddress: selectedAddress,
+          paymentMethod: paymentMethod,
         });
 
         console.log("user.order", user.order);
@@ -114,6 +117,8 @@ exports.postOnlineConfirm = async (req, res) => {
     }
 
     const selectedAddress = req.query.addresses.split(",");
+    const paymentMethod = req.query.paymentMethod;
+    console.log("payment method", paymentMethod);
 
     for (const cartItem of cart) {
       const { quantity, product } = cartItem;
@@ -144,6 +149,7 @@ exports.postOnlineConfirm = async (req, res) => {
           quantity,
           status: status,
           selectedAddress: selectedAddress,
+          paymentMethod: paymentMethod,
         });
 
         console.log("user.order", user.order);
@@ -266,12 +272,27 @@ exports.getOrderInvoice = async (req, res) => {
         path: "order.products",
       });
 
-    console.log("invoiceDetais", invoiceDetails);
+    // Filter the order array to get the specific order by order ID
+    const specificOrder = invoiceDetails.order.find((order) =>
+      order._id.equals(orderId)
+    );
 
-    res.render("user/invoice", { invoiceDetails });
+    // Create a new object with the user details and the specific order
+    const invoiceData = {
+      _id: invoiceDetails._id,
+      first_name: invoiceDetails.first_name,
+      last_name: invoiceDetails.last_name,
+      email: invoiceDetails.email,
+      phone: invoiceDetails.phone,
+      gender: invoiceDetails.gender,
+      address: invoiceDetails.address,
+      order: [specificOrder],
+    };
+
+    res.render("user/invoice", { invoiceDetails: invoiceData });
   } catch (error) {
     console.error(
-      "An unexpected error occuerd while generating the invoice",
+      "An unexpected error occurred while generating the invoice",
       error
     );
     res.render("error/404");

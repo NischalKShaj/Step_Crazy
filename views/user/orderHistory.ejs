@@ -135,6 +135,7 @@
                                   <strong>Quantity:</strong> <%= orders[i].quantity[j] %><br>
                                   <% totalPrice += orderDetails[i][j].price * orders[i].quantity[j]; %>
                                   <strong>Price:</strong> &#8377 <%= totalPrice %><br>
+                                  <strong>Payment:</strong><%= orders[i].paymentMethod %><br>
                                 </div>
                                 <!-- Display the product image -->
                                 <img src="<%= orderDetails[i][j].image[0] %>" alt="<%= orderDetails[i][j].name %>" class="img-fluid" style="max-height: 80px;">

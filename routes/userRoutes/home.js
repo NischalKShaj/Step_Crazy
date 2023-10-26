@@ -8,6 +8,7 @@ const ProfileController = require("../../controller/usercontroller/profileContro
 const cartController = require("../../controller/usercontroller/cartController");
 const orderController = require("../../controller/usercontroller/orderController");
 const wishlistController = require("../../controller/usercontroller/wishlistController");
+const walletController = require("../../controller/usercontroller/walletController");
 const userMiddleware = require("../../middleware/user/session");
 
 // setting the router for this page
@@ -143,6 +144,9 @@ router.post("/onlinepayment", orderController.postOnlinePayment);
 
 // router for posting the order confirmation page
 router.post("/product/order", orderController.postOnlineConfirm);
+
+// router for getting the wallet page
+router.get("/wallet", walletController.getWallet);
 
 // exporting the module to app.js
 module.exports = router;

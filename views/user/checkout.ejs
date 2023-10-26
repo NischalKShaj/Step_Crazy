@@ -283,10 +283,11 @@
                       <input
                         class="form-check-input"
                         type="radio"
-                        name="flexRadioDefault1"
+                        name="paymentMethod"
+                        value="cod"
                         id="check-payment"
                       />
-                      <label class="form-check-label" for="flexRadioDefault4">
+                      <label class="form-check-label" for="cod">
                         Cash on delivery
                       </label>
                     </div>
@@ -294,11 +295,24 @@
                       <input
                         class="form-check-input"
                         type="radio"
-                        name="flexRadioDefault1"
+                        name="paymentMethod"
+                        value="onlinepayment"
                         id="check-payment1"
                       />
-                      <label class="form-check-label" for="flexRadioDefault5">
+                      <label class="form-check-label" for="onlinepayment">
                         Online payment
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="paymentMethod"
+                        value="wallet"
+                        id="check-payment2"
+                      />
+                      <label class="form-check-label" for="wallet">
+                        Wallet
                       </label>
                     </div>
                   </div>
@@ -469,6 +483,7 @@
       orderLink.addEventListener("click", async (e) => {
          const selectedAddresses = [];
 
+
         // Check each address checkbox
         addressCheckboxes.forEach((checkbox) => {
           if (checkbox.checked) {
@@ -485,13 +500,15 @@
           }
         });
 
+        const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
         if (payment.checked && selectedAddresses.length > 0) {
           console.log("Selected Addresses: ", selectedAddresses);
 
           // Now, update the order link with selected addresses (you can adjust the format as needed)
           window.location.href = `/product/order?addresses=${selectedAddresses.join(
             ","
-          )}`;
+          )}&paymentMethod=${paymentMethod}`;
         } else if (onlinePayment.checked && selectedAddresses.length > 0) {
          
           // try {
@@ -518,7 +535,7 @@
                 "order_id": data.order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
                 "callback_url":`/product/order?addresses=${selectedAddresses.join(
             ","
-          )}`,
+          )}&paymentMethod=${paymentMethod}`,
                 "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
                     // "name": "Gaurav Kumar", //your customer's name
                     // "email": "",

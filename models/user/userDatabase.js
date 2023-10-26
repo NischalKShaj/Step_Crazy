@@ -88,14 +88,22 @@ const stepCrazy = new mongoose.Schema({
         type: Array,
         required: true,
       },
-      paymentId: {
+      paymentMethod: {
         type: String,
+        enum: ["cod", "onlinepayment", "wallet"],
+        required: true,
       },
       date: {
         type: Date,
         required: true,
         default: Date.now,
       },
+    },
+  ],
+
+  wallet: [
+    {
+      type: Number,
     },
   ],
   blocked: {
