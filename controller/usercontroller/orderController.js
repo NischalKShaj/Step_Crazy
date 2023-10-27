@@ -47,12 +47,6 @@ exports.postOrderPage = async (req, res) => {
         _id: product,
       });
 
-      if (paymentMethod == "wallet" && user.wallet >= existingProduct.price) {
-        const message = "Insufficient balance in your wallet";
-        res.status(400).json({ message, type: "danger" });
-        return;
-      }
-
       if (!existingProduct) {
         console.log(`Product with ID ${product} not found.`);
         continue;
@@ -133,6 +127,100 @@ exports.postOnlineConfirm = async (req, res) => {
       const existingProduct = await productCollection.findOne({
         _id: product,
       });
+
+      if (!existingProduct) {
+        console.log(`Product with ID ${product} not found.`);
+        continue;
+      }
+
+      const currentStock = existingProduct.stock;
+      const newStock = currentStock - quantity;
+
+      if (newStock >= 0 && quantity <= currentStock) {
+        await productCollection.updateOne(
+          { _id: product },
+          { $set: { stock: newStock } }
+        );
+
+        // Add the cart and product details to the user's order
+        user.order.push({
+          cart: cartItem._id,
+          products: product,
+          quantity,
+          status: status,
+          selectedAddress: selectedAddress,
+          paymentMethod: paymentMethod,
+        });
+
+        console.log("user.order", user.order);
+      } else {
+        res.status(400).json({ message: "Out of stock", type: "danger" });
+        return;
+      }
+
+      console.log(
+        `Stock for product with ID ${product} updated to ${newStock}.`
+      );
+    }
+
+    // Save the updated user document with the order details
+    await user.save();
+
+    // Remove the cart items
+    await cartCollection.deleteMany({ user: user._id });
+
+    // Render the thank-you page with order details
+    res.render("user/thank-you", {
+      orderDetail: user.order,
+    });
+  } catch (error) {
+    console.error("Error message", error);
+    res.render("error/404");
+  }
+};
+
+// contoleller for validating the stock after wallet payment
+exports.getWalletPayment = async (req, res) => {
+  const userId = req.session.user;
+  const status = "Pending";
+  try {
+    const user = await userCollection.findOne({ email: userId });
+    if (!user) {
+      console.log("User not found");
+      return res.render("error/404");
+    }
+
+    const cart = await cartCollection.find({ user: user._id });
+
+    if (!cart || cart.length === 0) {
+      console.log("Cart is empty");
+      return res.render("error/404");
+    }
+
+    const selectedAddress = req.query.addresses.split(",");
+    const paymentMethod = req.query.paymentMethod;
+    console.log("payment method", paymentMethod);
+
+    for (const cartItem of cart) {
+      const { quantity, product } = cartItem;
+
+      // Retrieve the current stock for the product
+      const existingProduct = await productCollection.findOne({
+        _id: product,
+      });
+
+      const wallet = user.wallet;
+      // condition for checking whether the wallet is having less amount or not
+      if (wallet <= existingProduct.price) {
+        const message = "Your wallet is having insufficient amount";
+        res.status(400).json({ message, type: "danger" });
+        return;
+      } else if (wallet >= existingProduct.price) {
+        await userCollection.updateOne(
+          { email: userId },
+          { $inc: { wallet: -existingProduct.price } }
+        );
+      }
 
       if (!existingProduct) {
         console.log(`Product with ID ${product} not found.`);

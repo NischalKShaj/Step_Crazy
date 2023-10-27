@@ -145,6 +145,9 @@ router.post("/onlinepayment", orderController.postOnlinePayment);
 // router for posting the order confirmation page
 router.post("/product/order", orderController.postOnlineConfirm);
 
+// router for wallet payment
+router.get("/product/order/wallet", orderController.getWalletPayment);
+
 // router for getting the wallet page
 router.get("/wallet", walletController.getWallet);
 

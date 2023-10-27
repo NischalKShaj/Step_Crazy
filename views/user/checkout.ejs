@@ -554,13 +554,13 @@
             })
         
         } else if (walletPayment.checked && selectedAddresses.length > 0){
-          window.location.href = `/product/order?addresses=${selectedAddresses.join(
+          window.location.href = `/product/order/wallet?addresses=${selectedAddresses.join(
             ","
           )}&paymentMethod=${paymentMethod}`;
         }else {
           e.preventDefault();
           console.log(
-            "Select payment (cash on delivery) and at least one address."
+            "Select payment (cash on delivery) or online payment or wallet payment and at least one address."
           );
         }
       });
