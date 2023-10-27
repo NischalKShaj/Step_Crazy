@@ -27,7 +27,7 @@ app.use(express.static("uploads"));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// paring the user inputed data
+// parsing the user inputed data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

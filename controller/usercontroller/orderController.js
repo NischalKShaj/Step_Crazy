@@ -47,6 +47,12 @@ exports.postOrderPage = async (req, res) => {
         _id: product,
       });
 
+      if (paymentMethod == "wallet" && user.wallet >= existingProduct.price) {
+        const message = "Insufficient balance in your wallet";
+        res.status(400).json({ message, type: "danger" });
+        return;
+      }
+
       if (!existingProduct) {
         console.log(`Product with ID ${product} not found.`);
         continue;
@@ -245,13 +251,39 @@ exports.getOrderDetails = async (req, res) => {
 
 // controller for cancelling the order
 exports.postCancelOrder = async (req, res) => {
+  const userId = req.session.user;
+  let user;
   const orderId = req.params.id;
   try {
     const filter = { "order._id": orderId };
 
-    const update = { $set: { "order.$.status": "Cancel" } }; // Set the status to "Cancel"
+    const update = { $set: { "order.$.status": "Cancel" } };
 
     const result = await userCollection.updateOne(filter, update);
+
+    const order = await userCollection
+      .findOne(filter)
+      .populate({ path: "order.products" });
+
+    // Filter the order array to get the specific order by order ID
+    const specificOrder = order.order.find((order) =>
+      order._id.equals(orderId)
+    );
+    console.log("specificOrder", specificOrder);
+    console.log("order", order);
+
+    const payment = specificOrder.paymentMethod;
+    const product = specificOrder.products[0];
+    const price = product.price;
+    console.log("price", price);
+    console.log("payment", payment);
+    if (payment == "onlinepayment") {
+      console.log("hello");
+      user = await userCollection.updateOne(
+        { email: userId },
+        { $inc: { wallet: price } }
+      );
+    }
 
     console.log("Order status updated to Cancel successfully");
     res.redirect("/order");

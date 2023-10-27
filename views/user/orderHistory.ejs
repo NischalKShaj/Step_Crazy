@@ -186,7 +186,7 @@
                                   <% } %>
                                   <form method="get" onclick="checker('/order/<%= orders[i]._id %>')">
                                     <% if (orders[i].status !== 'Delivered' && orders[i].status !== 'Cancel') { %>
-                                      <button class="btn btn-danger mt-3" type="button">Cancel</button>
+                                      <button class="btn btn-danger mt-3"  type="button">Cancel</button>
                                     <% } %>
                                   </form>
                                   <a href="/invoice/<%= orders[i]._id %>"><button class="btn btn-secondary mt-3" type="button">Invoice</button></a>
@@ -211,15 +211,7 @@
       
     </section>
     
-    // <script>
-    //   function confirmCancel() {
-    //     var confirmation = confirm("Are you sure you want to cancel the order");
-    //     if (confirmation) {
-    //       document.forms[0].submit();
-    //     }
-    //     return !confirmation; 
-    //   }
-    // </script>
+
 
     
 

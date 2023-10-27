@@ -101,11 +101,10 @@ const stepCrazy = new mongoose.Schema({
     },
   ],
 
-  wallet: [
-    {
-      type: Number,
-    },
-  ],
+  wallet: {
+    type: Number,
+  },
+
   blocked: {
     type: Boolean,
     default: false,
