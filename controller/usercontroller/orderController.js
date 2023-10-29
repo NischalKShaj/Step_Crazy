@@ -209,6 +209,7 @@ exports.getWalletPayment = async (req, res) => {
         _id: product,
       });
 
+      
       const wallet = user.wallet;
       // condition for checking whether the wallet is having less amount or not
       if (wallet <= existingProduct.price) {
@@ -362,8 +363,9 @@ exports.postCancelOrder = async (req, res) => {
 
     const payment = specificOrder.paymentMethod;
     const product = specificOrder.products[0];
-    const price = product.price;
-    console.log("price", price);
+    const price = specificOrder.quantity * product.price;
+    console.log("price",price);
+    
     console.log("payment", payment);
     if (payment == "onlinepayment") {
       console.log("hello");

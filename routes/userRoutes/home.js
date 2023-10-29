@@ -151,5 +151,8 @@ router.get("/product/order/wallet", orderController.getWalletPayment);
 // router for getting the wallet page
 router.get("/wallet", walletController.getWallet);
 
+// router for searching the products
+router.get("/products/search", productController.searchProduct);
+
 // exporting the module to app.js
 module.exports = router;

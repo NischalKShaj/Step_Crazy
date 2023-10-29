@@ -22,6 +22,7 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap"
     />
     <link rel="stylesheet" href="../CSS/user/fontawesome.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <!--
     
 TemplateMo 559 Zay Shop
@@ -139,17 +140,17 @@ https://templatemo.com/tm-559-zay-shop
                   id="inputMobileSearch"
                   placeholder="Search ..."
                 />
-                <div class="input-group-text">
+                <!-- <div class="input-group-text">
                   <i class="fa fa-fw fa-search"></i>
-                </div>
+                </div> -->
               </div>
             </div>
-            <a
+            <!-- <a
               class="nav-icon d-none d-lg-inline"
               href="#"
               data-bs-toggle="modal"
               data-bs-target="#templatemo_search"
-            >
+            > -->
               <i class="fa fa-fw fa-search text-dark mr-2"></i>
             </a>
             <!-- <a class="nav-icon position-relative text-decoration-none" href="#">
@@ -266,13 +267,13 @@ https://templatemo.com/tm-559-zay-shop
         <div class="col-lg-9">
           <div class="row">
             <div class="col-md-6">
-              <!-- <ul class="list-inline shop-top-menu pb-3 pt-1">
-                <li class="list-inline-item">
+              <ul class="list-inline shop-top-menu pb-3 pt-1">
+                <!-- <li class="list-inline-item">
                   <a class="h3 text-dark text-decoration-none mr-3" href="#"
                     >All</a
                   >
-                </li>
-                <li class="list-inline-item">
+                </li> -->
+                <!-- <li class="list-inline-item">
                   <a class="h3 text-dark text-decoration-none mr-3" href="#"
                     >Men's</a
                   >
@@ -281,18 +282,18 @@ https://templatemo.com/tm-559-zay-shop
                   <a class="h3 text-dark text-decoration-none" href="#"
                     >Women's</a
                   >
-                </li>
-              </ul> -->
+                </li> -->
+              </ul>
             </div>
             <div class="col-md-6 pb-4">
-              <div class="d-flex">
-                <select class="form-control">
-                  <option>Featured</option>
-                  <option>A to Z</option>
-                  <option>Item</option>
-                </select>
+              <div class="input-group">
+                <input type="text" class="form-control" id="searchInput" placeholder="Search..">
+                <div class="input-group-append">
+                  <button class="btn btn-primary" id="searchButton" type="button"><i class="fas fa-search"></i></button>
+                </div>
               </div>
             </div>
+            
           </div>
           <div class="row">
             <% product.forEach((singleProduct) => { %>
@@ -694,6 +695,26 @@ https://templatemo.com/tm-559-zay-shop
     <script src="../js/bootstrap.bundle.min.js"></script>
     <script src="../js/templatemo.js"></script>
     <script src="../js/custom.js"></script>
+    <script>
+      document.getElementById('searchButton').addEventListener('click', async () => {
+        const searchQuery = document.getElementById('searchInput').value;
+
+        try {
+          const response = await fetch(`/products/search?name=${searchQuery}`);
+          if (response.ok) {
+            const product = await response.json();
+            // Display the product details in the #productDetails element.
+            document.getElementById('productDetails').innerHTML = `<p>${product.name}: ${product.description}</p>`;
+          } else {
+            // Handle errors, e.g., product not found
+            document.getElementById('productDetails').innerHTML = '<p>Product not found</p>';
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      });
+
+    </script>
     <!-- End Script -->
   </body>
 </html>
