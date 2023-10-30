@@ -152,7 +152,7 @@ router.get("/product/order/wallet", orderController.getWalletPayment);
 router.get("/wallet", walletController.getWallet);
 
 // router for searching the products
-router.get("/products/search", productController.searchProduct);
+router.get("/products/search", productController.getProductPage);
 
 // exporting the module to app.js
 module.exports = router;

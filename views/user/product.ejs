@@ -285,15 +285,19 @@ https://templatemo.com/tm-559-zay-shop
                 </li> -->
               </ul>
             </div>
+            <form  action="/products/search" method="get">
             <div class="col-md-6 pb-4">
               <div class="input-group">
-                <input type="text" class="form-control" id="searchInput" placeholder="Search..">
-                <div class="input-group-append">
-                  <button class="btn btn-primary" id="searchButton" type="button"><i class="fas fa-search"></i></button>
+                
+                  <input type="text" class="form-control" id="searchInput" placeholder="Search.." name="search">
+                  <button type="submit" class="btn btn-primary" id="searchButton"><i class="fas fa-search"></i></button>
+                
+                
+                  
                 </div>
               </div>
-            </div>
-            
+              
+            </form>
           </div>
           <div class="row">
             <% product.forEach((singleProduct) => { %>
@@ -303,8 +307,10 @@ https://templatemo.com/tm-559-zay-shop
             <div class="col-md-4">
               <div class="card mb-4 product-wap rounded-0">
                 <div class="card rounded-0" style="position: relative;">
-                  <img src="<%= singleProduct.image[0] %>" width="303" height="400" alt="Image Description" />
-                
+                 
+                  <img src="/<%= singleProduct.image[0] %>" width="303" height="400" alt="<%= singleProduct.name %>" />
+                  <% console.log("Image URL:", singleProduct.image[0]); %>
+                  <% console.log("Product Status:", singleProduct.status); %>
                   <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
                     <% if (singleProduct.stock == 0) { %>
                       <p style="color: red; text-align: center;">Product out of stock</p>
@@ -324,6 +330,7 @@ https://templatemo.com/tm-559-zay-shop
                   <ul
                     class="w-100 list-unstyled d-flex justify-content-between mb-0"
                   >
+                    <li><%= singleProduct.category %></li>
                     <li>M/L/X/XL</li>
                     
                   </ul>
@@ -695,26 +702,7 @@ https://templatemo.com/tm-559-zay-shop
     <script src="../js/bootstrap.bundle.min.js"></script>
     <script src="../js/templatemo.js"></script>
     <script src="../js/custom.js"></script>
-    <script>
-      document.getElementById('searchButton').addEventListener('click', async () => {
-        const searchQuery = document.getElementById('searchInput').value;
 
-        try {
-          const response = await fetch(`/products/search?name=${searchQuery}`);
-          if (response.ok) {
-            const product = await response.json();
-            // Display the product details in the #productDetails element.
-            document.getElementById('productDetails').innerHTML = `<p>${product.name}: ${product.description}</p>`;
-          } else {
-            // Handle errors, e.g., product not found
-            document.getElementById('productDetails').innerHTML = '<p>Product not found</p>';
-          }
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      });
-
-    </script>
     <!-- End Script -->
   </body>
 </html>

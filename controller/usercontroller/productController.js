@@ -4,10 +4,32 @@
 const collection = require("../../models/product/productDetails");
 const cartCollection = require("../../models/cart/cartDetail");
 
-// rendering the product page
+// controller for searching and to show the products
 exports.getProductPage = async (req, res) => {
-  const product = await collection.find();
-  res.render("user/product", { product });
+  try {
+    const search = req.query.search;
+
+    // if the search is enabled then it will show this
+    if (search) {
+      const product = await collection.find({
+        $or: [
+          { name: { $regex: ".*" + search + ".*", $options: "i" } },
+          { category: { $regex: ".*" + search + ".*", $options: "i" } },
+        ],
+      });
+
+      console.log("product", product);
+      res.render("user/product", { product });
+    } else {
+      // if the search is not activated then it will show this page
+      const product = await collection.find();
+
+      res.render("user/product", { product });
+    }
+  } catch (error) {
+    console.error("There is an error while loading the page");
+    res.render("error/404");
+  }
 };
 
 // rendering the product details page
@@ -20,29 +42,4 @@ exports.getProductDetail = async (req, res) => {
   console.log(cartDetail);
 
   res.render("user/single_product", { productDetail, cartDetail });
-};
-
-// controller for searching the products
-exports.searchProduct = async (req, res) => {
-  const productName = req.query.name;
-
-  try {
-    if (productName) {
-      // If the search query is not empty, use regex for a case-insensitive search
-      const regex = new RegExp(productName, "i");
-      const products = await collection.find({ name: regex });
-
-      if (products.length > 0) {
-        return res.json(products);
-      } else {
-        return res.status(404).json({ message: "No products found" });
-      }
-    } else {
-      // If the search query is empty, return all products
-      const products = await collection.find();
-      return res.json(products);
-    }
-  } catch (error) {
-    return res.status(500).json({ message: "Internal server error" });
-  }
 };
