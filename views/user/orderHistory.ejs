@@ -138,7 +138,7 @@
                                   <strong>Payment:</strong><%= orders[i].paymentMethod %><br>
                                 </div>
                                 <!-- Display the product image -->
-                                <img src="<%= orderDetails[i][j].image[0] %>" alt="<%= orderDetails[i][j].name %>" class="img-fluid" style="max-height: 80px;">
+                                <a href="/product/details/<%= orderDetails[i][j].id %>"><img src="<%= orderDetails[i][j].image[0] %>" alt="<%= orderDetails[i][j].name %>" class="img-fluid" style="max-height: 80px;"></a>
                               </li>
                             <!-- Progress Bars -->
                             <div class="row d-flex align-items-center">

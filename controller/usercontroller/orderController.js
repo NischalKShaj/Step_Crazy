@@ -440,8 +440,6 @@ exports.getReturnOrder = async (req, res) => {
     const specificOrder = order.order.find((order) =>
       order._id.equals(orderId)
     );
-    console.log("specificOrder", specificOrder);
-    console.log("order", order);
 
     const payment = specificOrder.paymentMethod;
     const product = specificOrder.products[0];
@@ -449,8 +447,7 @@ exports.getReturnOrder = async (req, res) => {
     console.log("price", price);
 
     console.log("payment", payment);
-    if (payment == "onlinepayment" || payment == "wallet") {
-      console.log("hello");
+    if (payment == "onlinepayment" || payment == "wallet" || payment == "cod") {
       user = await userCollection.updateOne(
         { email: userId },
         { $inc: { wallet: price } }
