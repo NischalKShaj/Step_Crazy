@@ -7,6 +7,8 @@ const productCollection = require("../../models/product/productDetails");
 const Razorpay = require("razorpay");
 const dotenv = require("dotenv");
 dotenv.config();
+const fs = require("fs");
+const PDFDocument = require("pdfkit");
 
 // for taking the id and key from the env files
 const { razorpayIdKey, razorpaySecretKey } = process.env;
@@ -398,19 +400,52 @@ exports.getOrderInvoice = async (req, res) => {
       order._id.equals(orderId)
     );
 
-    // Create a new object with the user details and the specific order
-    const invoiceData = {
-      _id: invoiceDetails._id,
-      first_name: invoiceDetails.first_name,
-      last_name: invoiceDetails.last_name,
-      email: invoiceDetails.email,
-      phone: invoiceDetails.phone,
-      gender: invoiceDetails.gender,
-      address: invoiceDetails.address,
-      order: [specificOrder],
-    };
+    // Create a new PDF document
+    const doc = new PDFDocument();
 
-    res.render("user/invoice", { invoiceDetails: invoiceData });
+    // Set response headers to trigger a download
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename="invoice.pdf"`);
+
+    // Pipe the PDF document to the response
+    doc.pipe(res);
+
+    // Add content to the PDF document
+    doc.fontSize(16).text("Invoice Details", { align: "center" });
+    doc.moveDown(1);
+    doc.fontSize(10).text("Customer Details", { align: "center" });
+    doc.text(`Order ID: ${orderId}`);
+    doc.moveDown(0.3);
+    doc.text(`Name: ${invoiceDetails.first_name} ${invoiceDetails.last_name}`);
+    doc.moveDown(0.3);
+    doc.text(`Email: ${invoiceDetails.email}`);
+    doc.moveDown(0.3);
+    doc.text(`Phone: ${invoiceDetails.phone}`);
+    doc.moveDown(0.3);
+    doc.text(`Gender: ${invoiceDetails.gender}`);
+    doc.moveDown(0.3);
+    doc.text(`Address: ${specificOrder.selectedAddress}`);
+    doc.moveDown(2);
+    doc.fontSize(10).text("Product Details", { align: "center" });
+    doc.moveDown(1);
+    doc.text(`Name: ${specificOrder.products[0].name}`);
+    doc.moveDown(0.3);
+    doc.text(`Detail: ${specificOrder.products[0].description}`);
+    doc.moveDown(0.3);
+    doc.text(`Quantity: ${specificOrder.quantity}`);
+    doc.moveDown(0.3);
+    doc.text(`Price: ${specificOrder.products[0].price}`);
+    doc.moveDown(0.3);
+    doc.fontSize(10).text("Payment Details", { align: "center" });
+    doc.moveDown(1);
+    doc.text(`Payment Method: ${specificOrder.paymentMethod}`);
+    doc.moveDown(3);
+    doc
+      .fontSize(16)
+      .text(
+        "Thank you for choosing Step Crazy! We appreciate your support and are excited to have you as part of our footwear family."
+      );
+    doc.end();
   } catch (error) {
     console.error(
       "An unexpected error occurred while generating the invoice",
