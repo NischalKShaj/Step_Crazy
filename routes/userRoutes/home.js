@@ -124,6 +124,9 @@ router.get("/order", orderController.getOrderDetails);
 // router for canceling the order
 router.get("/order/:id", orderController.postCancelOrder);
 
+// router for returning the order
+router.get("/order/returnOrder/:id", orderController.getReturnOrder);
+
 // router for getting the wishlist
 router.get("/wishlist", wishlistController.getWishlist);
 

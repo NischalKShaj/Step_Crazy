@@ -155,7 +155,7 @@
                                         progressBarWidth = '50%';
                                       } else if (orders[i].status === 'Out for delivery') {
                                         progressBarWidth = '75%';
-                                      } else if (orders[i].status === 'Delivered' || orders[i].status === 'Cancel') {
+                                      } else if (orders[i].status === 'Delivered' || orders[i].status === 'Cancel' || orders[i].status === "Returned") {
                                         progressBarWidth = '100%';
                                       } %>
                                       <div class="progress-bar"
@@ -178,19 +178,28 @@
                                 <div class="d-flex justify-content-around mb-1">
                                   <% if (orders[i].status === 'Cancel') { %>
                                     <p class="text-muted mt-1 mb-0 small ms-xl-5">Canceled</p>
+                                    <% } else if (orders[i].status === 'Returned') { %>
+                                      <p class="text-muted mt-1 mb-0 small ms-xl-5">Returned</p>
                                     <% } else { %>
                                     <p class="text-muted mt-1 mb-0 small ms-xl-5">Pending</p>
                                     <p class="text-muted mt-1 mb-0 small ms-xl-5">Shipped</p>
                                     <p class="text-muted mt-1 mb-0 small ms-xl-5">Out for Delivery</p>
                                     <p class="text-muted mt-1 mb-0 small ms-xl-5">Delivered</p>
+
                                   <% } %>
                                   <form method="get" onclick="checker('/order/<%= orders[i]._id %>')">
-                                    <% if (orders[i].status !== 'Delivered' && orders[i].status !== 'Cancel') { %>
+                                    <% if (orders[i].status !== 'Delivered' && orders[i].status !== 'Cancel' && orders[i].status !== "Returned") { %>
                                       <button class="btn btn-danger mt-3"  type="button">Cancel</button>
                                     <% } %>
                                   </form>
+                                  
                                   <a href="/invoice/<%= orders[i]._id %>"><button class="btn btn-secondary mt-3" type="button">Invoice</button></a>
                                   
+                                  <form method="get" onclick="returned('/order/returnOrder/<%= orders[i]._id %>')">
+                                    <% if(orders[i].status === "Delivered"){ %>
+                                      <button class="btn btn-warning mt-3" type="button">Return</button>
+                                    <% } %>
+                                  </form>
                                 </div>
                               </div>
                            </div> 
@@ -220,7 +229,7 @@
       <script>
 
         function checker(url) {
-      // swal("Hello world!");
+      
       swal({
         title: "Cancel Order",
         text: "Are You Sure You Want To Cancel Order?",
@@ -236,6 +245,21 @@
     
 
       </script>
+      <script>
+        function returned(url){
+          swal({
+            title: "Return product",
+            text: "Are you sure you want to return the product?", 
+            icon: "warning", 
+            buttons: true,
+            dangerMode: true,
+          }).then((willDelete)=>{
+            if(willDelete){
+              window.location.href=url
+            }
+          })
+        }
+        </script>
 
 
 

@@ -116,7 +116,7 @@
                   <tr>
                     <th scope="col" class="h5">Wishlist</th>
                     <th scope="col">Product Name</th>
-
+                    <th scope="col">Product Description</th>
                     <th scope="col">Price</th>
                     
                   </tr>
@@ -129,22 +129,26 @@
                     <th scope="row">
                       <div class="d-flex align-items-center">
                         <% if (item.product && item.product.image && item.product.image[0]) { %>
-                          <img
+                          <% console.log(`/product/details/ ${item.product.id} `) %>
+                          <a href="/product/details/<%= item.product.id %>"><img
                             src="/<%= item.product.image[0] %>"
                             class="img-fluid rounded-3"
                             alt="Cotton T-shirt"
                             style="width: 120px; height: 150px;"
-                          />
+                          /></a>
                           <% }else { %>
                             <h4>image not found</h4>
                             <% } %>
                         
-                        <div class="flex-column ms-4">
-                          <p class="mb-2"><%= item.product.name %></p>
-                          
-                        </div>
+                        
                       </div>
                     </th>
+                    <td>
+                      <div class="flex-column ms-4">
+                        <p class="mb-2"><%= item.product.name %></p>
+                        
+                      </div>
+                    </td>
                     <td class="align-middle">
                       <p class="mb-0" style="font-weight: 500; max-width: 250px;"><%= item.product.description %></p>
                     </td>

@@ -40,6 +40,6 @@ exports.getProductDetail = async (req, res) => {
   const productDetail = await collection.findById(id);
   const cartDetail = await cartCollection.findOne({ product: id });
   console.log(cartDetail);
-
+  console.log("product", productDetail);
   res.render("user/single_product", { productDetail, cartDetail });
 };

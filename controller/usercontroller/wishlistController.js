@@ -21,8 +21,9 @@ exports.getWishlist = async (req, res) => {
       .populate("product")
       .exec();
     res.render("user/wishlist", { wishlistItems });
+    
   } catch (error) {
-    // console.error("There is an unexpected error while showing the wishlist");
+    console.error("There is an unexpected error while showing the wishlist");
     res.redirect("error/404");
   }
 };

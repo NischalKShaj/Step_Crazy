@@ -209,7 +209,6 @@ exports.getWalletPayment = async (req, res) => {
         _id: product,
       });
 
-      
       const wallet = user.wallet;
       // condition for checking whether the wallet is having less amount or not
       if (wallet <= existingProduct.price) {
@@ -364,8 +363,8 @@ exports.postCancelOrder = async (req, res) => {
     const payment = specificOrder.paymentMethod;
     const product = specificOrder.products[0];
     const price = specificOrder.quantity * product.price;
-    console.log("price",price);
-    
+    console.log("price", price);
+
     console.log("payment", payment);
     if (payment == "onlinepayment") {
       console.log("hello");
@@ -417,6 +416,51 @@ exports.getOrderInvoice = async (req, res) => {
       "An unexpected error occurred while generating the invoice",
       error
     );
+    res.render("error/404");
+  }
+};
+
+// controller for returning the product
+exports.getReturnOrder = async (req, res) => {
+  const userId = req.session.user;
+  let user;
+  const orderId = req.params.id;
+  try {
+    const filter = { "order._id": orderId };
+
+    const update = { $set: { "order.$.status": "Returned" } };
+
+    const result = await userCollection.updateOne(filter, update);
+
+    const order = await userCollection
+      .findOne(filter)
+      .populate({ path: "order.products" });
+
+    // Filter the order array to get the specific order by order ID
+    const specificOrder = order.order.find((order) =>
+      order._id.equals(orderId)
+    );
+    console.log("specificOrder", specificOrder);
+    console.log("order", order);
+
+    const payment = specificOrder.paymentMethod;
+    const product = specificOrder.products[0];
+    const price = specificOrder.quantity * product.price;
+    console.log("price", price);
+
+    console.log("payment", payment);
+    if (payment == "onlinepayment" || payment == "wallet") {
+      console.log("hello");
+      user = await userCollection.updateOne(
+        { email: userId },
+        { $inc: { wallet: price } }
+      );
+    }
+
+    console.log("Order status updated to Cancel successfully");
+    res.redirect("/order");
+  } catch (error) {
+    console.error("An unexpected error occurred", error);
     res.render("error/404");
   }
 };
