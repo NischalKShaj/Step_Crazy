@@ -122,9 +122,9 @@
                     </a>
 
                     <a
-                      href="/admin/dashboard/coupon/delete/<%= row.id %>"
-                      class="text-danger"
-                      id="deactivate_"
+                      href="/admin//dashboard/coupon/delete/<%= row._id %>"
+                      class="text-danger delete-Coupon"
+                      id="deleteCoupon_<%= row._id %>"
                       ><i class="fas fa-trash fa-lg mx-1"></i>
                     </a>
                   </td>
@@ -138,5 +138,40 @@
         </div>
       </div>
     </div>
+    <script>
+      const deleteCoupon = document.querySelectorAll(".delete-Coupon");
+      
+
+      deleteCoupon.forEach((deleteCoup) => {
+        deleteCoup.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          const couponId = this.id.split("_")[1];
+          const confirmation = confirm(
+            "Are you sure you want to delete this coupon"
+          );
+          if (confirmation) {
+            // fetch method for deleting the category
+            fetch(`/admin/dashboard/coupon/delete/${couponId}`, {
+              method: "delete",
+            }).then((response) => {
+              if (response.ok) {
+                console.log("The coupon is deleted successfully");
+                this.parentNode.parentNode.remove();
+              } else {
+                console.log(
+                  "Error deleting the coupon",
+                  response.status,
+                  response.statusText
+                );
+              }
+            })
+            .catch((error)=>{
+              console.error("Network error");
+            })
+          }
+        });
+      });
+    </script>
   </body>
 </html>

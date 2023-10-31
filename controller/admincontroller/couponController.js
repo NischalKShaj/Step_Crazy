@@ -38,7 +38,60 @@ exports.postCoupnPage = async (req, res) => {
   }
 };
 
-// controller for editing the coupons
-exports.editCoupon = (req, res) => {
-  res.render("admin/edit_coupon");
+// controller for getting the edit page for the coupons
+exports.getEditCoupon = (req, res) => {
+  const id = req.params.id;
+  couponCollection
+    .findById(id)
+    .then((coupon) => {
+      if (!coupon) {
+        res.redirect("/admin/dashboard/coupon");
+      } else {
+        res.render("admin/edit_coupon", { coupon: coupon });
+      }
+    })
+    .catch((error) => {
+      console.log("Error finding the category....", error);
+      res.render("error/404");
+    });
+};
+
+// controller for updating the coupons
+exports.postCouponUpdate = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const updateCoupon = await couponCollection.findByIdAndUpdate(id, {
+      code: req.body.code,
+      discount: req.body.discount,
+      description: req.body.description,
+      expiryDate: req.body.expiryDate,
+      minAmount: req.body.minAmount,
+    });
+
+    res.redirect("/admin/dashboard/coupon");
+  } catch (error) {
+    res.redirect("/admin/dashboard/coupon/edit/:id");
+    console.log("There is an error while updating the values....", error);
+  }
+};
+
+// controller for deleting the coupons
+exports.deleteCoupon = async (req, res) => {
+  const couponId = req.params.couponId;
+  console.log(couponId);
+  try {
+    // Find and remove the coupon by ID
+    const deletedCoupon = await couponCollection.findByIdAndRemove(couponId);
+
+    if (!deletedCoupon) {
+      return res.status(404).json({ message: "Coupon not found" });
+    }
+
+    console.log("Coupon is deleted successfully");
+    return res.status(200).json({ message: "Coupon deleted successfully" });
+  } catch (error) {
+    console.error("Error in deleting the coupon", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 };

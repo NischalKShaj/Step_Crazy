@@ -130,4 +130,16 @@ router.get("/dashboard/coupon/add", couponController.getCouponAdd);
 // router for posting the coupon page
 router.post("/dashboard/coupon", couponController.postCoupnPage);
 
+// router for editing the coupon
+router.get("/dashboard/coupon/edit/:id", couponController.getEditCoupon);
+
+// router for updating the coupon
+router.post("/dashboard/coupon/update/:id", couponController.postCouponUpdate);
+
+// router for deleting the coupon
+router.delete(
+  "/dashboard/coupon/delete/:couponId",
+  couponController.deleteCoupon
+);
+
 module.exports = router;
