@@ -9,6 +9,7 @@ const productController = require("../../controller/admincontroller/productContr
 const userController = require("../../controller/admincontroller/userController");
 const categoryController = require("../../controller/admincontroller/categoryController");
 const orderController = require("../../controller/admincontroller/orderController");
+const couponController = require("../../controller/admincontroller/couponController");
 
 // router for getting the admin login page
 router.get("/", homecontroller.getAdminPage);
@@ -119,5 +120,14 @@ router.get("/dashboard/order/:id", orderController.getOrderPage);
 
 // router for updating the order status
 router.post("/dashboard/order/status/:id", orderController.getUpdateStatus);
+
+// router for getting the coupon page
+router.get("/dashboard/coupon", couponController.getCouponPage);
+
+// router for getting the page for adding the coupon
+router.get("/dashboard/coupon/add", couponController.getCouponAdd);
+
+// router for posting the coupon page
+router.post("/dashboard/coupon", couponController.postCoupnPage);
 
 module.exports = router;

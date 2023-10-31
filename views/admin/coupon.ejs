@@ -3,28 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Step-Crazy/Admins</title>
+    <title>Step-Crazy/coupons</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/css/bootstrap-utilities.rtl.min.css"
+      integrity="sha512-g/9zc34RrAHk9cSFEodVsDR+TjDAhw9+VjWHnbK6kZe6sK4xTpPJ6cqJYd3WXfFmQuNLIkhDetQdm6fOOzj/nQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
   </head>
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-    crossorigin="anonymous"
-  />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/css/bootstrap-utilities.rtl.min.css"
-    integrity="sha512-g/9zc34RrAHk9cSFEodVsDR+TjDAhw9+VjWHnbK6kZe6sK4xTpPJ6cqJYd3WXfFmQuNLIkhDetQdm6fOOzj/nQ=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
   <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
@@ -77,60 +77,66 @@
               href="/admin/dashboard/category"
               >Category</a
             >
-            <a
-              class="nav-link active"
-              aria-current="page"
-              href="/admin/dashboard/coupon"
-              >Coupons</a
+            <a href="/admin/dashboard/coupon/add">
+              <button type="submit" class="btn btn-primary">
+                Add Coupons
+              </button></a
             >
-            <a href="/admin/dashboard/admins/add">
-              <button type="submit" class="btn btn-primary">Add Admin</button></a
-            >
-        </div>
           </div>
         </div>
       </div>
     </nav>
+    <!-- content for the coupon page -->
     <div class="container">
       <div class="row my-4">
         <div class="col-lg-14">
           <div class="table-responsive">
-            <% if (admin !== '') { %>
             <table class="table table-striped text-center">
               <thead>
                 <tr class="table-dark">
-                  <th>Id</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  
+                  <th>No.</th>
+                  <th>Code</th>
+                  <th>Discount</th>
+                  <th>Description</th>
+                  <th>Min Amount</th>
+                  <th>Expiry Date</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                <% admin.forEach((row, index) => { %>
+                <% coupon.forEach((row, index) => { %>
+                 
+                
                 <tr>
                   <td><%= index+1 %></td>
-                  <td><%= row.name %></td>
-                  <td><%= row.email %></td>
-                  
-                  <% }) %>
+                  <td><%= row.code %></td>
+                  <td><%= row.discount %>%</td>
+                  <td><%= row.description %></td>
+                  <td><%= row.minAmount %></td>
+                  <td><%= row.expiryDate %></td>
+                  <td>
+                    <a
+                      href="/admin/dashboard/coupon/edit/<%= row.id %>"
+                      class="text-success"
+                      ><i class="fas fa-edit fa-lg"></i>
+                    </a>
+
+                    <a
+                      href="/admin/dashboard/coupon/delete/<%= row.id %>"
+                      class="text-danger"
+                      id="deactivate_"
+                      ><i class="fas fa-trash fa-lg mx-1"></i>
+                    </a>
+                  </td>
                 </tr>
+                <% }) %>
               </tbody>
             </table>
-            <% } else {%>
-              <h1>There is no data in the database</h1>
-              <% } %>
+
+            
           </div>
         </div>
       </div>
     </div>
   </body>
-  <script>
-    src =
-      "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/js/bootstrap.bundle.min.js";
-    integrity =
-      "sha512-X/YkDZyjTf4wyc2Vy16YGCPHwAY8rZJY+POgokZjQB2mhIRFJCckEGc6YyX9eNsPfn0PzThEuNs+uaomE5CO6A==";
-    crossorigin = "anonymous";
-    referrerpolicy = "no-referrer";
-  </script>
-  
 </html>
