@@ -8,26 +8,49 @@ const cartCollection = require("../../models/cart/cartDetail");
 exports.getProductPage = async (req, res) => {
   try {
     const search = req.query.search;
+    const page = parseInt(req.query.page) || 1; // Default to page 1
+    const priceRange = req.query.priceRange;
+    const limit = 9;
 
-    // if the search is enabled then it will show this
+    // Calculate the skip value to paginate
+    const skip = (page - 1) * limit;
+
+    // Define a base query
+    const query = {};
+
+    // Add the search criteria to the query
     if (search) {
-      const product = await collection.find({
-        $or: [
-          { name: { $regex: ".*" + search + ".*", $options: "i" } },
-          { category: { $regex: ".*" + search + ".*", $options: "i" } },
-        ],
-      });
-
-      console.log("product", product);
-      res.render("user/product", { product });
-    } else {
-      // if the search is not activated then it will show this page
-      const product = await collection.find();
-
-      res.render("user/product", { product });
+      query.$or = [
+        { name: { $regex: ".*" + search + ".*", $options: "i" } },
+        { category: { $regex: ".*" + search + ".*", $options: "i" } },
+      ];
     }
+
+    // Add the price range filter to the query
+    if (priceRange) {
+      const [minPrice, maxPrice] = priceRange.split("-");
+      if (minPrice) {
+        query.price = { $gte: parseInt(minPrice) };
+      }
+      if (maxPrice) {
+        if (query.price) {
+          query.price.$lte = parseInt(maxPrice);
+        } else {
+          query.price = { $lte: parseInt(maxPrice) };
+        }
+      }
+    }
+
+    // Perform the database query with pagination
+    const product = await collection
+      .find(query)
+      .skip(skip)
+      .limit(limit);
+
+    console.log("product", product);
+    res.render("user/product", { product });
   } catch (error) {
-    console.error("There is an error while loading the page");
+    console.error("There is an error while loading the page", error);
     res.render("error/404");
   }
 };

@@ -224,36 +224,34 @@ https://templatemo.com/tm-559-zay-shop
         <div class="col-lg-3">
           <article class="filter-group">
             <header class="card-header">
-              
-                <h6 class="title">Price range</h6>
-              </a>
+              <h6 class="title">Price range</h6>
             </header>
             <div class="filter-content collapse show" id="collapse_3">
               <div class="card-body">
-                <div class="form-group">
-                  <label>Price Range</label>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="range_1" name="priceRange" class="custom-control-input">
-                    <label class="custom-control-label" for="range_1">0 - 1000</label>
+                <form id="priceRangeForm" action="/products/search?priceRange=" method="get">
+                  <div class="form-group">
+                    <label>Price Range</label>
+                    <div class="custom-control custom-radio">
+                      <input type="radio" id="range_1" name="priceRange" class="custom-control-input" value="0-1000">
+                      <label class="custom-control-label" for="range_1">0 - 1000</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                      <input type="radio" id="range_2" name="priceRange" class="custom-control-input" value="1001-5000">
+                      <label class="custom-control-label" for="range_2">1001 - 5000</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                      <input type="radio" id="range_3" name="priceRange" class="custom-control-input" value="5001-30000">
+                      <label class="custom-control-label" for="range_3">5001 - 30000</label>
+                    </div>
+                    
+                    <!-- Add other price range options here -->
                   </div>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="range_1" name="priceRange" class="custom-control-input">
-                    <label class="custom-control-label" for="range_1">1001 - 5000</label>
-                  </div>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="range_1" name="priceRange" class="custom-control-input">
-                    <label class="custom-control-label" for="range_1">5001 - 30000</label>
-                  </div>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="range_1" name="priceRange" class="custom-control-input">
-                    <label class="custom-control-label" for="range_1">30000+</label>
-                  </div>
-                  <!-- Add other price range options here -->
-                </div>
-                <button class="btn btn-block btn-primary"  type="submit">Apply</button>
+                  <button class="btn btn-block btn-primary" type="submit">Apply</button>
+                </form>
               </div>
             </div>
           </article>
+          
         </div>
 
 
@@ -337,26 +335,26 @@ https://templatemo.com/tm-559-zay-shop
             <% }) %>
           </div>
           <div div="row">
-            <ul class="pagination pagination-lg justify-content-end">
-              <li class="page-item disabled">
+            <ul class="pagination pagination-lg justify-content-end" id="pagination">
+              <li class="page-item">
                 <a
                   class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
-                  href="#"
+                  href="/products/search?page=1"
                   tabindex="-1"
                   >1</a
                 >
               </li>
               <li class="page-item">
                 <a
-                  class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"
-                  href="#"
+                  class="page-link active  mr-3 shadow-sm border-top-0 border-left-0"
+                  href="/products/search?page=2"
                   >2</a
                 >
               </li>
               <li class="page-item">
                 <a
-                  class="page-link rounded-0 shadow-sm border-top-0 border-left-0 text-dark"
-                  href="#"
+                  class="page-link active rounded-0 shadow-sm border-top-0 border-left-0"
+                  href="/products/search?page=3"
                   >3</a
                 >
               </li>
@@ -377,7 +375,7 @@ https://templatemo.com/tm-559-zay-shop
               Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
               eiusmod Lorem ipsum dolor sit amet.
             </p>
-          </div>
+          </div>page
           <div class="col-lg-9 m-auto tempaltemo-carousel">
             <div class="row d-flex flex-row"> -->
               <!--Controls-->
@@ -698,8 +696,31 @@ https://templatemo.com/tm-559-zay-shop
     <script src="../js/templatemo.js"></script>
     <script src="../js/custom.js"></script>
     <script>
+      document.querySelectorAll('.custom-radio input').forEach((radio) => {
+        radio.addEventListener('change', function() {
+          const selectedValue = this.value;
+          const form = document.getElementById('priceRangeForm');
+          form.action = `/products/search?priceRange=${selectedValue}`;
+        });
+      });
 
     </script>
+  
+  <!-- <script>
+    // JavaScript code to update pagination links
+    const pagination = document.getElementById("pagination");
+    
+    // Total number of pages (replace with your actual value)
+    const totalPages = 10;
+    
+    // Dynamically set the href for each pagination link
+    for (let i = 1; i <= totalPages; i++) {
+      const pageLink = pagination.querySelector(`[href="/products/search/page=${i}"]`);
+      if (pageLink) {
+        pageLink.href = `/products/search/page=${i}`;
+      }
+    }
+    </script> -->
 
     <!-- End Script -->
   </body>
