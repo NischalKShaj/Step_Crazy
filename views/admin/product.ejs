@@ -186,6 +186,7 @@
     crossorigin = "anonymous";
     referrerpolicy = "no-referrer";
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
   <script>
     const deactivate = document.querySelectorAll("[id^='deactivate_']");
@@ -193,51 +194,73 @@
 
     //  for deactivating the product
     deactivate.forEach((deactivateProduct) => {
-      deactivateProduct.addEventListener("click", function (e) {
-        e.preventDefault();
+  deactivateProduct.addEventListener("click", function (e) {
+    e.preventDefault();
 
-        const productId = this.id.split("_")[1];
-        const confirmation = confirm("Are you sure you want to deactivate this product?");
-        if(confirmation){
+    const productId = this.id.split("_")[1];
 
-          fetch(`/admin/dashboard/product/deactivate/${productId}`, {
-            method: "put",
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to deactivate this product?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, deactivate it!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`/admin/dashboard/product/deactivate/${productId}`, {
+          method: "put",
+        })
+          .then((response) => {
+            if (response.ok) {
+              Swal.fire("Product Deactivated", "", "success");
+              window.location.href = "/admin/dashboard/product";
+            } else {
+              Swal.fire("Error", "Network error", "error");
+            }
           })
-            .then((response) => {
-              if (response.ok) {
-                window.location.href = "/admin/dashboard/product"
-              }
-            })
-            .catch((error) => {
-              console.error("Network error", error);
-            });
-        }
-        // fetching the api for deactivating the product
-      });
+          .catch((error) => {
+            console.error("Network error", error);
+            Swal.fire("Error", "Network error", "error");
+          });
+      }
     });
+  });
+});
 
     // for activating the product
     activate.forEach((activateProduct) => {
-      activateProduct.addEventListener("click", function (e) {
-        e.preventDefault();
-        const productId = this.id.split("_")[1];
-        const activation = confirm("Are you sure you want to activate the product?")
-        // fetching the api for activating the product
-        if(activation){
+  activateProduct.addEventListener("click", function (e) {
+    e.preventDefault();
+    const productId = this.id.split("_")[1];
 
-          fetch(`/admin/dashboard/product/activate/${productId}`, {
-            method: "PUT", 
+    // Create a SweetAlert2 custom alert dialog
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Are you sure you want to activate the product?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // User clicked "Yes"
+        fetch(`/admin/dashboard/product/activate/${productId}`, {
+          method: "PUT",
+        })
+          .then((response) => {
+            if (response.ok) {
+              // Redirect on success
+              window.location.href = "/admin/dashboard/product";
+            }
           })
-            .then((response) => {
-              if (response.ok) {
-                window.location.href = "/admin/dashboard/product"
-              }
-            })
-            .catch((error) => {
-              console.error("Network error", error);
-            });
-        }
-      });
+          .catch((error) => {
+            console.error("Network error", error);
+          });
+      }
     });
+  });
+});
+
   </script>
 </html>

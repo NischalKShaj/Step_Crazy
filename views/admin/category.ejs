@@ -145,39 +145,48 @@
     crossorigin = "anonymous";
     referrerpolicy = "no-referrer";
   </script>
-
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     const deleteCategory = document.querySelectorAll(".delete-Category");
 
     deleteCategory.forEach((deleteCat) => {
-      deleteCat.addEventListener("click", function (e) {
-        e.preventDefault();
+  deleteCat.addEventListener("click", function (e) {
+    e.preventDefault();
 
-        const categoryId = this.id.split("_")[1];
-        const confirmation = confirm(
-          "Are you sure you want to delete this category"
-        );
-        if (confirmation) {
-          // fetch method for deleting the category
-          fetch(`/admin/dashboard/category/delete/${categoryId}`, {
-            method: "delete",
-          }).then((response) => {
+    const categoryId = this.id.split("_")[1];
+
+    // Use SweetAlert for confirmation
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to delete this category?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Fetch method for deleting the category
+        fetch(`/admin/dashboard/category/delete/${categoryId}`, {
+          method: "delete",
+        })
+          .then((response) => {
             if (response.ok) {
-              console.log("The category is deleted successfully");
+              // Show a success SweetAlert
+              Swal.fire("Deleted!", "The category is deleted successfully.", "success");
               this.parentNode.parentNode.remove();
             } else {
-              console.log(
-                "Error deleting the category",
-                response.status,
-                response.statusText
-              );
+              // Show an error SweetAlert
+              Swal.fire("Error!", `Error deleting the category (${response.status} - ${response.statusText})`, "error");
             }
           })
-          .catch((error)=>{
-            console.error("Network error");
-          })
-        }
-      });
+          .catch((error) => {
+            // Show a network error SweetAlert
+            Swal.fire("Error!", "Network error", "error");
+          });
+      }
     });
+  });
+});
+
   </script>
 </html>

@@ -164,48 +164,63 @@
     crossorigin = "anonymous";
     referrerpolicy = "no-referrer";
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script>
     // Function to handle blocking a user
-    
-    function blockUser(userId) {
-      const confirmation = confirm("Are you sure you want to block this user?");
-      if(confirmation){
 
-        fetch(`/admin/dashboard/user/block-user/${userId}`, {
-          method: "POST",
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.success) {
-              // Update the UI to reflect the user is blocked
-              window.location.href = "/admin/dashboard/user";
-            }
+    function blockUser(userId) {
+      Swal.fire({
+        title: "Are you sure you want to block this user?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, block them",
+        cancelButtonText: "No, cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch(`/admin/dashboard/user/block-user/${userId}`, {
+            method: "POST",
           })
-          .catch((error) => {
-            console.error("Error blocking user:", error);
-          });
-      }
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                // Update the UI to reflect the user is blocked
+                window.location.href = "/admin/dashboard/user";
+              }
+            })
+            .catch((error) => {
+              console.error("Error blocking user:", error);
+            });
+        }
+      });
     }
 
     // Function to handle unblocking a user
     function unblockUser(userId) {
-      const confirmation = confirm("Are you sure you want to unblock this user?");
-      if(confirmation){
-        
-        fetch(`/admin/dashboard/user/unblock-user/${userId}`, {
-          method: "POST",
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.success) {
-              window.location.href = "/admin/dashboard/user";
-            }
+      Swal.fire({
+        title: "Are you sure you want to unblock this user?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, unblock!",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch(`/admin/dashboard/user/unblock-user/${userId}`, {
+            method: "POST",
           })
-          .catch((error) => {
-            console.error("Error unblocking user:", error);
-          });
-      }
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                // You can customize the success message with another SweetAlert
+                Swal.fire("User unblocked!", "", "success");
+                window.location.href = "/admin/dashboard/user";
+              }
+            })
+            .catch((error) => {
+              console.error("Error unblocking user:", error);
+            });
+        }
+      });
     }
 
     // Get all block buttons

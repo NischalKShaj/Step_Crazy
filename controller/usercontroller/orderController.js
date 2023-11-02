@@ -344,114 +344,128 @@ exports.postCancelOrder = async (req, res) => {
   const userId = req.session.user;
   let user;
   const orderId = req.params.id;
-  try {
-    const filter = { "order._id": orderId };
+  if (userId) {
+    try {
+      const filter = { "order._id": orderId };
 
-    const update = { $set: { "order.$.status": "Cancel" } };
+      const update = { $set: { "order.$.status": "Cancel" } };
 
-    const result = await userCollection.updateOne(filter, update);
+      const result = await userCollection.updateOne(filter, update);
 
-    const order = await userCollection
-      .findOne(filter)
-      .populate({ path: "order.products" });
+      const order = await userCollection
+        .findOne(filter)
+        .populate({ path: "order.products" });
 
-    // Filter the order array to get the specific order by order ID
-    const specificOrder = order.order.find((order) =>
-      order._id.equals(orderId)
-    );
-    console.log("specificOrder", specificOrder);
-    console.log("order", order);
-
-    const payment = specificOrder.paymentMethod;
-    const product = specificOrder.products[0];
-    const price = specificOrder.quantity * product.price;
-    console.log("price", price);
-
-    console.log("payment", payment);
-    if (payment == "onlinepayment") {
-      console.log("hello");
-      user = await userCollection.updateOne(
-        { email: userId },
-        { $inc: { wallet: price } }
+      // Filter the order array to get the specific order by order ID
+      const specificOrder = order.order.find((order) =>
+        order._id.equals(orderId)
       );
-    }
+      console.log("specificOrder", specificOrder);
+      console.log("order", order);
 
-    console.log("Order status updated to Cancel successfully");
-    res.redirect("/order");
-  } catch (error) {
-    console.error("An unexpected error occurred", error);
-    res.render("error/404");
+      const payment = specificOrder.paymentMethod;
+      const product = specificOrder.products[0];
+      const price = specificOrder.quantity * product.price;
+      console.log("price", price);
+
+      console.log("payment", payment);
+      if (payment == "onlinepayment") {
+        console.log("hello");
+        user = await userCollection.updateOne(
+          { email: userId },
+          { $inc: { wallet: price } }
+        );
+      }
+
+      console.log("Order status updated to Cancel successfully");
+      res.redirect("/order");
+    } catch (error) {
+      console.error("An unexpected error occurred", error);
+      res.render("error/404");
+    }
+  } else {
+    res.redirect("/login");
   }
 };
 
 // controller for getting the invoice of the product
 exports.getOrderInvoice = async (req, res) => {
-  try {
-    const orderId = req.params.id;
+  const user = req.session.user;
+  if (user) {
+    try {
+      const orderId = req.params.id;
 
-    const invoiceDetails = await userCollection
-      .findOne({ "order._id": orderId })
-      .populate({
-        path: "order.products",
-      });
+      const invoiceDetails = await userCollection
+        .findOne({ "order._id": orderId })
+        .populate({
+          path: "order.products",
+        });
 
-    // Filter the order array to get the specific order by order ID
-    const specificOrder = invoiceDetails.order.find((order) =>
-      order._id.equals(orderId)
-    );
-
-    // Create a new PDF document
-    const doc = new PDFDocument();
-
-    // Set response headers to trigger a download
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", `attachment; filename="invoice.pdf"`);
-
-    // Pipe the PDF document to the response
-    doc.pipe(res);
-
-    // Add content to the PDF document
-    doc.fontSize(16).text("Invoice Details", { align: "center" });
-    doc.moveDown(1);
-    doc.fontSize(10).text("Customer Details", { align: "center" });
-    doc.text(`Order ID: ${orderId}`);
-    doc.moveDown(0.3);
-    doc.text(`Name: ${invoiceDetails.first_name} ${invoiceDetails.last_name}`);
-    doc.moveDown(0.3);
-    doc.text(`Email: ${invoiceDetails.email}`);
-    doc.moveDown(0.3);
-    doc.text(`Phone: ${invoiceDetails.phone}`);
-    doc.moveDown(0.3);
-    doc.text(`Gender: ${invoiceDetails.gender}`);
-    doc.moveDown(0.3);
-    doc.text(`Address: ${specificOrder.selectedAddress}`);
-    doc.moveDown(2);
-    doc.fontSize(10).text("Product Details", { align: "center" });
-    doc.moveDown(1);
-    doc.text(`Name: ${specificOrder.products[0].name}`);
-    doc.moveDown(0.3);
-    doc.text(`Detail: ${specificOrder.products[0].description}`);
-    doc.moveDown(0.3);
-    doc.text(`Quantity: ${specificOrder.quantity}`);
-    doc.moveDown(0.3);
-    doc.text(`Price: ${specificOrder.products[0].price}`);
-    doc.moveDown(0.3);
-    doc.fontSize(10).text("Payment Details", { align: "center" });
-    doc.moveDown(1);
-    doc.text(`Payment Method: ${specificOrder.paymentMethod}`);
-    doc.moveDown(3);
-    doc
-      .fontSize(16)
-      .text(
-        "Thank you for choosing Step Crazy! We appreciate your support and are excited to have you as part of our footwear family."
+      // Filter the order array to get the specific order by order ID
+      const specificOrder = invoiceDetails.order.find((order) =>
+        order._id.equals(orderId)
       );
-    doc.end();
-  } catch (error) {
-    console.error(
-      "An unexpected error occurred while generating the invoice",
-      error
-    );
-    res.render("error/404");
+
+      // Create a new PDF document
+      const doc = new PDFDocument();
+
+      // Set response headers to trigger a download
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="invoice.pdf"`
+      );
+
+      // Pipe the PDF document to the response
+      doc.pipe(res);
+
+      // Add content to the PDF document
+      doc.fontSize(16).text("Invoice Details", { align: "center" });
+      doc.moveDown(1);
+      doc.fontSize(10).text("Customer Details", { align: "center" });
+      doc.text(`Order ID: ${orderId}`);
+      doc.moveDown(0.3);
+      doc.text(
+        `Name: ${invoiceDetails.first_name} ${invoiceDetails.last_name}`
+      );
+      doc.moveDown(0.3);
+      doc.text(`Email: ${invoiceDetails.email}`);
+      doc.moveDown(0.3);
+      doc.text(`Phone: ${invoiceDetails.phone}`);
+      doc.moveDown(0.3);
+      doc.text(`Gender: ${invoiceDetails.gender}`);
+      doc.moveDown(0.3);
+      doc.text(`Address: ${specificOrder.selectedAddress}`);
+      doc.moveDown(2);
+      doc.fontSize(10).text("Product Details", { align: "center" });
+      doc.moveDown(1);
+      doc.text(`Name: ${specificOrder.products[0].name}`);
+      doc.moveDown(0.3);
+      doc.text(`Detail: ${specificOrder.products[0].description}`);
+      doc.moveDown(0.3);
+      doc.text(`Quantity: ${specificOrder.quantity}`);
+      doc.moveDown(0.3);
+      doc.text(`Price: ${specificOrder.products[0].price}`);
+      doc.moveDown(0.3);
+      doc.fontSize(10).text("Payment Details", { align: "center" });
+      doc.moveDown(1);
+      doc.text(`Payment Method: ${specificOrder.paymentMethod}`);
+      doc.moveDown(3);
+      doc
+        .fontSize(16)
+        .text(
+          "Thank you for choosing Step Crazy! We appreciate your support and are excited to have you as part of our footwear family."
+        );
+      doc.end();
+    } catch (error) {
+      console.error(
+        "An unexpected error occurred while generating the invoice",
+        error
+      );
+      res.render("error/404");
+    }
+  } else {
+    res.redirect("/login");
   }
 };
 
@@ -460,39 +474,47 @@ exports.getReturnOrder = async (req, res) => {
   const userId = req.session.user;
   let user;
   const orderId = req.params.id;
-  try {
-    const filter = { "order._id": orderId };
+  if (userId) {
+    try {
+      const filter = { "order._id": orderId };
 
-    const update = { $set: { "order.$.status": "Returned" } };
+      const update = { $set: { "order.$.status": "Returned" } };
 
-    const result = await userCollection.updateOne(filter, update);
+      const result = await userCollection.updateOne(filter, update);
 
-    const order = await userCollection
-      .findOne(filter)
-      .populate({ path: "order.products" });
+      const order = await userCollection
+        .findOne(filter)
+        .populate({ path: "order.products" });
 
-    // Filter the order array to get the specific order by order ID
-    const specificOrder = order.order.find((order) =>
-      order._id.equals(orderId)
-    );
-
-    const payment = specificOrder.paymentMethod;
-    const product = specificOrder.products[0];
-    const price = specificOrder.quantity * product.price;
-    console.log("price", price);
-
-    console.log("payment", payment);
-    if (payment == "onlinepayment" || payment == "wallet" || payment == "cod") {
-      user = await userCollection.updateOne(
-        { email: userId },
-        { $inc: { wallet: price } }
+      // Filter the order array to get the specific order by order ID
+      const specificOrder = order.order.find((order) =>
+        order._id.equals(orderId)
       );
-    }
 
-    console.log("Order status updated to Cancel successfully");
-    res.redirect("/order");
-  } catch (error) {
-    console.error("An unexpected error occurred", error);
-    res.render("error/404");
+      const payment = specificOrder.paymentMethod;
+      const product = specificOrder.products[0];
+      const price = specificOrder.quantity * product.price;
+      console.log("price", price);
+
+      console.log("payment", payment);
+      if (
+        payment == "onlinepayment" ||
+        payment == "wallet" ||
+        payment == "cod"
+      ) {
+        user = await userCollection.updateOne(
+          { email: userId },
+          { $inc: { wallet: price } }
+        );
+      }
+
+      console.log("Order status updated to Cancel successfully");
+      res.redirect("/order");
+    } catch (error) {
+      console.error("An unexpected error occurred", error);
+      res.render("error/404");
+    }
+  } else {
+    res.redirect("/login");
   }
 };

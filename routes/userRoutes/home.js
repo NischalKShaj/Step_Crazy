@@ -1,8 +1,8 @@
 // requiring the modules for this page
 const express = require("express");
-const homeController = require("../../controller/usercontroller/homecontroller");
-const signupController = require("../../controller/usercontroller/signupcontroller");
-const loginController = require("../../controller/usercontroller/logincontroller");
+const homeController = require("../../controller/usercontroller/homeController");
+const signupController = require("../../controller/usercontroller/signupController");
+const loginController = require("../../controller/usercontroller/loginController");
 const productController = require("../../controller/usercontroller/productController");
 const ProfileController = require("../../controller/usercontroller/profileController");
 const cartController = require("../../controller/usercontroller/cartController");

@@ -3,8 +3,8 @@
 const express = require("express");
 const router = express.Router();
 
-const homecontroller = require("../../controller/admincontroller/logincontroller");
-const loginController = require("../../controller/admincontroller/homecontroller");
+const homecontroller = require("../../controller/admincontroller/loginController");
+const loginController = require("../../controller/admincontroller/homeController");
 const productController = require("../../controller/admincontroller/productController");
 const userController = require("../../controller/admincontroller/userController");
 const categoryController = require("../../controller/admincontroller/categoryController");
@@ -92,26 +92,43 @@ router.get(
 );
 
 // router for getting the category page
-router.get("/dashboard/category", categoryController.getCategoryPage);
+router.get(
+  "/dashboard/category",
+  categoryController.getCategoryPage
+);
 
 // router for posting the category page
-router.post("/dashboard/category", categoryController.postCategory);
+router.post(
+  "/dashboard/category",
+
+  categoryController.postCategory
+);
 
 // router for adding new category
-router.get("/dashboard/category/add", categoryController.getCategoryAdd);
+router.get(
+  "/dashboard/category/add",
+
+  categoryController.getCategoryAdd
+);
 
 // router for editing the category
-router.get("/dashboard/category/edit/:id", categoryController.getEditCategory);
+router.get(
+  "/dashboard/category/edit/:id",
+
+  categoryController.getEditCategory
+);
 
 // router for updating the category
 router.post(
   "/dashboard/category/update/:id",
+
   categoryController.postCategoryUpdate
 );
 
 // router for deleting the category
 router.delete(
   "/dashboard/category/delete/:categoryId",
+
   categoryController.deleteCategory
 );
 

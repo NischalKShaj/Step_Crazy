@@ -138,40 +138,53 @@
         </div>
       </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+
       const deleteCoupon = document.querySelectorAll(".delete-Coupon");
       
 
       deleteCoupon.forEach((deleteCoup) => {
-        deleteCoup.addEventListener("click", function (e) {
-          e.preventDefault();
+  deleteCoup.addEventListener("click", function (e) {
+    e.preventDefault();
 
-          const couponId = this.id.split("_")[1];
-          const confirmation = confirm(
-            "Are you sure you want to delete this coupon"
-          );
-          if (confirmation) {
-            // fetch method for deleting the category
-            fetch(`/admin/dashboard/coupon/delete/${couponId}`, {
-              method: "delete",
-            }).then((response) => {
-              if (response.ok) {
-                console.log("The coupon is deleted successfully");
-                this.parentNode.parentNode.remove();
-              } else {
-                console.log(
-                  "Error deleting the coupon",
-                  response.status,
-                  response.statusText
-                );
-              }
-            })
-            .catch((error)=>{
-              console.error("Network error");
-            })
-          }
-        });
-      });
+    const couponId = this.id.split("_")[1];
+
+    // Use SweetAlert for confirmation
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Are you sure you want to delete this coupon?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Fetch method for deleting the coupon
+        fetch(`/admin/dashboard/coupon/delete/${couponId}`, {
+          method: "delete",
+        })
+          .then((response) => {
+            if (response.ok) {
+              console.log("The coupon is deleted successfully");
+              this.parentNode.parentNode.remove();
+            } else {
+              console.log(
+                "Error deleting the coupon",
+                response.status,
+                response.statusText
+              );
+            }
+          })
+          .catch((error) => {
+            console.error("Network error");
+          });
+      }
+    });
+  });
+});
+
     </script>
   </body>
 </html>
