@@ -28,72 +28,74 @@ exports.postOrderPage = async (req, res) => {
     if (!user) {
       console.log("User not found");
       return res.render("error/404");
-    }
+    } else if (user && user.blocked === false) {
+      const cart = await cartCollection.find({ user: user._id });
 
-    const cart = await cartCollection.find({ user: user._id });
-
-    if (!cart || cart.length === 0) {
-      console.log("Cart is empty");
-      return res.render("error/404");
-    }
-
-    const selectedAddress = req.query.addresses.split(",");
-    const paymentMethod = req.query.paymentMethod;
-    console.log("paymentmethod", paymentMethod);
-
-    for (const cartItem of cart) {
-      const { quantity, product } = cartItem;
-
-      // Retrieve the current stock for the product
-      const existingProduct = await productCollection.findOne({
-        _id: product,
-      });
-
-      if (!existingProduct) {
-        console.log(`Product with ID ${product} not found.`);
-        continue;
+      if (!cart || cart.length === 0) {
+        console.log("Cart is empty");
+        return res.render("error/404");
       }
 
-      const currentStock = existingProduct.stock;
-      const newStock = currentStock - quantity;
+      const selectedAddress = req.query.addresses.split(",");
+      const paymentMethod = req.query.paymentMethod;
+      console.log("paymentmethod", paymentMethod);
 
-      if (newStock >= 0 && quantity <= currentStock) {
-        await productCollection.updateOne(
-          { _id: product },
-          { $set: { stock: newStock } }
-        );
+      for (const cartItem of cart) {
+        const { quantity, product } = cartItem;
 
-        // Add the cart and product details to the user's order
-        user.order.push({
-          cart: cartItem._id,
-          products: product,
-          quantity,
-          status: status,
-          selectedAddress: selectedAddress,
-          paymentMethod: paymentMethod,
+        // Retrieve the current stock for the product
+        const existingProduct = await productCollection.findOne({
+          _id: product,
         });
 
-        console.log("user.order", user.order);
-      } else {
-        res.status(400).json({ message: "Out of stock", type: "danger" });
-        return;
+        if (!existingProduct) {
+          console.log(`Product with ID ${product} not found.`);
+          continue;
+        }
+
+        const currentStock = existingProduct.stock;
+        const newStock = currentStock - quantity;
+
+        if (newStock >= 0 && quantity <= currentStock) {
+          await productCollection.updateOne(
+            { _id: product },
+            { $set: { stock: newStock } }
+          );
+
+          // Add the cart and product details to the user's order
+          user.order.push({
+            cart: cartItem._id,
+            products: product,
+            quantity,
+            status: status,
+            selectedAddress: selectedAddress,
+            paymentMethod: paymentMethod,
+          });
+
+          console.log("user.order", user.order);
+        } else {
+          res.status(400).json({ message: "Out of stock", type: "danger" });
+          return;
+        }
+
+        console.log(
+          `Stock for product with ID ${product} updated to ${newStock}.`
+        );
       }
 
-      console.log(
-        `Stock for product with ID ${product} updated to ${newStock}.`
-      );
+      // Save the updated user document with the order details
+      await user.save();
+
+      // Remove the cart items
+      await cartCollection.deleteMany({ user: user._id });
+
+      // Render the thank-you page with order details
+      res.render("user/thank-you", {
+        orderDetail: user.order,
+      });
+    } else {
+      res.redirect("/login");
     }
-
-    // Save the updated user document with the order details
-    await user.save();
-
-    // Remove the cart items
-    await cartCollection.deleteMany({ user: user._id });
-
-    // Render the thank-you page with order details
-    res.render("user/thank-you", {
-      orderDetail: user.order,
-    });
   } catch (error) {
     console.error("Error message", error);
     res.render("error/404");
@@ -109,72 +111,74 @@ exports.postOnlineConfirm = async (req, res) => {
     if (!user) {
       console.log("User not found");
       return res.render("error/404");
-    }
+    } else if (user && user.blocked === false) {
+      const cart = await cartCollection.find({ user: user._id });
 
-    const cart = await cartCollection.find({ user: user._id });
-
-    if (!cart || cart.length === 0) {
-      console.log("Cart is empty");
-      return res.render("error/404");
-    }
-
-    const selectedAddress = req.query.addresses.split(",");
-    const paymentMethod = req.query.paymentMethod;
-    console.log("payment method", paymentMethod);
-
-    for (const cartItem of cart) {
-      const { quantity, product } = cartItem;
-
-      // Retrieve the current stock for the product
-      const existingProduct = await productCollection.findOne({
-        _id: product,
-      });
-
-      if (!existingProduct) {
-        console.log(`Product with ID ${product} not found.`);
-        continue;
+      if (!cart || cart.length === 0) {
+        console.log("Cart is empty");
+        return res.render("error/404");
       }
 
-      const currentStock = existingProduct.stock;
-      const newStock = currentStock - quantity;
+      const selectedAddress = req.query.addresses.split(",");
+      const paymentMethod = req.query.paymentMethod;
+      console.log("payment method", paymentMethod);
 
-      if (newStock >= 0 && quantity <= currentStock) {
-        await productCollection.updateOne(
-          { _id: product },
-          { $set: { stock: newStock } }
-        );
+      for (const cartItem of cart) {
+        const { quantity, product } = cartItem;
 
-        // Add the cart and product details to the user's order
-        user.order.push({
-          cart: cartItem._id,
-          products: product,
-          quantity,
-          status: status,
-          selectedAddress: selectedAddress,
-          paymentMethod: paymentMethod,
+        // Retrieve the current stock for the product
+        const existingProduct = await productCollection.findOne({
+          _id: product,
         });
 
-        console.log("user.order", user.order);
-      } else {
-        res.status(400).json({ message: "Out of stock", type: "danger" });
-        return;
+        if (!existingProduct) {
+          console.log(`Product with ID ${product} not found.`);
+          continue;
+        }
+
+        const currentStock = existingProduct.stock;
+        const newStock = currentStock - quantity;
+
+        if (newStock >= 0 && quantity <= currentStock) {
+          await productCollection.updateOne(
+            { _id: product },
+            { $set: { stock: newStock } }
+          );
+
+          // Add the cart and product details to the user's order
+          user.order.push({
+            cart: cartItem._id,
+            products: product,
+            quantity,
+            status: status,
+            selectedAddress: selectedAddress,
+            paymentMethod: paymentMethod,
+          });
+
+          console.log("user.order", user.order);
+        } else {
+          res.status(400).json({ message: "Out of stock", type: "danger" });
+          return;
+        }
+
+        console.log(
+          `Stock for product with ID ${product} updated to ${newStock}.`
+        );
       }
 
-      console.log(
-        `Stock for product with ID ${product} updated to ${newStock}.`
-      );
+      // Save the updated user document with the order details
+      await user.save();
+
+      // Remove the cart items
+      await cartCollection.deleteMany({ user: user._id });
+
+      // Render the thank-you page with order details
+      res.render("user/thank-you", {
+        orderDetail: user.order,
+      });
+    } else {
+      res.redirect("/login");
     }
-
-    // Save the updated user document with the order details
-    await user.save();
-
-    // Remove the cart items
-    await cartCollection.deleteMany({ user: user._id });
-
-    // Render the thank-you page with order details
-    res.render("user/thank-you", {
-      orderDetail: user.order,
-    });
   } catch (error) {
     console.error("Error message", error);
     res.render("error/404");
@@ -190,85 +194,87 @@ exports.getWalletPayment = async (req, res) => {
     if (!user) {
       console.log("User not found");
       return res.render("error/404");
-    }
+    } else if (user && user.blocked === false) {
+      const cart = await cartCollection.find({ user: user._id });
 
-    const cart = await cartCollection.find({ user: user._id });
-
-    if (!cart || cart.length === 0) {
-      console.log("Cart is empty");
-      return res.render("error/404");
-    }
-
-    const selectedAddress = req.query.addresses.split(",");
-    const paymentMethod = req.query.paymentMethod;
-    console.log("payment method", paymentMethod);
-
-    for (const cartItem of cart) {
-      const { quantity, product } = cartItem;
-
-      // Retrieve the current stock for the product
-      const existingProduct = await productCollection.findOne({
-        _id: product,
-      });
-
-      const wallet = user.wallet;
-      // condition for checking whether the wallet is having less amount or not
-      if (wallet <= existingProduct.price) {
-        const message = "Your wallet is having insufficient amount";
-        res.status(400).json({ message, type: "danger" });
-        return;
-      } else if (wallet >= existingProduct.price) {
-        await userCollection.updateOne(
-          { email: userId },
-          { $inc: { wallet: -existingProduct.price } }
-        );
+      if (!cart || cart.length === 0) {
+        console.log("Cart is empty");
+        return res.render("error/404");
       }
 
-      if (!existingProduct) {
-        console.log(`Product with ID ${product} not found.`);
-        continue;
-      }
+      const selectedAddress = req.query.addresses.split(",");
+      const paymentMethod = req.query.paymentMethod;
+      console.log("payment method", paymentMethod);
 
-      const currentStock = existingProduct.stock;
-      const newStock = currentStock - quantity;
+      for (const cartItem of cart) {
+        const { quantity, product } = cartItem;
 
-      if (newStock >= 0 && quantity <= currentStock) {
-        await productCollection.updateOne(
-          { _id: product },
-          { $set: { stock: newStock } }
-        );
-
-        // Add the cart and product details to the user's order
-        user.order.push({
-          cart: cartItem._id,
-          products: product,
-          quantity,
-          status: status,
-          selectedAddress: selectedAddress,
-          paymentMethod: paymentMethod,
+        // Retrieve the current stock for the product
+        const existingProduct = await productCollection.findOne({
+          _id: product,
         });
 
-        console.log("user.order", user.order);
-      } else {
-        res.status(400).json({ message: "Out of stock", type: "danger" });
-        return;
+        const wallet = user.wallet;
+        // condition for checking whether the wallet is having less amount or not
+        if (wallet <= existingProduct.price) {
+          const message = "Your wallet is having insufficient amount";
+          res.status(400).json({ message, type: "danger" });
+          return;
+        } else if (wallet >= existingProduct.price) {
+          await userCollection.updateOne(
+            { email: userId },
+            { $inc: { wallet: -existingProduct.price } }
+          );
+        }
+
+        if (!existingProduct) {
+          console.log(`Product with ID ${product} not found.`);
+          continue;
+        }
+
+        const currentStock = existingProduct.stock;
+        const newStock = currentStock - quantity;
+
+        if (newStock >= 0 && quantity <= currentStock) {
+          await productCollection.updateOne(
+            { _id: product },
+            { $set: { stock: newStock } }
+          );
+
+          // Add the cart and product details to the user's order
+          user.order.push({
+            cart: cartItem._id,
+            products: product,
+            quantity,
+            status: status,
+            selectedAddress: selectedAddress,
+            paymentMethod: paymentMethod,
+          });
+
+          console.log("user.order", user.order);
+        } else {
+          res.status(400).json({ message: "Out of stock", type: "danger" });
+          return;
+        }
+
+        console.log(
+          `Stock for product with ID ${product} updated to ${newStock}.`
+        );
       }
 
-      console.log(
-        `Stock for product with ID ${product} updated to ${newStock}.`
-      );
+      // Save the updated user document with the order details
+      await user.save();
+
+      // Remove the cart items
+      await cartCollection.deleteMany({ user: user._id });
+
+      // Render the thank-you page with order details
+      res.render("user/thank-you", {
+        orderDetail: user.order,
+      });
+    } else {
+      res.redirect("/login");
     }
-
-    // Save the updated user document with the order details
-    await user.save();
-
-    // Remove the cart items
-    await cartCollection.deleteMany({ user: user._id });
-
-    // Render the thank-you page with order details
-    res.render("user/thank-you", {
-      orderDetail: user.order,
-    });
   } catch (error) {
     console.error("Error message", error);
     res.render("error/404");
@@ -295,7 +301,7 @@ exports.getOrderDetails = async (req, res) => {
     const userEmail = req.session.user;
     const user = await userCollection.findOne({ email: userEmail }).exec();
 
-    if (user) {
+    if (user && user.blocked === false) {
       const orders = user.order;
 
       console.log("user.order", user.order);
@@ -344,7 +350,7 @@ exports.postCancelOrder = async (req, res) => {
   const userId = req.session.user;
   let user;
   const orderId = req.params.id;
-  if (userId) {
+  if (userId && user.blocked === false) {
     try {
       const filter = { "order._id": orderId };
 
@@ -391,7 +397,7 @@ exports.postCancelOrder = async (req, res) => {
 // controller for getting the invoice of the product
 exports.getOrderInvoice = async (req, res) => {
   const user = req.session.user;
-  if (user) {
+  if (user && user.blocked === false) {
     try {
       const orderId = req.params.id;
 
@@ -474,7 +480,7 @@ exports.getReturnOrder = async (req, res) => {
   const userId = req.session.user;
   let user;
   const orderId = req.params.id;
-  if (userId) {
+  if (userId && user.blocked === false) {
     try {
       const filter = { "order._id": orderId };
 

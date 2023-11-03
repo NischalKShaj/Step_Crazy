@@ -14,14 +14,16 @@ exports.getWishlist = async (req, res) => {
   try {
     if (!user) {
       res.redirect("/login");
+    } else if (user && user.blocked === false) {
+      const userId = user._id;
+      const wishlistItems = await wishlistCollection
+        .find({ user: userId })
+        .populate("product")
+        .exec();
+      res.render("user/wishlist", { wishlistItems });
+    } else {
+      res.redirect("/login");
     }
-    const userId = user._id;
-    const wishlistItems = await wishlistCollection
-      .find({ user: userId })
-      .populate("product")
-      .exec();
-    res.render("user/wishlist", { wishlistItems });
-    
   } catch (error) {
     console.error("There is an unexpected error while showing the wishlist");
     res.redirect("error/404");
@@ -37,31 +39,33 @@ exports.addToWishlist = async (req, res) => {
     const userDetail = await User.findOne({ email: userEmail });
     if (!userDetail) {
       res.redirect("/login");
-    }
+    } else if (userDetail && userDetail.blocked === false) {
+      const userId = userDetail._id;
 
-    const userId = userDetail._id;
-
-    // Check if the product is already in the user's wishlist
-    const existingWishlistItem = await wishlistCollection.findOne({
-      user: userId,
-      product: productId,
-    });
-
-    if (existingWishlistItem) {
-      res.redirect("/product");
-    } else {
-      // Product is not in the wishlist, so add it
-      const wishlist = new wishlistCollection({
+      // Check if the product is already in the user's wishlist
+      const existingWishlistItem = await wishlistCollection.findOne({
         user: userId,
         product: productId,
       });
-      await wishlist.save();
 
-      const wishlistItems = await wishlistCollection
-        .find({ user: userId })
-        .populate("product")
-        .exec();
-      res.redirect("/wishlist");
+      if (existingWishlistItem) {
+        res.redirect("/product");
+      } else {
+        // Product is not in the wishlist, so add it
+        const wishlist = new wishlistCollection({
+          user: userId,
+          product: productId,
+        });
+        await wishlist.save();
+
+        const wishlistItems = await wishlistCollection
+          .find({ user: userId })
+          .populate("product")
+          .exec();
+        res.redirect("/wishlist");
+      }
+    } else {
+      res.redirect("/login");
     }
   } catch (error) {
     res.render("error/404");
@@ -80,10 +84,10 @@ exports.getRemoveProduct = async (req, res) => {
     const removeProduct = await wishlistCollection.findOneAndRemove({
       _id: wishlistId,
     });
-    if(removeProduct){
+    if (removeProduct) {
       console.log("Product removed succesefully", removeProduct);
     }
-    res.redirect("/wishlist")
+    res.redirect("/wishlist");
   } catch (error) {
     console.error("There is an error while removing the product from the cart");
     res.render("error/404");

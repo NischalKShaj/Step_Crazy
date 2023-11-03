@@ -10,7 +10,7 @@ exports.getWallet = async (req, res) => {
     const user = await userCollection.findOne({ email: userId });
     console.log("user", user);
     // if the user is valid then only the user will be directed to the wallet
-    if (user) {
+    if (user && user.blocked === false) {
       const order = user.order;
       console.log("orders", order);
       const orderDetail = [];

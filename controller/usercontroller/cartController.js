@@ -15,7 +15,7 @@ exports.getCart = async (req, res) => {
   const user = await userCollection.findOne({ email: userId });
 
   try {
-    if (user) {
+    if (user && user.blocked === false) {
       const userId = user._id;
       const cartItems = await cartCollection
         .find({ user: userId })
@@ -42,52 +42,55 @@ exports.addProducts = async (req, res) => {
     if (!user) {
       console.error("User not found for email: " + userEmail);
       return res.redirect("/login");
-    }
+    } else if (user && user.blocked === false) {
+      const userId = user._id;
+      const productId = new mongoose.Types.ObjectId(req.params.id);
 
-    const userId = user._id;
-    const productId = new mongoose.Types.ObjectId(req.params.id);
+      console.log("ProductId:", productId); // Log the productId
 
-    console.log("ProductId:", productId); // Log the productId
+      // Verify that the product exists in the product collection
+      const existingProduct = await productCollection.findOne({
+        _id: productId,
+      });
 
-    // Verify that the product exists in the product collection
-    const existingProduct = await productCollection.findOne({ _id: productId });
+      if (!existingProduct) {
+        console.log("Product not found.");
+        // Handle the case when the product doesn't exist, e.g., display an error message.
+        return res.redirect("/product");
+      }
 
-    if (!existingProduct) {
-      console.log("Product not found.");
-      // Handle the case when the product doesn't exist, e.g., display an error message.
-      return res.redirect("/product");
-    }
+      console.log("Existing Product:", existingProduct); // Log existingProduct
 
-    console.log("Existing Product:", existingProduct); // Log existingProduct
-
-    // Now you can add the product to the cart
-    const existingCartItem = await cartCollection.findOne({
-      user: userId,
-      product: productId,
-    });
-
-    console.log("Existing Cart Item:", existingCartItem); // Log existingCartItem
-
-    if (existingCartItem) {
-      console.log("Product already available in the cart");
-    } else {
-      const cartItem = new cartCollection({
+      // Now you can add the product to the cart
+      const existingCartItem = await cartCollection.findOne({
         user: userId,
         product: productId,
-        quantity: req.body.quantity,
       });
-      console.log("cartItem ", cartItem);
-      await cartItem.save();
-      console.log("Product added to the cart successfully");
-      
-    }
 
-    const cartItems = await cartCollection
-      .find({ user: userId })
-      .populate("product")
-      .exec();
-    console.log("cartItems", cartItems);
-    res.redirect("/cart");
+      console.log("Existing Cart Item:", existingCartItem); // Log existingCartItem
+
+      if (existingCartItem) {
+        console.log("Product already available in the cart");
+      } else {
+        const cartItem = new cartCollection({
+          user: userId,
+          product: productId,
+          quantity: req.body.quantity,
+        });
+        console.log("cartItem ", cartItem);
+        await cartItem.save();
+        console.log("Product added to the cart successfully");
+      }
+
+      const cartItems = await cartCollection
+        .find({ user: userId })
+        .populate("product")
+        .exec();
+      console.log("cartItems", cartItems);
+      res.redirect("/cart");
+    } else {
+      res.redirect("/login");
+    }
   } catch (error) {
     console.error("Error adding the product to the cart:", error);
     res.redirect("/product");
@@ -186,23 +189,25 @@ exports.getCheckout = async (req, res) => {
     if (!user) {
       console.log("User not found in the database.");
       throw new Error("User not found");
+    } else if (user && user.blocked === false) {
+      const userId = user._id;
+      console.log("userId", userId);
+
+      let cartItem = await cartCollection
+        .find({ user: userId })
+        .populate({ path: "product", model: "product" });
+      const useAdd = await userCollection.find({ email: address });
+
+      console.log("cartItems", cartItem);
+      console.log(useAdd);
+
+      res.render("user/checkout", { address, useAdd, cartItem });
+
+      // Clear cartItem after rendering the page
+      cartItem = [];
+    } else {
+      res.redirect("/login");
     }
-
-    const userId = user._id;
-    console.log("userId", userId);
-
-    let cartItem = await cartCollection
-      .find({ user: userId })
-      .populate({ path: "product", model: "product" });
-    const useAdd = await userCollection.find({ email: address });
-
-    console.log("cartItems", cartItem);
-    console.log(useAdd);
-
-    res.render("user/checkout", { address, useAdd, cartItem });
-
-    // Clear cartItem after rendering the page
-    cartItem = [];
   } catch (error) {
     console.error("Error while loading the checkout page:", error);
     res.redirect("/product");
@@ -213,19 +218,18 @@ exports.getCheckout = async (req, res) => {
 exports.deleteProduct = async (req, res) => {
   try {
     const cartId = req.params.id;
-    
+
     console.log(cartId);
     // Use the model to find the cart item that matches the user, product ID, and remove it
     const removedCartItem = await cartCollection.findOneAndRemove({
       _id: cartId,
-      
     });
     console.log(cartId);
     console.log(removedCartItem);
     if (removedCartItem) {
       // The product was successfully removed from the cart
       console.log("Product successfully removed from the cart");
-      console.log(removedCartItem); 
+      console.log(removedCartItem);
     } else {
       // The product wasn't found in the cart
       console.log("Product not found in the cart");

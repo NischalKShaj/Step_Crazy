@@ -15,8 +15,8 @@ let userAddress;
 // rendring the profile page of the user
 exports.getProfilePage = async (req, res) => {
   const user = req.session.user;
-  if (user) {
-    const userProfile = await userCollection.findOne({ email: user });
+  const userProfile = await userCollection.findOne({ email: user });
+  if (user && userProfile.blocked === false) {
     res.render("user/profile", { user, userProfile });
   } else {
     res.redirect("/login");
@@ -30,25 +30,29 @@ exports.getAddressAdd = (req, res) => {
 
 // for redirecting to the profile page
 exports.postProfilePage = async (req, res) => {
+  const user = req.session.user;
+  const User = await userCollection.find({ email: user });
   try {
-    const filter = { email: req.body.email };
-    const userAddress = {
-      pincode: req.body.pincode,
-      locality: req.body.locality,
-      fullAddress: req.body.fullAddress,
-      city: req.body.city,
-      state: req.body.state,
-    };
-    const update = {
-      $push: {
-        address: userAddress,
-      },
-    };
+    if (user && User.blocked === false) {
+      const filter = { email: req.body.email };
+      const userAddress = {
+        pincode: req.body.pincode,
+        locality: req.body.locality,
+        fullAddress: req.body.fullAddress,
+        city: req.body.city,
+        state: req.body.state,
+      };
+      const update = {
+        $push: {
+          address: userAddress,
+        },
+      };
 
-    console.log(userAddress);
-    await userCollection.updateOne(filter, update);
+      console.log(userAddress);
+      await userCollection.updateOne(filter, update);
 
-    res.redirect("/profile");
+      res.redirect("/profile");
+    }
   } catch (error) {
     res.redirect("/profile/add-address");
   }
@@ -56,13 +60,19 @@ exports.postProfilePage = async (req, res) => {
 
 // router to show the address page
 exports.getAddressPage = async (req, res) => {
-  const address = req.session.user;
-  id = req.params.id;
+  const user = req.session.user;
 
-  console.log(address);
-  const userAdd = await userCollection.find({ email: address });
-  console.log(userAdd);
-  res.render("user/showAddress", { address, userAdd });
+  if (user) {
+    const address = req.session.user;
+    id = req.params.id;
+
+    console.log(address);
+    const userAdd = await userCollection.find({ email: address });
+    console.log(userAdd);
+    res.render("user/showAddress", { address, userAdd });
+  } else {
+    res.redirect("/login");
+  }
 };
 
 // router for editing the user profile
@@ -74,12 +84,14 @@ exports.getProfileEdit = (req, res) => {
     .then((user) => {
       if (!user) {
         res.redirect("/profile");
-      } else {
+      } else if (user && user.blocked === false) {
         res.render("user/editProfile", { user: user });
+      } else {
+        res.redirect("/login");
       }
     })
     .catch((error) => {
-      console.log("Error finding the user....");
+      console.log("Error finding the user....", error);
       res.redirect("/profile");
     });
 };
@@ -189,7 +201,7 @@ exports.postNewAddress = async (req, res) => {
     // Find the user by their email
     const user = await userCollection.findOne({ email: userEmail });
 
-    if (user) {
+    if (user && user.blocked === false) {
       // Initialize the address array if it's undefined
       if (!user.address) {
         user.address = [];
