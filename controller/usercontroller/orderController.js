@@ -547,13 +547,25 @@ exports.getCoupon = async (req, res) => {
 exports.checkCoupons = async (req, res) => {
   const userId = req.session.user;
   const user = await userCollection.findOne({ email: userId });
+
   try {
     if (user && user.blocked === false) {
       const coupon = await couponCollection.findOne({
         code: req.body.code,
       });
-      if (coupon) {
+      if (coupon && coupon.status === false) {
+        const userid = user._id;
+        const cartItem = await cartCollection
+          .find({ user: userid })
+          .populate({ path: "product", model: "product" });
         // If the coupon is valid, send a success response
+        let amount, discount, total;
+        for (const item of cartItem) {
+          amount = item.quantity * item.product.price;
+          discount = coupon.discount;
+          total = (amount * discount) / 100;
+        }
+        console.log("cartItem+amount", cartItem, amount, discount, total);
         res.json({ success: true });
       } else {
         // If the coupon is not valid, send an error response with a message
@@ -563,7 +575,7 @@ exports.checkCoupons = async (req, res) => {
       res.redirect("/login");
     }
   } catch (error) {
-    console.error("There was an error while checking the coupon");
+    console.error("There was an error while checking the coupon", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
