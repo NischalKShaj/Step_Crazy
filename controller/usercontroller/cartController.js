@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cartCollection = require("../../models/cart/cartDetail");
 const productCollection = require("../../models/product/productDetails");
 const userCollection = require("../../models/user/userDatabase");
+const couponCollection = require("../../models/coupons/couponCollection");
 
 // for saving the products in the cart
 const User = mongoose.model("userCollection");
@@ -151,7 +152,7 @@ exports.putStock = async (req, res) => {
       // Update the quantity
       existingCartItem.quantity = plusCount;
       increamentQuantity(productId);
-      // Save the updated cart item
+      // Save the updated cart item<
       await existingCartItem.save();
 
       console.log("Updated quantity for cart item:", existingCartItem);
@@ -185,7 +186,7 @@ exports.getCheckout = async (req, res) => {
 
   try {
     const user = await userCollection.findOne({ email: address });
-
+    const coupon = await couponCollection.find();
     if (!user) {
       console.log("User not found in the database.");
       throw new Error("User not found");
@@ -201,7 +202,7 @@ exports.getCheckout = async (req, res) => {
       console.log("cartItems", cartItem);
       console.log(useAdd);
 
-      res.render("user/checkout", { address, useAdd, cartItem ,user});
+      res.render("user/checkout", { address, useAdd, cartItem, user, coupon });
 
       // Clear cartItem after rendering the page
       cartItem = [];

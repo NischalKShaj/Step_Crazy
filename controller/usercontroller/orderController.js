@@ -4,6 +4,7 @@
 const cartCollection = require("../../models/cart/cartDetail");
 const userCollection = require("../../models/user/userDatabase");
 const productCollection = require("../../models/product/productDetails");
+const couponCollection = require("../../models/coupons/couponCollection");
 const Razorpay = require("razorpay");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -216,14 +217,14 @@ exports.getWalletPayment = async (req, res) => {
         console.log("existingProduct", existingProduct);
         const wallet = user.wallet;
         // condition for checking whether the wallet is having less amount or not
-        if (wallet <= existingProduct.price*quantity) {
+        if (wallet <= existingProduct.price * quantity) {
           // const message = "Your wallet is having insufficient amount";
           // res.status(400).json({ message, type: "danger" });
           return;
         } else if (wallet >= existingProduct.price) {
           await userCollection.updateOne(
             { email: userId },
-            { $inc: { wallet: -existingProduct.price*quantity } }
+            { $inc: { wallet: -existingProduct.price * quantity } }
           );
         }
 
@@ -375,7 +376,7 @@ exports.postCancelOrder = async (req, res) => {
       console.log("price", price);
 
       console.log("payment", payment);
-      if (payment == "onlinepayment" || payment ==="wallet") {
+      if (payment == "onlinepayment" || payment === "wallet") {
         console.log("hello");
         user = await userCollection.updateOne(
           { email: userId },
@@ -522,5 +523,47 @@ exports.getReturnOrder = async (req, res) => {
     }
   } else {
     res.redirect("/login");
+  }
+};
+
+// controller for getting the coupons page
+exports.getCoupon = async (req, res) => {
+  const userId = req.session.user;
+  const user = await userCollection.findOne({ email: userId });
+  const coupon = await couponCollection.find();
+  try {
+    if (user && user.blocked === false) {
+      res.render("user/coupon", { coupon, user });
+    } else {
+      res.redirect("/login");
+    }
+  } catch (error) {
+    console.error("There is an error while showing the coupons", coupon);
+    res.render("error/404");
+  }
+};
+
+// controller for checking the coupons
+exports.checkCoupons = async (req, res) => {
+  const userId = req.session.user;
+  const user = await userCollection.findOne({ email: userId });
+  try {
+    if (user && user.blocked === false) {
+      const coupon = await couponCollection.findOne({
+        code: req.body.code,
+      });
+      if (coupon) {
+        // If the coupon is valid, send a success response
+        res.json({ success: true });
+      } else {
+        // If the coupon is not valid, send an error response with a message
+        res.json({ success: false, message: "Invalid coupon code" });
+      }
+    } else {
+      res.redirect("/login");
+    }
+  } catch (error) {
+    console.error("There was an error while checking the coupon");
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };

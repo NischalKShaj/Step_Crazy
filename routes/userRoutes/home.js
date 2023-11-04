@@ -157,5 +157,11 @@ router.get("/wallet", walletController.getWallet);
 // router for searching the products
 router.get("/products/search", productController.getProductPage);
 
+// router for getting the coupon page
+router.get("/coupon", orderController.getCoupon);
+
+// router for posting the coupon details
+router.post("/product/cart/coupon", orderController.checkCoupons);
+
 // exporting the module to app.js
 module.exports = router;
