@@ -570,8 +570,12 @@ exports.checkCoupons = async (req, res) => {
 
         const discount = coupon.discount;
         const totalDiscount = (amount * discount) / 100;
-        console.log("totalDiscount",totalDiscount);
-        res.json({ success: true, totalDiscount });
+        console.log("totalDiscount", totalDiscount);
+        res.json({
+          success: true,
+          discountPercent: discount,
+          amountAfterDiscount: totalDiscount,
+        });
       }
     } else {
       res.json({

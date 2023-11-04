@@ -247,17 +247,19 @@
                   <div class="checkout_order_total">
                     <ul>
                       <ul>
-                        <li>Subtotal <span>&#x20B9;<i id="grandtotal"></i><%= item.product.price * item.quantity %></span></li>
-                        <li id="coupenadded"><span> <i></i></span></li>
-                        <div id="clear" ></div>
-                        <section hidden id="discount1"></section>
+                        <li>Subtotal <span>&#x20B9;<i id="grandtotal"><%= item.product.price * item.quantity %></i></span></li>
+                        
+                        <div id="clear"></div>
+                        <section id="discountSection" hidden>
+                          <li><span id="discountPercent"></span></li>
+                          <li><span id="amountAfterDiscount"></span></li>
+                        </section>
                         <section hidden id="coupenid"></section>
-            
                         <i id="clear"></i>
-                        <li>Total <span>&#x20B9; <i id="grandtotal1"><%= item.product.price * item.quantity %></i></span></li>
-                        <li id="total" hidden></li>
+                        
                       </ul>
                     </ul>
+                    
                   </div>
                   <div class="checkout_order_widget">
                     <div class="form-check">
@@ -573,35 +575,44 @@
       });
 
       // script for checking the coupons
-      document.getElementById("check-coupon").addEventListener("click", function (e) {
-        e.preventDefault(); // Prevent default form submission
-        const code = document.getElementById("coupon").value;
+      document.getElementById("check-coupon").addEventListener("click", async function () {
+        const couponCode = document.getElementById("coupon").value; // Get the entered coupon code
 
-        // Use the Fetch API to send the coupon code to the server
-        fetch("/product/cart/coupon", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json", // Set the content type to JSON
-          },
-          body: JSON.stringify({ code: code }), // Convert the code to JSON format
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            // Handle the response from the server
-            if (data.success) {
-              // If the server response indicates success, redirect to the checkout page
-              window.location.href = "/product/cart/checkout";
-            } else {
-              // If the server response indicates an error, you can handle it here
-              // For example, show an error message to the user
-              console.log("Coupon validation failed: " + data.message);
-            }
-          })
-          .catch((error) => {
-            // Handle any network or server-related errors
-            console.error("An error occurred: " + error);
+        try {
+          // Make an AJAX request to check the coupon and get the discount details
+          const response = await fetch("/product/cart/coupon", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ code: couponCode }),
           });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+              // Update the hidden sections with the discount details
+              document.getElementById("discountPercent").textContent = `Discount Percent: ${data.discountPercent}%`;
+              document.getElementById("amountAfterDiscount").textContent = `Total: ₹${data.amountAfterDiscount}`;
+              
+              // Show the hidden sections
+              document.getElementById("discountSection").removeAttribute("hidden");
+            } else {
+              // Handle the case when the coupon is invalid
+              console.log("Coupon is invalid.");
+              // You can show an error message or take appropriate action.
+            }
+          } else {
+            console.log("Network error:", response.status);
+            // Handle network errors
+          }
+        } catch (error) {
+          console.error("Error while checking the coupon:", error);
+          // Handle other errors
+        }
       });
+
+
 
       
       
