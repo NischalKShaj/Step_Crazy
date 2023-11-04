@@ -225,10 +225,7 @@
                             style="max-width: 120px; word-wrap: break-word"
                           >
                             <%= item.product.name %>
-                            <section
-                              style="color: red"
-                              id="outofstock"
-                            ></section>
+                            
                           </td>
                           <td class="text-center"><%= item.quantity %></td>
                           <td class="text-center font-weight-bold">
@@ -296,6 +293,15 @@
                         Online payment
                       </label>
                     </div>
+                    
+                    <% let isWalletDisabled = false; %>
+                    <% cartItem.forEach((item) => { %>
+                      <% if (user.wallet <= item.quantity * item.product.price) { %>
+                        <p style="color: red;">Insufficient balance in the wallet</p>
+                        <% isWalletDisabled = true; %>
+                      <% } %>
+                    <% }) %>
+                    
                     <div class="form-check">
                       <input
                         class="form-check-input"
@@ -303,10 +309,15 @@
                         name="paymentMethod"
                         value="wallet"
                         id="check-payment2"
+                        <% if (isWalletDisabled) { %>disabled<% } %>
                       />
-                      <label class="form-check-label" for="wallet">
+                    
+                      <label class="form-check-label" for="check-payment2">
                         Wallet
                       </label>
+                    </div>
+                    
+                        
                     </div>
                   </div>
                   
@@ -563,5 +574,6 @@
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
       crossorigin="anonymous"
     ></script>
+    
   </body>
 </html>

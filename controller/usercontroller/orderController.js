@@ -213,17 +213,17 @@ exports.getWalletPayment = async (req, res) => {
         const existingProduct = await productCollection.findOne({
           _id: product,
         });
-
+        console.log("existingProduct", existingProduct);
         const wallet = user.wallet;
         // condition for checking whether the wallet is having less amount or not
-        if (wallet <= existingProduct.price) {
-          const message = "Your wallet is having insufficient amount";
-          res.status(400).json({ message, type: "danger" });
+        if (wallet <= existingProduct.price*quantity) {
+          // const message = "Your wallet is having insufficient amount";
+          // res.status(400).json({ message, type: "danger" });
           return;
         } else if (wallet >= existingProduct.price) {
           await userCollection.updateOne(
             { email: userId },
-            { $inc: { wallet: -existingProduct.price } }
+            { $inc: { wallet: -existingProduct.price*quantity } }
           );
         }
 
@@ -350,7 +350,7 @@ exports.postCancelOrder = async (req, res) => {
   const userId = req.session.user;
   let user;
   const orderId = req.params.id;
-  if (userId && user.blocked === false) {
+  if (userId) {
     try {
       const filter = { "order._id": orderId };
 
@@ -375,7 +375,7 @@ exports.postCancelOrder = async (req, res) => {
       console.log("price", price);
 
       console.log("payment", payment);
-      if (payment == "onlinepayment") {
+      if (payment == "onlinepayment" || payment ==="wallet") {
         console.log("hello");
         user = await userCollection.updateOne(
           { email: userId },
@@ -397,7 +397,7 @@ exports.postCancelOrder = async (req, res) => {
 // controller for getting the invoice of the product
 exports.getOrderInvoice = async (req, res) => {
   const user = req.session.user;
-  if (user && user.blocked === false) {
+  if (user) {
     try {
       const orderId = req.params.id;
 
@@ -480,7 +480,7 @@ exports.getReturnOrder = async (req, res) => {
   const userId = req.session.user;
   let user;
   const orderId = req.params.id;
-  if (userId && user.blocked === false) {
+  if (userId) {
     try {
       const filter = { "order._id": orderId };
 

@@ -201,7 +201,7 @@ exports.getCheckout = async (req, res) => {
       console.log("cartItems", cartItem);
       console.log(useAdd);
 
-      res.render("user/checkout", { address, useAdd, cartItem });
+      res.render("user/checkout", { address, useAdd, cartItem ,user});
 
       // Clear cartItem after rendering the page
       cartItem = [];
