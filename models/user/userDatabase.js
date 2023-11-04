@@ -80,7 +80,14 @@ const stepCrazy = new mongoose.Schema({
       ],
       status: {
         type: String,
-        enum: ["Pending", "Shipped", "Out for delivery", "Delivered", "Cancel", "Returned"],
+        enum: [
+          "Pending",
+          "Shipped",
+          "Out for delivery",
+          "Delivered",
+          "Cancel",
+          "Returned",
+        ],
         default: "Pending",
         required: true,
       },
@@ -104,7 +111,6 @@ const stepCrazy = new mongoose.Schema({
   wallet: {
     type: Number,
   },
-
   blocked: {
     type: Boolean,
     default: false,

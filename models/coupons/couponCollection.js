@@ -25,10 +25,15 @@ const stepCrazy = new mongoose.Schema({
     type: String,
     required: true,
   },
-  status:{
-    type : Boolean,
+  status: {
+    type: Boolean,
     default: false,
-  }
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "userCollection",
+    
+  },
 });
 
 // declaring the collection

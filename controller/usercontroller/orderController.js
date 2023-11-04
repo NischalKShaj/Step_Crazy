@@ -546,33 +546,38 @@ exports.getCoupon = async (req, res) => {
 // controller for checking the coupons
 exports.checkCoupons = async (req, res) => {
   const userId = req.session.user;
-  const user = await userCollection.findOne({ email: userId });
+  const couponCode = req.body.code; // The coupon code entered by the user
 
   try {
-    if (user && user.blocked === false) {
-      const coupon = await couponCollection.findOne({
-        code: req.body.code,
-      });
-      if (coupon && coupon.status === false) {
+    const user = await userCollection.findOne({ email: userId });
+    const coupon = await couponCollection.findOne({ code: couponCode });
+
+    if (user && user.blocked === false && coupon && coupon.status === false) {
+      // Check if the coupon is valid for the user
+      if (coupon.user && !coupon.user.equals(user._id)) {
+        res.json({ success: false, message: "Invalid coupon for this user" });
+      } else {
         const userid = user._id;
         const cartItem = await cartCollection
           .find({ user: userid })
           .populate({ path: "product", model: "product" });
-        // If the coupon is valid, send a success response
-        let amount, discount, total;
+
+        // Calculate the total discount for the user's cart
+        let amount = 0;
         for (const item of cartItem) {
-          amount = item.quantity * item.product.price;
-          discount = coupon.discount;
-          total = (amount * discount) / 100;
+          amount += item.quantity * item.product.price;
         }
-        console.log("cartItem+amount", cartItem, amount, discount, total);
-        res.json({ success: true });
-      } else {
-        // If the coupon is not valid, send an error response with a message
-        res.json({ success: false, message: "Invalid coupon code" });
+
+        const discount = coupon.discount;
+        const totalDiscount = (amount * discount) / 100;
+        console.log("totalDiscount",totalDiscount);
+        res.json({ success: true, totalDiscount });
       }
     } else {
-      res.redirect("/login");
+      res.json({
+        success: false,
+        message: "Invalid coupon code or user is blocked",
+      });
     }
   } catch (error) {
     console.error("There was an error while checking the coupon", error);
