@@ -111,16 +111,17 @@ const stepCrazy = new mongoose.Schema({
   wallet: {
     type: Number,
   },
-  coupons: [
+  unUsedCoupons: [
+    {
+      coupons: {
+        type: String,
+      },
+    },
+  ],
+  usedCoupons: [
     {
       coupon: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "coupon", // Reference the Coupons collection
-        required: true,
-      },
-      status: {
-        type: Boolean,
-        default: false, // Default status (e.g., false means blocked for the user)
+        type: String,
       },
     },
   ],

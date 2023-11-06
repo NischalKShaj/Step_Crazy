@@ -187,11 +187,109 @@ exports.postOnlineConfirm = async (req, res) => {
 };
 
 // contoleller for validating the stock after wallet payment
+// exports.getWalletPayment = async (req, res) => {
+//   const userId = req.session.user;
+//   const status = "Pending";
+//   try {
+//     const user = await userCollection.findOne({ email: userId });
+//     if (!user) {
+//       console.log("User not found");
+//       return res.render("error/404");
+//     } else if (user && user.blocked === false) {
+//       const cart = await cartCollection.find({ user: user._id });
+
+//       if (!cart || cart.length === 0) {
+//         console.log("Cart is empty");
+//         return res.render("error/404");
+//       }
+
+//       const selectedAddress = req.query.addresses.split(",");
+//       const paymentMethod = req.query.paymentMethod;
+//       console.log("payment method", paymentMethod);
+
+//       for (const cartItem of cart) {
+//         const { quantity, product } = cartItem;
+
+//         // Retrieve the current stock for the product
+//         const existingProduct = await productCollection.findOne({
+//           _id: product,
+//         });
+//         console.log("existingProduct", existingProduct);
+//         const wallet = user.wallet;
+//         // condition for checking whether the wallet is having less amount or not
+//         if (wallet <= existingProduct.price * quantity) {
+//           // const message = "Your wallet is having insufficient amount";
+//           // res.status(400).json({ message, type: "danger" });
+//           return;
+//         } else if (wallet >= existingProduct.price) {
+//           await userCollection.updateOne(
+//             { email: userId },
+//             { $inc: { wallet: -existingProduct.price * quantity } }
+//           );
+//         }
+
+//         if (!existingProduct) {
+//           console.log(`Product with ID ${product} not found.`);
+//           continue;
+//         }
+
+//         const currentStock = existingProduct.stock;
+//         const newStock = currentStock - quantity;
+
+//         if (newStock >= 0 && quantity <= currentStock) {
+//           await productCollection.updateOne(
+//             { _id: product },
+//             { $set: { stock: newStock } }
+//           );
+
+//           // Add the cart and product details to the user's order
+//           user.order.push({
+//             cart: cartItem._id,
+//             products: product,
+//             quantity,
+//             status: status,
+//             selectedAddress: selectedAddress,
+//             paymentMethod: paymentMethod,
+//           });
+
+//           console.log("user.order", user.order);
+//         } else {
+//           res.status(400).json({ message: "Out of stock", type: "danger" });
+//           return;
+//         }
+
+//         console.log(
+//           `Stock for product with ID ${product} updated to ${newStock}.`
+//         );
+//       }
+
+//       // Save the updated user document with the order details
+//       await user.save();
+
+//       // Remove the cart items
+//       await cartCollection.deleteMany({ user: user._id });
+
+//       // Render the thank-you page with order details
+//       res.render("user/thank-you", {
+//         orderDetail: user.order,
+//       });
+//     } else {
+//       res.redirect("/login");
+//     }
+//   } catch (error) {
+//     console.error("Error message", error);
+//     res.render("error/404");
+//   }
+// };
 exports.getWalletPayment = async (req, res) => {
   const userId = req.session.user;
   const status = "Pending";
+  let totalPayment = 0; // Initialize the total payment variable
+
   try {
     const user = await userCollection.findOne({ email: userId });
+    const unUsedCoupons = user.unUsedCoupons;
+
     if (!user) {
       console.log("User not found");
       return res.render("error/404");
@@ -215,23 +313,38 @@ exports.getWalletPayment = async (req, res) => {
           _id: product,
         });
         console.log("existingProduct", existingProduct);
-        const wallet = user.wallet;
-        // condition for checking whether the wallet is having less amount or not
-        if (wallet <= existingProduct.price * quantity) {
-          // const message = "Your wallet is having insufficient amount";
-          // res.status(400).json({ message, type: "danger" });
-          return;
-        } else if (wallet >= existingProduct.price) {
-          await userCollection.updateOne(
-            { email: userId },
-            { $inc: { wallet: -existingProduct.price * quantity } }
-          );
-        }
 
         if (!existingProduct) {
           console.log(`Product with ID ${product} not found.`);
           continue;
         }
+
+        // Calculate the product price
+        let productPrice = existingProduct.price * quantity;
+
+        // If a coupon code is provided in the request body, update the product price with the discount
+        console.log("unUsedCoupons", unUsedCoupons);
+        if (unUsedCoupons) {
+          // add a loop to get the value from the loop NOTE:- its not added if added then remove thiscomment
+          const coupon = await couponCollection.findOne({
+            code: unUsedCoupons,
+          });
+          console.log("coupon", coupon);
+         
+          
+          
+          
+          if (coupon) {
+            const discount = coupon.discount;
+            productPrice = (productPrice * (100 - discount)) / 100;
+
+            // Mark the coupon as used in the user collection
+            user.usedCoupons.push({ coupon: unUsedCoupons });
+          }
+        }
+
+        // Add the product price to the total payment
+        totalPayment += productPrice;
 
         const currentStock = existingProduct.stock;
         const newStock = currentStock - quantity;
@@ -263,7 +376,12 @@ exports.getWalletPayment = async (req, res) => {
         );
       }
 
-      // Save the updated user document with the order details
+      // Deduct the total payment from the user's wallet
+      if (totalPayment > 0) {
+        user.wallet -= totalPayment;
+      }
+
+      // Save the updated user document with the order details and used coupons
       await user.save();
 
       // Remove the cart items
@@ -549,55 +667,67 @@ exports.checkCoupons = async (req, res) => {
   const couponCode = req.body.code; // The coupon code entered by the user
 
   try {
-    const user = await userCollection
-      .findOne({ email: userId })
-      .populate("coupons.coupon"); // Populate the 'coupons' field and the nested 'coupon' field
-    
+    const user = await userCollection.findOne({ email: userId });
     const coupon = await couponCollection.findOne({ code: couponCode });
-    console.log(user.coupon,coupon);
-    if (user && coupon) {
-      // Check if the user has this coupon in their coupons array
-      const userCoupon = user.coupons.find((c) => c.coupon.code === couponCode);
-      console.log("userCoupon",userCoupon);
 
-      if (userCoupon && userCoupon.status === false) {
-        // Check if the coupon is not expired
-        const currentDate = new Date();
-        const expiryDate = new Date(coupon.expiryDate);
-
-        if (currentDate <= expiryDate) {
-          // Coupon is valid
-          // Calculate the total discount for the user's cart
-          const userid = user._id;
-          const cartItem = await cartCollection
-            .find({ user: userid })
-            .populate({ path: "product", model: "product" });
-
-          let amount = 0;
-          for (const item of cartItem) {
-            amount += item.quantity * item.product.price;
-          }
-
-          const discount = coupon.discount;
-          const totalDiscount = (amount * discount) / 100;
-
-          res.json({
-            success: true,
-            discountPercent: discount,
-            amountAfterDiscount: totalDiscount,
-            message: "Coupon is valid",
-          });
+    if (user && user.blocked === false) {
+      const unUsedCoupons = user.unUsedCoupons;
+      if (unUsedCoupons && unUsedCoupons.length > 0) {
+        unUsedCoupons.pop();
+      }
+      if (coupon) {
+        if (
+          user.usedCoupons &&
+          user.usedCoupons.some(
+            (usedCoupon) => usedCoupon.coupon === couponCode
+          )
+        ) {
+          res.json({ success: false, message: "Coupon has already been used" });
         } else {
-          // Coupon has expired
-          res.json({ success: false, message: "Coupon has expired" });
+          // Check if the coupon is expired
+          const expiryDate = new Date(coupon.expiryDate);
+          const currentDate = new Date();
+
+          if (expiryDate <= currentDate) {
+            res.json({ success: false, message: "Coupon has expired" });
+          } else {
+            const userid = user._id;
+            const cartItem = await cartCollection
+              .find({ user: userid })
+              .populate({ path: "product", model: "product" });
+
+            // Calculate the total discount for the user's cart
+            let amount = 0;
+            for (const item of cartItem) {
+              amount += item.quantity * item.product.price;
+            }
+
+            const discount = coupon.discount;
+            const totalDiscount = (amount * discount) / 100;
+            console.log("totalDiscount", totalDiscount);
+
+            // Update the unUsedCoupons array
+            unUsedCoupons.push({ coupons: couponCode });
+
+            console.log("user.unUsedCoupons", unUsedCoupons);
+            // Save the updated user document with used coupons
+            await user.save();
+
+            res.json({
+              success: true,
+              discountPercent: discount,
+              amountAfterDiscount: totalDiscount,
+            });
+          }
         }
       } else {
-        // Coupon is blocked for this user or not in their coupons array
-        res.json({ success: false, message: "Invalid coupon for this user" });
+        res.json({ success: false, message: "Invalid coupon code" });
       }
     } else {
-      // Invalid user or coupon not found
-      res.json({ success: false, message: "Invalid user or coupon code" });
+      res.json({
+        success: false,
+        message: "User is blocked or not found",
+      });
     }
   } catch (error) {
     console.error("There was an error while checking the coupon", error);

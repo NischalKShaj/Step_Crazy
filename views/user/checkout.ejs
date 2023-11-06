@@ -270,7 +270,7 @@
                         </div>
                       </form>
                        
-                      <section style="color: red;" id="cpn">Invalid coupon</section>
+                      <p id="errorMessage" style="color: red;"></p>
             
                      
                     </div>
@@ -577,10 +577,11 @@
       // script for checking the coupons
       document.getElementById("check-coupon").addEventListener("click", async function () {
         const couponCode = document.getElementById("coupon").value; // Get the entered coupon code
+        const errorMessageElement = document.getElementById("errorMessage"); // Get the error message element
 
         try {
           // Make an AJAX request to check the coupon and get the discount details
-          const response = await fetch("/product/cart/coupon", {
+          const response = await fetch(`/product/cart/coupon?code=${couponCode}`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -594,11 +595,15 @@
               // Update the hidden sections with the discount details
               document.getElementById("discountPercent").textContent = `Discount Percent: ${data.discountPercent}%`;
               document.getElementById("amountAfterDiscount").textContent = `Total: ₹${data.amountAfterDiscount}`;
-              
+
               // Show the hidden sections
               document.getElementById("discountSection").removeAttribute("hidden");
+              
+              // Clear any previous error message
+              errorMessageElement.textContent = "";
             } else {
               // Handle the case when the coupon is invalid
+              errorMessageElement.textContent = "Invalid coupon. Please try another one.";
               console.log("Coupon is invalid.");
               // You can show an error message or take appropriate action.
             }
@@ -611,6 +616,7 @@
           // Handle other errors
         }
       });
+
 
 
 
