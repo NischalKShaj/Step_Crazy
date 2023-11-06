@@ -549,39 +549,55 @@ exports.checkCoupons = async (req, res) => {
   const couponCode = req.body.code; // The coupon code entered by the user
 
   try {
-    const user = await userCollection.findOne({ email: userId });
+    const user = await userCollection
+      .findOne({ email: userId })
+      .populate("coupons.coupon"); // Populate the 'coupons' field and the nested 'coupon' field
+    
     const coupon = await couponCollection.findOne({ code: couponCode });
+    console.log(user.coupon,coupon);
+    if (user && coupon) {
+      // Check if the user has this coupon in their coupons array
+      const userCoupon = user.coupons.find((c) => c.coupon.code === couponCode);
+      console.log("userCoupon",userCoupon);
 
-    if (user && user.blocked === false && coupon && coupon.status === false) {
-      // Check if the coupon is valid for the user
-      if (coupon.user && !coupon.user.equals(user._id)) {
-        res.json({ success: false, message: "Invalid coupon for this user" });
-      } else {
-        const userid = user._id;
-        const cartItem = await cartCollection
-          .find({ user: userid })
-          .populate({ path: "product", model: "product" });
+      if (userCoupon && userCoupon.status === false) {
+        // Check if the coupon is not expired
+        const currentDate = new Date();
+        const expiryDate = new Date(coupon.expiryDate);
 
-        // Calculate the total discount for the user's cart
-        let amount = 0;
-        for (const item of cartItem) {
-          amount += item.quantity * item.product.price;
+        if (currentDate <= expiryDate) {
+          // Coupon is valid
+          // Calculate the total discount for the user's cart
+          const userid = user._id;
+          const cartItem = await cartCollection
+            .find({ user: userid })
+            .populate({ path: "product", model: "product" });
+
+          let amount = 0;
+          for (const item of cartItem) {
+            amount += item.quantity * item.product.price;
+          }
+
+          const discount = coupon.discount;
+          const totalDiscount = (amount * discount) / 100;
+
+          res.json({
+            success: true,
+            discountPercent: discount,
+            amountAfterDiscount: totalDiscount,
+            message: "Coupon is valid",
+          });
+        } else {
+          // Coupon has expired
+          res.json({ success: false, message: "Coupon has expired" });
         }
-
-        const discount = coupon.discount;
-        const totalDiscount = (amount * discount) / 100;
-        console.log("totalDiscount", totalDiscount);
-        res.json({
-          success: true,
-          discountPercent: discount,
-          amountAfterDiscount: totalDiscount,
-        });
+      } else {
+        // Coupon is blocked for this user or not in their coupons array
+        res.json({ success: false, message: "Invalid coupon for this user" });
       }
     } else {
-      res.json({
-        success: false,
-        message: "Invalid coupon code or user is blocked",
-      });
+      // Invalid user or coupon not found
+      res.json({ success: false, message: "Invalid user or coupon code" });
     }
   } catch (error) {
     console.error("There was an error while checking the coupon", error);

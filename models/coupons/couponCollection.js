@@ -25,19 +25,10 @@ const stepCrazy = new mongoose.Schema({
     type: String,
     required: true,
   },
-  status: {
-    type: Boolean,
-    default: false,
-  },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "userCollection",
-    
-  },
 });
 
 // declaring the collection
-const collection = new mongoose.model("Coupons", stepCrazy);
+const collection = new mongoose.model("coupon", stepCrazy);
 
 // exporting the collection
 module.exports = collection;
