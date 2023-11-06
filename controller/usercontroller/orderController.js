@@ -187,100 +187,6 @@ exports.postOnlineConfirm = async (req, res) => {
 };
 
 // contoleller for validating the stock after wallet payment
-// exports.getWalletPayment = async (req, res) => {
-//   const userId = req.session.user;
-//   const status = "Pending";
-//   try {
-//     const user = await userCollection.findOne({ email: userId });
-//     if (!user) {
-//       console.log("User not found");
-//       return res.render("error/404");
-//     } else if (user && user.blocked === false) {
-//       const cart = await cartCollection.find({ user: user._id });
-
-//       if (!cart || cart.length === 0) {
-//         console.log("Cart is empty");
-//         return res.render("error/404");
-//       }
-
-//       const selectedAddress = req.query.addresses.split(",");
-//       const paymentMethod = req.query.paymentMethod;
-//       console.log("payment method", paymentMethod);
-
-//       for (const cartItem of cart) {
-//         const { quantity, product } = cartItem;
-
-//         // Retrieve the current stock for the product
-//         const existingProduct = await productCollection.findOne({
-//           _id: product,
-//         });
-//         console.log("existingProduct", existingProduct);
-//         const wallet = user.wallet;
-//         // condition for checking whether the wallet is having less amount or not
-//         if (wallet <= existingProduct.price * quantity) {
-//           // const message = "Your wallet is having insufficient amount";
-//           // res.status(400).json({ message, type: "danger" });
-//           return;
-//         } else if (wallet >= existingProduct.price) {
-//           await userCollection.updateOne(
-//             { email: userId },
-//             { $inc: { wallet: -existingProduct.price * quantity } }
-//           );
-//         }
-
-//         if (!existingProduct) {
-//           console.log(`Product with ID ${product} not found.`);
-//           continue;
-//         }
-
-//         const currentStock = existingProduct.stock;
-//         const newStock = currentStock - quantity;
-
-//         if (newStock >= 0 && quantity <= currentStock) {
-//           await productCollection.updateOne(
-//             { _id: product },
-//             { $set: { stock: newStock } }
-//           );
-
-//           // Add the cart and product details to the user's order
-//           user.order.push({
-//             cart: cartItem._id,
-//             products: product,
-//             quantity,
-//             status: status,
-//             selectedAddress: selectedAddress,
-//             paymentMethod: paymentMethod,
-//           });
-
-//           console.log("user.order", user.order);
-//         } else {
-//           res.status(400).json({ message: "Out of stock", type: "danger" });
-//           return;
-//         }
-
-//         console.log(
-//           `Stock for product with ID ${product} updated to ${newStock}.`
-//         );
-//       }
-
-//       // Save the updated user document with the order details
-//       await user.save();
-
-//       // Remove the cart items
-//       await cartCollection.deleteMany({ user: user._id });
-
-//       // Render the thank-you page with order details
-//       res.render("user/thank-you", {
-//         orderDetail: user.order,
-//       });
-//     } else {
-//       res.redirect("/login");
-//     }
-//   } catch (error) {
-//     console.error("Error message", error);
-//     res.render("error/404");
-//   }
-// };
 exports.getWalletPayment = async (req, res) => {
   const userId = req.session.user;
   const status = "Pending";
@@ -289,6 +195,7 @@ exports.getWalletPayment = async (req, res) => {
   try {
     const user = await userCollection.findOne({ email: userId });
     const unUsedCoupons = user.unUsedCoupons;
+    const usedCoupons = user.usedCoupons;
 
     if (!user) {
       console.log("User not found");
@@ -323,26 +230,24 @@ exports.getWalletPayment = async (req, res) => {
         let productPrice = existingProduct.price * quantity;
 
         // If a coupon code is provided in the request body, update the product price with the discount
-        console.log("unUsedCoupons", unUsedCoupons);
-        if (unUsedCoupons) {
-          // add a loop to get the value from the loop NOTE:- its not added if added then remove thiscomment
-          const coupon = await couponCollection.findOne({
-            code: unUsedCoupons,
-          });
-          console.log("coupon", coupon);
-         
-          
-          
-          
-          if (coupon) {
-            const discount = coupon.discount;
-            productPrice = (productPrice * (100 - discount)) / 100;
+        if (unUsedCoupons && unUsedCoupons.length > 0) {
+          for (const unusedCoupon of unUsedCoupons) {
+            const couponCode = unusedCoupon.coupons;
+            console.log("Coupon Code:", couponCode);
 
-            // Mark the coupon as used in the user collection
-            user.usedCoupons.push({ coupon: unUsedCoupons });
+            // Now you can use `couponCode` to look up the coupon in your collection
+            const coupon = await couponCollection.findOne({ code: couponCode });
+            console.log("Coupon:", coupon);
+            if (coupon) {
+              const discount = coupon.discount;
+              productPrice = (productPrice * discount) / 100;
+
+              // Mark the coupon as used in the user collection
+              usedCoupons.push({ coupon: couponCode });
+            }
           }
         }
-
+        console.log("user.usedCoupons", user.usedCoupons);
         // Add the product price to the total payment
         totalPayment += productPrice;
 
