@@ -67,3 +67,52 @@
   </section>
 </body>
 </html>
+
+
+
+
+
+
+<% if (orderDetail.length > 0) { %>
+	<ul>
+	  <% for (let i = 0; i < orderDetail.length; i++) { %>
+		<li>
+		  <div class="card shadow-0 border mb-4">
+			<div class="card-body">
+			  <div class="row">
+				<% const products = orderDetail[i]; %>
+				<% let totalPrice = 0; %>
+				<% for (let j = 0; j < products.length; j++) { %>
+				  <div class="col-md-2">
+					<!-- Display product image -->
+					<img src="<%= products[j].image[0] %>" class="img-fluid" alt="<%= products[j].name %>" style="height: 120px; width: 150px;">
+				  </div>
+				  <div class="col-md-2 text-center d-flex justify-content-between align-items-center">
+					<!-- Display product name -->
+					<p class="text-muted mb-0"><%= products[j].name %></p>
+				  </div>
+				  <div class="col-md-2 text-center d-flex justify-content between align-items-center">
+					<!-- Display quantity -->
+					<p class="text-muted mb-0 small">Quantity: <%= order[i].quantity[j] %></p>
+				  </div>
+				  <div class="col-md-2 text-center d-flex justify-content-between align-items-center">
+					<!-- Display price for the current product -->
+					<% order.forEach(element => { %>
+					  <p class="text-muted mb-0 small">Price: #&8377 <%= element.price %></p>
+					 
+					<% }) %>
+				  </div>
+				  <% totalPrice += order[i].price[j] * order[i].quantity[j]; %>
+				<% } %>
+				<!-- Display the total price for the current order -->
+				<div class="col-md-2 text-center d-flex justify-content-between align-items-center">
+				  <p class="text-muted mb-0 small">Total Price: <%= totalPrice %></p>
+				</div>
+			  </div>
+			</div>
+		  </div>
+		</li>
+	  <% } %>
+	</ul>
+  <% } %>
+  

@@ -5,44 +5,54 @@ const cartCollection = require("../../models/cart/cartDetail");
 
 // controller for getting the wallet page
 exports.getWallet = async (req, res) => {
-  const userId = req.session.user;
   try {
-    const user = await userCollection.findOne({ email: userId });
-    console.log("user", user);
-    // if the user is valid then only the user will be directed to the wallet
+    const userEmail = req.session.user;
+    const user = await userCollection.findOne({ email: userEmail }).exec();
+
     if (user && user.blocked === false) {
-      const order = user.order;
-     
-      const orderDetail = [];
+      const orders = user.order;
 
-      for (const orders of order) {
-        const product = orders.products;
-        paymentMethod = orders.paymentMethod;
-        const amount = orders.price;
-        console.log("amount", amount);
-        console.log("paymentMethod", paymentMethod);
+      console.log("user.order", user.order);
 
-        // condition for checking whether the payment method is wallet
-        if (paymentMethod == "wallet") {
+      if (orders && orders.length > 0) {
+        // Create an array to store all product details
+        const allOrderDetails = [];
+
+        // Filter orders where paymentMethod is "wallet"
+        const walletOrders = orders.filter(
+          (order) => order.paymentMethod === "wallet"
+        );
+
+        for (const order of walletOrders) {
+          // Assuming each order has an array of product IDs in the "products" field
+          const productIds = order.products;
+          console.log("productId", productIds);
+
+          // Use populate to retrieve product details for each product ID
           console.log("inside wallet payment method");
           const orderDetails = await productCollection
-            .find({ _id: { $in: product } })
+            .find({ _id: { $in: productIds } })
             .exec();
-          orderDetail.push(orderDetails);
-          console.log("orderdetails", orderDetails);
+          allOrderDetails.push(orderDetails);
         }
+
+        console.log("allorderdetails", allOrderDetails);
+
+        res.render("user/wallet", {
+          user,
+          orders: walletOrders, // Pass the filtered wallet orders
+          orderDetails: allOrderDetails,
+        });
+      } else {
+        console.log("No wallet orders found for the user");
+        res.redirect("/");
       }
-      console.log("orderDetail", orderDetail);
-      // console.log("order", order);
-      // rendering the wallet page
-      res.render("user/wallet", { user, order, orderDetail });
     } else {
-      // if the user is invalid or not loged in then the user is redirected to the loginpage
-      res.redirect("/login");
+      console.log("User not found");
+      res.redirect("/");
     }
   } catch (error) {
-    // handling the error if there is any error regarding rendering the wallet page
-    console.error("Error while rendering the wallet page", error);
+    console.error("Error while fetching wallet order details:", error);
     res.render("error/404");
   }
 };
