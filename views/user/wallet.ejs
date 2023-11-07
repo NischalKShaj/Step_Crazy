@@ -173,7 +173,8 @@
                                         </div>
                                         <div class="col-md-2 text-center d-flex justify-content-between align-items-center">
                                           <!-- Display price -->
-                                          <p class="text-muted mb-0 small">Price: &#8377 <%= products[j].price %></p>
+                                          
+                                          <p class="text-muted mb-0 small">Price: &#8377 <%= order[i].price[j] * order[i].quantity[j] %></p>
                                         </div>
                                       <% } %>
                                     </div>

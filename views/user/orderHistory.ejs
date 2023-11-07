@@ -133,7 +133,7 @@
 
                                   <strong>Product Name:</strong> <%= orderDetails[i][j].name %><br>
                                   <strong>Quantity:</strong> <%= orders[i].quantity[j] %><br>
-                                  <% totalPrice += orderDetails[i][j].price * orders[i].quantity[j]; %>
+                                  <% totalPrice += orders[i].price[j] * orders[i].quantity[j]; %>
                                   <strong>Price:</strong> &#8377 <%= totalPrice %><br>
                                   <strong>Payment:</strong><%= orders[i].paymentMethod %><br>
                                 </div>

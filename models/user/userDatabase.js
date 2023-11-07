@@ -78,6 +78,12 @@ const stepCrazy = new mongoose.Schema({
           required: true,
         },
       ],
+      price: [
+        {
+          type: Number,
+          required: true,
+        },
+      ],
       status: {
         type: String,
         enum: [

@@ -12,12 +12,14 @@ exports.getWallet = async (req, res) => {
     // if the user is valid then only the user will be directed to the wallet
     if (user && user.blocked === false) {
       const order = user.order;
-      console.log("orders", order);
+     
       const orderDetail = [];
 
       for (const orders of order) {
         const product = orders.products;
         paymentMethod = orders.paymentMethod;
+        const amount = orders.price;
+        console.log("amount", amount);
         console.log("paymentMethod", paymentMethod);
 
         // condition for checking whether the payment method is wallet
@@ -31,7 +33,7 @@ exports.getWallet = async (req, res) => {
         }
       }
       console.log("orderDetail", orderDetail);
-
+      // console.log("order", order);
       // rendering the wallet page
       res.render("user/wallet", { user, order, orderDetail });
     } else {

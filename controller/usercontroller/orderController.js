@@ -228,6 +228,7 @@ exports.getWalletPayment = async (req, res) => {
 
         // Calculate the product price
         let productPrice = existingProduct.price * quantity;
+        
 
         // If a coupon code is provided in the request body, update the product price with the discount
         if (unUsedCoupons && unUsedCoupons.length > 0) {
@@ -244,6 +245,7 @@ exports.getWalletPayment = async (req, res) => {
 
               // Mark the coupon as used in the user collection
               usedCoupons.push({ coupon: couponCode });
+              unUsedCoupons.pop();
             }
           }
         }
@@ -265,6 +267,7 @@ exports.getWalletPayment = async (req, res) => {
             cart: cartItem._id,
             products: product,
             quantity,
+            price:totalPayment,
             status: status,
             selectedAddress: selectedAddress,
             paymentMethod: paymentMethod,
