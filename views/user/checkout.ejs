@@ -439,7 +439,7 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
       
-      const totalPrice = document.getElementById("totalPrice").innerHTML
+      let totalPrice = document.getElementById("totalPrice").innerHTML
       document
         .getElementById("saveButton")
         .addEventListener("click", function () {
@@ -521,8 +521,25 @@
           )}&paymentMethod=${paymentMethod}`;
         } else if (onlinePayment.checked && selectedAddresses.length > 0) {
          
-          
+          const couponIsEmpty = document.getElementById("coupon").innerHTML;
+          console.log("hello",couponIsEmpty);
           console.log(totalPrice,selectedAddresses);
+          
+          const newTotal = document.getElementById("amountAfterDiscount").innerHTML
+          const text = newTotal;
+          const regex = /₹(\d+)/; // This regex pattern captures one or more digits following the ₹ symbol.
+
+          const match = text.match(regex);
+
+          if (match) {
+            const amount = match[1]; // The captured numeric value is in match[1].
+            totalPrice = amount;
+            console.log("Total Amount: " + amount);
+          } else {
+            console.log("Total Amount not found in the text.");
+          }
+
+          console.log("new total1",totalPrice);
           // Create a Razorpay order and obtain the order ID
           const response = await fetch("/onlinepayment", {
             method: "post",

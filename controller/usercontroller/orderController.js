@@ -26,6 +26,8 @@ exports.postOrderPage = async (req, res) => {
   const status = "Pending";
   try {
     const user = await userCollection.findOne({ email: userId });
+    const unUsedCoupons = user.unUsedCoupons;
+    const usedCoupons = user.usedCoupons;
     if (!user) {
       console.log("User not found");
       return res.render("error/404");
@@ -54,6 +56,29 @@ exports.postOrderPage = async (req, res) => {
           continue;
         }
 
+        // Calculate the product price
+        let productPrice = existingProduct.price * quantity;
+
+        // If a coupon code is provided in the request body, update the product price with the discount
+        if (unUsedCoupons && unUsedCoupons.length > 0) {
+          for (const unusedCoupon of unUsedCoupons) {
+            const couponCode = unusedCoupon.coupons;
+            console.log("Coupon Code:", couponCode);
+
+            // Now you can use `couponCode` to look up the coupon in your collection
+            const coupon = await couponCollection.findOne({ code: couponCode });
+            console.log("Coupon:", coupon);
+            if (coupon) {
+              const discount = coupon.discount;
+              productPrice = (productPrice * discount) / 100;
+
+              // Mark the coupon as used in the user collection
+              usedCoupons.push({ coupon: couponCode });
+              unUsedCoupons.pop();
+            }
+          }
+        }
+
         const currentStock = existingProduct.stock;
         const newStock = currentStock - quantity;
 
@@ -68,6 +93,7 @@ exports.postOrderPage = async (req, res) => {
             cart: cartItem._id,
             products: product,
             quantity,
+            price: productPrice,
             status: status,
             selectedAddress: selectedAddress,
             paymentMethod: paymentMethod,
@@ -109,6 +135,9 @@ exports.postOnlineConfirm = async (req, res) => {
   const status = "Pending";
   try {
     const user = await userCollection.findOne({ email: userId });
+    const unUsedCoupons = user.unUsedCoupons;
+    const usedCoupons = user.usedCoupons;
+
     if (!user) {
       console.log("User not found");
       return res.render("error/404");
@@ -137,6 +166,30 @@ exports.postOnlineConfirm = async (req, res) => {
           continue;
         }
 
+        // Calculate the product price
+        let productPrice = existingProduct.price * quantity;
+        
+
+        // If a coupon code is provided in the request body, update the product price with the discount
+        if (unUsedCoupons && unUsedCoupons.length > 0) {
+          for (const unusedCoupon of unUsedCoupons) {
+            const couponCode = unusedCoupon.coupons;
+            console.log("Coupon Code:", couponCode);
+
+            // Now you can use `couponCode` to look up the coupon in your collection
+            const coupon = await couponCollection.findOne({ code: couponCode });
+            console.log("Coupon:", coupon);
+            if (coupon) {
+              const discount = coupon.discount;
+              productPrice = (productPrice * discount) / 100;
+
+              // Mark the coupon as used in the user collection
+              usedCoupons.push({ coupon: couponCode });
+              unUsedCoupons.pop();
+            }
+          }
+        }
+
         const currentStock = existingProduct.stock;
         const newStock = currentStock - quantity;
 
@@ -151,6 +204,7 @@ exports.postOnlineConfirm = async (req, res) => {
             cart: cartItem._id,
             products: product,
             quantity,
+            price: productPrice,
             status: status,
             selectedAddress: selectedAddress,
             paymentMethod: paymentMethod,
@@ -228,7 +282,6 @@ exports.getWalletPayment = async (req, res) => {
 
         // Calculate the product price
         let productPrice = existingProduct.price * quantity;
-        
 
         // If a coupon code is provided in the request body, update the product price with the discount
         if (unUsedCoupons && unUsedCoupons.length > 0) {
@@ -267,7 +320,7 @@ exports.getWalletPayment = async (req, res) => {
             cart: cartItem._id,
             products: product,
             quantity,
-            price:totalPayment,
+            price: totalPayment,
             status: status,
             selectedAddress: selectedAddress,
             paymentMethod: paymentMethod,
