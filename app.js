@@ -12,6 +12,7 @@ const userDb = require("./models/user/userDatabase");
 const routerAdmin = require("./routes/adminRoutes/home");
 const sessionAdmin = require("./middleware/admin/session");
 const sessionUser = require("./middleware/user/session");
+const errorPage = require("./middleware/error/404");
 
 // setting the express() as app
 const app = express();
@@ -43,7 +44,8 @@ app.use("/login", routerHome);
 app.use("/signup", routerHome);
 app.use("/admin", routerAdmin);
 
-// app.use('/otp',routerHome)
+// setting up the error page middleware
+app.use(errorPage);
 
 // running the project in the specified port number
 app.listen(port, () => {

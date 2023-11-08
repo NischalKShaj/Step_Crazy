@@ -142,7 +142,7 @@ router.delete(
 router.get("/dashboard/order/:id", orderController.getOrderPage);
 
 // router for pagination and searching
-router.get("/dashboard/order/search", orderController.getOrderPage);
+router.get("/dashboard/order/:id/search", orderController.getOrderPage);
 
 // router for updating the order status
 router.post("/dashboard/order/status/:id", orderController.getUpdateStatus);

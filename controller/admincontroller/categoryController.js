@@ -5,13 +5,22 @@ const productCollection = require("../../models/product/productDetails");
 // getting the category page
 exports.getCategoryPage = async (req, res) => {
   const admin = req.session.admin;
+  const search = req.query.search;
   const page = parseInt(req.query.page);
   const limit = 5;
 
   const skip = (page - 1) * limit;
 
+  // define the base query
+  const query = {};
+
+  // add the search criteria
+  if (search) {
+    query.$or = [{ category: { $regex: ".*" + search + ".*", $options: "i" } }];
+  }
+
   if (admin) {
-    const category = await collection.find().skip(skip).limit(limit);
+    const category = await collection.find(query).skip(skip).limit(limit);
     res.render("admin/category", { category });
   } else {
     res.redirect("/admin");

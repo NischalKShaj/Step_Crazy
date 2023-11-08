@@ -8,8 +8,8 @@ const cartCollection = require("../../models/cart/cartDetail");
 // controller for getting the ordermanagement page
 exports.getOrderPage = async (req, res) => {
   const admin = req.session.admin;
-  // const page = parseInt(req.query.page) || 1;
-  // const limit = 25;
+  const page = parseInt(req.query.page) || 1;
+  const limit = 25;
   if (admin) {
     try {
       const id = req.params.id;
@@ -21,16 +21,16 @@ exports.getOrderPage = async (req, res) => {
         console.log("user.order", user.order);
 
         if (orders && orders.length > 0) {
-          // const startIndex = (page - 1) * limit;
-          // const endIndex = startIndex + limit;
+          const startIndex = (page - 1) * limit;
+          const endIndex = startIndex + limit;
 
           // Slice the orders array to get the orders for the current page
-          // const ordersForPage = orders.slice(startIndex, endIndex);
+          const ordersForPage = orders.slice(startIndex, endIndex);
           // Create an array to store all product details
 
           const allOrderDetails = [];
 
-          for (const order of orders) {
+          for (const order of ordersForPage) {
             // Assuming each order has an array of product IDs in the "products" field
             const productIds = order.products;
             const orderId = order._id;
@@ -51,7 +51,8 @@ exports.getOrderPage = async (req, res) => {
           console.log("orders", orders);
 
           res.render("admin/orderManagement", {
-            orders: orders,
+            user,
+            orders: ordersForPage,
             orderDetails: allOrderDetails,
           });
         } else {

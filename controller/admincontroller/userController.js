@@ -5,22 +5,23 @@ let users;
 
 // setting the routes for the usermanagement page
 exports.getUserPage = async (req, res) => {
-  // const search = req.query.search;
+  const search = req.query.search;
   const page = parseInt(req.query.page) || 1;
   const limit = 10;
   const skip = (page - 1) * limit;
 
-  // const query = {};
+  const query = {};
 
   const admin = req.session.admin;
   if (admin) {
-    // if (search) {
-    //   query.$or = [
-    //     { name: { $regex: ".*" + search + ".*", $options: "i" } },
-    //     { category: { $regex: ".*" + search + ".*", $options: "i" } },
-    //   ];
-    // }
-    const users = await collection.find().skip(skip).limit(limit);
+    if (search) {
+      query.$or = [
+        { first_name: { $regex: ".*" + search + ".*", $options: "i" } },
+        { last_name: { $regex: ".*" + search + ".*", $options: "i" } },
+        { email: { $regex: ".*" + search + ".*", $options: "i" } },
+      ];
+    }
+    const users = await collection.find(query).skip(skip).limit(limit);
     res.render("admin/usermanagement", { users });
   } else {
     res.redirect("/admin");

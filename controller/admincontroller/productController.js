@@ -20,15 +20,26 @@ exports.uploads = multer({
 
 // for getting the product page
 exports.getProductPage = async (req, res) => {
-  // const search = req.qurey.search;
+  const search = req.query.search;
   const page = parseInt(req.query.page);
   const limit = 5;
 
   const skip = (page - 1) * limit;
 
+  // Define a base query
+  const query = {};
+
+  // Add the search criteria to the query
+  if (search) {
+    query.$or = [
+      { name: { $regex: ".*" + search + ".*", $options: "i" } },
+      { category: { $regex: ".*" + search + ".*", $options: "i" } },
+    ];
+  }
+
   const admin = req.session.admin;
   if (admin) {
-    const product = await collection.find().skip(skip).limit(limit);
+    const product = await collection.find(query).skip(skip).limit(limit);
     res.render("admin/product", { product });
   } else {
     res.redirect("/admin");
