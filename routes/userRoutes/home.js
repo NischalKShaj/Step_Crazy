@@ -121,6 +121,9 @@ router.get("/product/order", orderController.postOrderPage);
 // router for getting the order History page and the order status
 router.get("/order", orderController.getOrderDetails);
 
+// router for the pagination and the details
+router.get("/order/search", orderController.getOrderDetails);
+
 // router for canceling the order
 router.get("/order/:id", orderController.postCancelOrder);
 

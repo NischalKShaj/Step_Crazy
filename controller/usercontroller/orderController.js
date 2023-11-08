@@ -168,7 +168,6 @@ exports.postOnlineConfirm = async (req, res) => {
 
         // Calculate the product price
         let productPrice = existingProduct.price * quantity;
-        
 
         // If a coupon code is provided in the request body, update the product price with the discount
         if (unUsedCoupons && unUsedCoupons.length > 0) {
@@ -378,8 +377,13 @@ exports.postOnlinePayment = (req, res) => {
 // controller for rendering the order history page with status
 exports.getOrderDetails = async (req, res) => {
   try {
+    const search = req.query.search;
+    const page = parseInt(req.query.page) || 1;
+    const limit = 25;
     const userEmail = req.session.user;
     const user = await userCollection.findOne({ email: userEmail }).exec();
+
+    const skip = (page - 1) * limit;
 
     if (user && user.blocked === false) {
       const orders = user.order;
@@ -387,10 +391,16 @@ exports.getOrderDetails = async (req, res) => {
       console.log("user.order", user.order);
 
       if (orders && orders.length > 0) {
+        const startIndex = (page - 1) * limit;
+        const endIndex = startIndex + limit;
+
+        // Slice the orders array to get the orders for the current page
+        const ordersForPage = orders.slice(startIndex, endIndex);
+
         // Create an array to store all product details
         const allOrderDetails = [];
 
-        for (const order of orders) {
+        for (const order of ordersForPage) {
           // Assuming each order has an array of product IDs in the "products" field
           const productIds = order.products;
 
@@ -408,7 +418,7 @@ exports.getOrderDetails = async (req, res) => {
         console.log("allorderdetails", allOrderDetails);
 
         res.render("user/orderHistory", {
-          orders: orders,
+          orders: ordersForPage,
           orderDetails: allOrderDetails,
         });
       } else {
