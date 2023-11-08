@@ -20,9 +20,15 @@ exports.uploads = multer({
 
 // for getting the product page
 exports.getProductPage = async (req, res) => {
+  // const search = req.qurey.search;
+  const page = parseInt(req.query.page);
+  const limit = 5;
+
+  const skip = (page - 1) * limit;
+
   const admin = req.session.admin;
   if (admin) {
-    const product = await collection.find();
+    const product = await collection.find().skip(skip).limit(limit);
     res.render("admin/product", { product });
   } else {
     res.redirect("/admin");

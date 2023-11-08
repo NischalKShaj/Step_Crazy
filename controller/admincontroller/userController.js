@@ -5,9 +5,22 @@ let users;
 
 // setting the routes for the usermanagement page
 exports.getUserPage = async (req, res) => {
+  // const search = req.query.search;
+  const page = parseInt(req.query.page) || 1;
+  const limit = 10;
+  const skip = (page - 1) * limit;
+
+  // const query = {};
+
   const admin = req.session.admin;
   if (admin) {
-    const users = await collection.find();
+    // if (search) {
+    //   query.$or = [
+    //     { name: { $regex: ".*" + search + ".*", $options: "i" } },
+    //     { category: { $regex: ".*" + search + ".*", $options: "i" } },
+    //   ];
+    // }
+    const users = await collection.find().skip(skip).limit(limit);
     res.render("admin/usermanagement", { users });
   } else {
     res.redirect("/admin");

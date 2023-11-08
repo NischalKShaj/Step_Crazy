@@ -35,6 +35,9 @@ router.get("/dashboard/admins/add", loginController.getAdminAdd);
 // router for getting the user page
 router.get("/dashboard/user", userController.getUserPage);
 
+// router for searching and pagination
+router.get("/dashboard/user/search", userController.getUserPage);
+
 // router for posting the user page
 router.post("/dashboard/user", userController.postUserPage);
 
@@ -52,6 +55,9 @@ router.post(
 
 // router for getting the product page
 router.get("/dashboard/product", productController.getProductPage);
+
+// router for searching and pagination of the product page
+router.get("/dashboard/product/search", productController.getProductPage);
 
 // router for posting the product page
 router.post(
@@ -92,10 +98,10 @@ router.get(
 );
 
 // router for getting the category page
-router.get(
-  "/dashboard/category",
-  categoryController.getCategoryPage
-);
+router.get("/dashboard/category", categoryController.getCategoryPage);
+
+// router for getting the paginationa and searching the category
+router.get("/dashboard/category/search", categoryController.getCategoryPage);
 
 // router for posting the category page
 router.post(
@@ -134,6 +140,9 @@ router.delete(
 
 // router for getting the order management page
 router.get("/dashboard/order/:id", orderController.getOrderPage);
+
+// router for pagination and searching
+router.get("/dashboard/order/search", orderController.getOrderPage);
 
 // router for updating the order status
 router.post("/dashboard/order/status/:id", orderController.getUpdateStatus);

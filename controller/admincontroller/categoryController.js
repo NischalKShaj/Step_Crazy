@@ -5,8 +5,13 @@ const productCollection = require("../../models/product/productDetails");
 // getting the category page
 exports.getCategoryPage = async (req, res) => {
   const admin = req.session.admin;
+  const page = parseInt(req.query.page);
+  const limit = 5;
+
+  const skip = (page - 1) * limit;
+
   if (admin) {
-    const category = await collection.find();
+    const category = await collection.find().skip(skip).limit(limit);
     res.render("admin/category", { category });
   } else {
     res.redirect("/admin");
