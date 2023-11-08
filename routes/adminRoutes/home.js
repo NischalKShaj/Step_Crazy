@@ -1,8 +1,8 @@
 // requiring the modules for the files
-
 const express = require("express");
 const router = express.Router();
 
+// requiring the local modules
 const homecontroller = require("../../controller/admincontroller/loginController");
 const loginController = require("../../controller/admincontroller/homeController");
 const productController = require("../../controller/admincontroller/productController");
@@ -10,6 +10,7 @@ const userController = require("../../controller/admincontroller/userController"
 const categoryController = require("../../controller/admincontroller/categoryController");
 const orderController = require("../../controller/admincontroller/orderController");
 const couponController = require("../../controller/admincontroller/couponController");
+const adminAuth = require("../../middleware/authentication/adminAuth");
 
 // router for getting the admin login page
 router.get("/", homecontroller.getAdminPage);

@@ -1,5 +1,7 @@
 // requiring the modules for this page
 const express = require("express");
+
+// requiring the local modules
 const homeController = require("../../controller/usercontroller/homeController");
 const signupController = require("../../controller/usercontroller/signupController");
 const loginController = require("../../controller/usercontroller/loginController");
@@ -9,7 +11,7 @@ const cartController = require("../../controller/usercontroller/cartController")
 const orderController = require("../../controller/usercontroller/orderController");
 const wishlistController = require("../../controller/usercontroller/wishlistController");
 const walletController = require("../../controller/usercontroller/walletController");
-const userMiddleware = require("../../middleware/user/session");
+const userAuth = require("../../middleware/authentication/userAuth");
 
 // setting the router for this page
 const router = express.Router();
