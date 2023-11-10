@@ -5,5 +5,7 @@ exports.adminAuth = (req, res, next) => {
   const admin = req.session.admin;
   if (admin) {
     next();
+  } else {
+    res.redirect("/admin");
   }
 };

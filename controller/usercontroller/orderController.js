@@ -461,11 +461,12 @@ exports.postCancelOrder = async (req, res) => {
 
       const payment = specificOrder.paymentMethod;
       const product = specificOrder.products[0];
-      const price = specificOrder.quantity * product.price;
+      const priceArray = specificOrder.price;
+      const price = priceArray.reduce((total, amount) => total + amount, 0);
       console.log("price", price);
 
       console.log("payment", payment);
-      if (payment == "onlinepayment" || payment === "wallet") {
+      if (payment == "onlinepayment" || payment == "wallet") {
         console.log("hello");
         user = await userCollection.updateOne(
           { email: userId },
@@ -589,8 +590,8 @@ exports.getReturnOrder = async (req, res) => {
 
       const payment = specificOrder.paymentMethod;
       const product = specificOrder.products[0];
-      const price = specificOrder.quantity * product.price;
-      console.log("price", price);
+      const priceArray = specificOrder.price;
+      const price = priceArray.reduce((total, amount) => total + amount, 0);
 
       console.log("payment", payment);
       if (
