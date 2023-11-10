@@ -289,6 +289,8 @@
                         <section id="discountSection" hidden>
                           <li><span id="discountPercent"></span></li>
                           <li><span id="amountAfterDiscount"></span></li>
+                          <button class="btn btn-primary" type="button" id="clear-coupon" style="display: none;">Clear</button>              
+
                         </section>
                         <section hidden id="coupenid"></section>
                         <i id="clear"></i>
@@ -632,7 +634,7 @@
       document.getElementById("check-coupon").addEventListener("click", async function () {
         const couponCode = document.getElementById("coupon").value; // Get the entered coupon code
         const errorMessageElement = document.getElementById("errorMessage"); // Get the error message element
-
+        
         try {
           // Make an AJAX request to check the coupon and get the discount details
           const response = await fetch(`/product/cart/coupon?code=${couponCode}`, {
@@ -652,7 +654,7 @@
 
               // Show the hidden sections
               document.getElementById("discountSection").removeAttribute("hidden");
-              
+              document.getElementById("clear-coupon").style.display = "inline-block"; // Show the clear button
               // Clear any previous error message
               errorMessageElement.textContent = "";
             } else {
@@ -660,6 +662,7 @@
               errorMessageElement.textContent = "Invalid coupon. Please try another one.";
               console.log("Coupon is invalid.");
               // You can show an error message or take appropriate action.
+              document.getElementById("clear-coupon").style.display = "none";
             }
           } else {
             console.log("Network error:", response.status);
@@ -672,10 +675,40 @@
       });
 
 
+      document.getElementById("clear-coupon").addEventListener("click", async function () {
+        const couponCode = document.getElementById("coupon").value;
+        const errorMessageElement = document.getElementById("errorMessage");
 
+        try {
+            const response = await fetch(`/clear-coupon?couponCode=${couponCode}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ couponCode }),
+            });
 
-      
-      
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    // Coupon cleared successfully, you can perform any additional frontend actions here
+                    console.log(data.message);
+
+                    // Additionally, you might want to hide the discount section and clear the coupon input
+                    document.getElementById("coupon").value = "";
+                    document.getElementById("discountSection").setAttribute("hidden", "true");
+                    document.getElementById("clear-coupon").style.display = "none";
+                } else {
+                    // Handle the case when the coupon is not found on the server
+                    errorMessageElement.textContent = data.message;
+                }
+            } else {
+                console.log('Network error:', response.status);
+            }
+        } catch (error) {
+            console.error('Error while clearing the coupon:', error);
+        }
+    });
 
     </script>
     <script

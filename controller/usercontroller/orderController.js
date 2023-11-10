@@ -706,3 +706,29 @@ exports.checkCoupons = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+// controller for the removing the coupons
+exports.clearCoupon = async (req, res) => {
+  const userId = req.session.user;
+  const couponCode = req.query.couponCode;
+  console.log("couponCode", couponCode);
+  try {
+    const user = await userCollection.findOne({ email: userId });
+    const unUsedCoupons = user.unUsedCoupons;
+    console.log("working",unUsedCoupons);
+    //for extracting the coupon from the array unUsedCoupons 
+    const extractedCoupons = unUsedCoupons.map(coupon => coupon.coupons);
+    console.log("working", extractedCoupons);
+    // checking the enterd couponcode and the extracted coupon code
+    if (couponCode == extractedCoupons){
+      console.log("checking..");
+      unUsedCoupons.pop()
+    }
+    // commiting the changes
+    user.save();
+    res.json({ success: true, extractedCoupons });
+  } catch (error){
+    console.error("There was an unexpected error while deleting the coupon", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};

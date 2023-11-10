@@ -237,7 +237,7 @@
                     </div>
                   </div>
                   <div class="col-lg-4 bg-grey">
-                    <div class="p-5">
+                    <div class="p-5" id="summaryContainer">
                       <h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
                       <hr class="my-4" />
 
@@ -308,15 +308,17 @@
             console.log("product quantity increased successfully");
             
             const initialQuantity = parseInt(document.getElementById(`quantityInput_${productId}`).value);
+            
           } else {
             console.log("Response not ok:", response);
           }
+          
         })
         
         .catch((error)=>{
           console.error("error while increasing the product");
         })
-        
+        location.reload();
       }
 
       // function to decrement the quantity
@@ -340,14 +342,17 @@
               
               console.log("Response not ok:", response);
             }
+            
           })
           .catch((error)=>{
             console.error("error while decreasing the quantity");
           })
         }
         const initialQuantity = parseInt(document.getElementById(`quantityInput_${productId}`).value);
+        location.reload()
       }
 
+      
       // adding event listners to all the buttons
       const incrementButton = document.querySelectorAll(".increment-button");
       const decrementButton = document.querySelectorAll(".decrement-button");
@@ -374,6 +379,9 @@
       
 
     </script>
+   
+  
+
     <script>
       $(document).ready(function() {
         const loader = $('#loader');
