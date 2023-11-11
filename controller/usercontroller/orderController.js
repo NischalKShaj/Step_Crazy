@@ -5,6 +5,7 @@ const cartCollection = require("../../models/cart/cartDetail");
 const userCollection = require("../../models/user/userDatabase");
 const productCollection = require("../../models/product/productDetails");
 const couponCollection = require("../../models/coupons/couponCollection");
+const reportCollection = require("../../models/reports/reportDetails");
 const Razorpay = require("razorpay");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -315,7 +316,7 @@ exports.getWalletPayment = async (req, res) => {
           );
 
           // Add the cart and product details to the user's order
-          user.order.push({
+          const details = {
             cart: cartItem._id,
             products: product,
             quantity,
@@ -323,9 +324,18 @@ exports.getWalletPayment = async (req, res) => {
             status: status,
             selectedAddress: selectedAddress,
             paymentMethod: paymentMethod,
-          });
+          };
 
-          console.log("user.order", user.order);
+          user.order.push(details);
+          console.log("user.details", user.order);
+          // entering the values inside the report collection
+          const reportEntry = new reportCollection({
+            orderDetails: [details],
+          });
+          console.log("reportEntry", reportEntry);
+
+          // save the reports in the report collection
+          await reportEntry.save();
         } else {
           res.status(400).json({ message: "Out of stock", type: "danger" });
           return;
@@ -379,7 +389,7 @@ exports.getOrderDetails = async (req, res) => {
   try {
     const search = req.query.search;
     const page = parseInt(req.query.page) || 1;
-    const limit = 25;
+    const limit = 10;
     const userEmail = req.session.user;
     const user = await userCollection.findOne({ email: userEmail }).exec();
 
@@ -715,20 +725,23 @@ exports.clearCoupon = async (req, res) => {
   try {
     const user = await userCollection.findOne({ email: userId });
     const unUsedCoupons = user.unUsedCoupons;
-    console.log("working",unUsedCoupons);
-    //for extracting the coupon from the array unUsedCoupons 
-    const extractedCoupons = unUsedCoupons.map(coupon => coupon.coupons);
+    console.log("working", unUsedCoupons);
+    //for extracting the coupon from the array unUsedCoupons
+    const extractedCoupons = unUsedCoupons.map((coupon) => coupon.coupons);
     console.log("working", extractedCoupons);
     // checking the enterd couponcode and the extracted coupon code
-    if (couponCode == extractedCoupons){
+    if (couponCode == extractedCoupons) {
       console.log("checking..");
-      unUsedCoupons.pop()
+      unUsedCoupons.pop();
     }
     // commiting the changes
     user.save();
     res.json({ success: true, extractedCoupons });
-  } catch (error){
-    console.error("There was an unexpected error while deleting the coupon", error);
+  } catch (error) {
+    console.error(
+      "There was an unexpected error while deleting the coupon",
+      error
+    );
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };

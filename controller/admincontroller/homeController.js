@@ -2,12 +2,18 @@
 
 // importing the modules for the data in the admins database
 const collection = require("../../models/admin/adminDatabase");
+const reportCollection = require("../../models/reports/reportDetails");
 
 let admin;
 
 // for getting the admin dashboard
 exports.getAdminHome = (req, res) => {
-  res.redirect("/admin");
+  try {
+    res.redirect("/admin");
+  } catch (error) {
+    console.log("error", error);
+    res.render("error/404");
+  }
 };
 
 // for showing the admin dashboard
@@ -18,6 +24,7 @@ exports.postAdminHome = async (req, res) => {
       password: req.body.password,
     });
 
+    const report = await reportCollection.find().count();
     console.log(admin);
     if (
       admin.email === req.body.email &&
@@ -25,6 +32,8 @@ exports.postAdminHome = async (req, res) => {
     ) {
       req.session.admin = req.body.email;
       console.log("inside the dashboard...");
+
+      console.log("report", report);
       res.redirect("/admin");
     } else {
       const message = "Invalid admin credentials";

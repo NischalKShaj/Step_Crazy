@@ -138,21 +138,17 @@
     <h1>welcome to the admin panel</h1>
     <div class="container-fluid pt-4 px-4">
       <div class="row g-4">
+        
+       
         <div class="col-sm-12 col-xl-6">
           <div class="bg-light rounded h-100 p-4">
-            <h6 class="mb-4">Single Line Chart</h6>
-            <canvas id="line-chart"></canvas>
-          </div>
-        </div>
-        <div class="col-sm-12 col-xl-6">
-          <div class="bg-light rounded h-100 p-4">
-            <h6 class="mb-4">Multiple Line Chart</h6>
+            <a href="/admin/dashboard"><h6 class="mb-4">Multiple Line Chart</h6></a>
             <canvas id="salse-revenue"></canvas>
           </div>
         </div>
         <div class="col-sm-12 col-xl-6">
           <div class="bg-light rounded h-100 p-4">
-            <h6 class="mb-4">Single Bar Chart</h6>
+            <h6 class="mb-4">Total Sales Report</h6>
             <canvas id="bar-chart"></canvas>
           </div>
         </div>
@@ -162,21 +158,13 @@
             <canvas id="worldwide-sales"></canvas>
           </div>
         </div>
-        <div class="col-sm-12 col-xl-6">
-          <div class="bg-light rounded h-100 p-4">
-            <h6 class="mb-4">Pie Chart</h6>
-            <canvas id="pie-chart"></canvas>
-          </div>
-        </div>
-        <div class="col-sm-12 col-xl-6">
-          <div class="bg-light rounded h-100 p-4">
-            <h6 class="mb-4">Doughnut Chart</h6>
-            <canvas id="doughnut-chart"></canvas>
-          </div>
-        </div>
+        
+       
+        
       </div>
     </div>
   </body>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="../../js/chart.min.js"></script>
   <script>
@@ -207,6 +195,108 @@
         });
     });
   </script>
+ 
+
+
+
+ 
+ <script>
+  document.addEventListener("DOMContentLoaded", function () {
+     // Data for the multiple line chart
+     var data = {
+        labels: ['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5'],
+        datasets: [
+           {
+              label: 'Line 1',
+              data: [10, 20, 15, 25, 18],
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 2,
+              fill: false
+           },
+           {
+              label: 'Line 2',
+              data: [5, 10, 8, 15, 12],
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 2,
+              fill: false
+           }
+           // Add more datasets as needed
+        ]
+     };
+
+     // Configuration options
+     var options = {
+        scales: {
+           y: {
+              beginAtZero: true
+           }
+        }
+     };
+
+     // Get the canvas element
+     var ctx = document.getElementById('salse-revenue').getContext('2d');
+
+     // Create the multiple line chart
+     var lineChart = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: options
+     });
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+     // Data for the multiple bar chart
+     var data = {
+        labels: ['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5'],
+        datasets: [
+           {
+              label: 'Bar 1',
+              data: [10, 20, 15, 25, 18],
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1
+           },
+           {
+              label: 'Bar 2',
+              data: [5, 10, 8, 15, 12],
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+           },
+           {
+              label: 'Bar 2',
+              data: [5, 10, 8, 15, 12],
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+           }
+           // Add more datasets as needed
+        ]
+     };
+
+     // Configuration options
+     var options = {
+        scales: {
+           y: {
+              beginAtZero: true
+           }
+        }
+     };
+
+     // Get the canvas element
+     var ctx = document.getElementById('worldwide-sales').getContext('2d');
+
+     // Create the multiple bar chart
+     var barChart = new Chart(ctx, {
+        type: 'bar',
+        data: data,
+        options: options
+     });
+  });
+</script>
+
+
   <script>
     $(document).ready(function() {
       const loader = $('#loader');

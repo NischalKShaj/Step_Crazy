@@ -10,6 +10,7 @@ const userController = require("../../controller/admincontroller/userController"
 const categoryController = require("../../controller/admincontroller/categoryController");
 const orderController = require("../../controller/admincontroller/orderController");
 const couponController = require("../../controller/admincontroller/couponController");
+const reportController = require("../../controller/admincontroller/reportController");
 const adminAuth = require("../../middleware/authentication/adminAuth");
 
 // router for getting the admin login page
@@ -22,7 +23,7 @@ router.get("/logout", homecontroller.Logout);
 router.get("/dashboard", loginController.getAdminHome);
 
 // router for posting the admin dashboard
-router.post("/dashboard", loginController.postAdminHome);
+router.post("/", loginController.postAdminHome);
 
 // router for getting the admin page
 router.get("/dashboard/admins", adminAuth.adminAuth, loginController.getAdmin);
@@ -246,5 +247,12 @@ router.delete(
   adminAuth.adminAuth,
   couponController.deleteCoupon
 );
+
+// // router for showing the count in the chart
+// router.get(
+//   "/dashboard/chart",
+//   adminAuth.adminAuth,
+//   reportController.showSalesReport
+// );
 
 module.exports = router;
