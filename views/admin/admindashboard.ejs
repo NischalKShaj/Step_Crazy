@@ -142,14 +142,15 @@
        
         <div class="col-sm-12 col-xl-6">
           <div class="bg-light rounded h-100 p-4">
-            <a href="/admin/dashboard"><h6 class="mb-4">Multiple Line Chart</h6></a>
+            <h6 class="mb-4">Multiple Line Chart</h6>
             <canvas id="salse-revenue"></canvas>
           </div>
         </div>
+        <!-- Your EJS template -->
         <div class="col-sm-12 col-xl-6">
           <div class="bg-light rounded h-100 p-4">
             <h6 class="mb-4">Total Sales Report</h6>
-            <canvas id="bar-chart"></canvas>
+            <canvas id="bar-chart" data-report="<%= report %>" ></canvas>
           </div>
         </div>
         <div class="col-sm-12 col-xl-6">
@@ -196,6 +197,46 @@
     });
   </script>
  
+ <script>
+  document.addEventListener("DOMContentLoaded", function () {
+     const canvas = document.getElementById('bar-chart');
+     const report = JSON.parse(canvas.getAttribute('data-report'));
+
+     // Data for the Bar Chart
+     var data = {
+        labels: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+        datasets: [{
+          label: 'Total Sales',
+           data: [report],
+           backgroundColor: 'rgba(75, 192, 192, 0.2)',
+           borderColor: 'rgba(75, 192, 192, 1)',
+           borderWidth: 1,
+           barPercentage: 0.5
+        }]
+     };
+
+     // Configuration options
+     var options = {
+        scales: {
+           y: {
+              beginAtZero: true,
+              max: report*2 // Set the maximum value of the y-axis
+           }
+        }
+     };
+
+     // Get the canvas element
+     var ctx = canvas.getContext('2d');
+
+     // Create the Bar Chart
+     var barChart = new Chart(ctx, {
+        type: 'bar',
+        data: data,
+        options: options
+     });
+  });
+</script>
+
 
 
 

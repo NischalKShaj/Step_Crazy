@@ -90,7 +90,7 @@ exports.postOrderPage = async (req, res) => {
           );
 
           // Add the cart and product details to the user's order
-          user.order.push({
+          const details = {
             cart: cartItem._id,
             products: product,
             quantity,
@@ -98,9 +98,18 @@ exports.postOrderPage = async (req, res) => {
             status: status,
             selectedAddress: selectedAddress,
             paymentMethod: paymentMethod,
-          });
+          };
 
-          console.log("user.order", user.order);
+          user.order.push(details);
+          console.log("user.details", user.order);
+          // entering the values inside the report collection
+          const reportEntry = new reportCollection({
+            orderDetails: [details],
+          });
+          console.log("reportEntry", reportEntry);
+
+          // save the reports in the report collection
+          await reportEntry.save();
         } else {
           res.status(400).json({ message: "Out of stock", type: "danger" });
           return;
@@ -200,7 +209,7 @@ exports.postOnlineConfirm = async (req, res) => {
           );
 
           // Add the cart and product details to the user's order
-          user.order.push({
+          const details = {
             cart: cartItem._id,
             products: product,
             quantity,
@@ -208,9 +217,18 @@ exports.postOnlineConfirm = async (req, res) => {
             status: status,
             selectedAddress: selectedAddress,
             paymentMethod: paymentMethod,
-          });
+          };
 
-          console.log("user.order", user.order);
+          user.order.push(details);
+          console.log("user.details", user.order);
+          // entering the values inside the report collection
+          const reportEntry = new reportCollection({
+            orderDetails: [details],
+          });
+          console.log("reportEntry", reportEntry);
+
+          // save the reports in the report collection
+          await reportEntry.save();
         } else {
           res.status(400).json({ message: "Out of stock", type: "danger" });
           return;

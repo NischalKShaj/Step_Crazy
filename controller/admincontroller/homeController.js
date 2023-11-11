@@ -7,9 +7,15 @@ const reportCollection = require("../../models/reports/reportDetails");
 let admin;
 
 // for getting the admin dashboard
-exports.getAdminHome = (req, res) => {
+exports.getAdminHome = async (req, res) => {
+  const adminId = req.session.admin;
+  const admin = await collection.findOne({ email: adminId });
   try {
-    res.redirect("/admin");
+    if (admin) {
+     const report = await reportCollection.find().count();
+     console.log(report);
+     res.render("admin/admindashboard", {report})
+    }
   } catch (error) {
     console.log("error", error);
     res.render("error/404");
@@ -24,7 +30,6 @@ exports.postAdminHome = async (req, res) => {
       password: req.body.password,
     });
 
-    const report = await reportCollection.find().count();
     console.log(admin);
     if (
       admin.email === req.body.email &&
@@ -32,9 +37,10 @@ exports.postAdminHome = async (req, res) => {
     ) {
       req.session.admin = req.body.email;
       console.log("inside the dashboard...");
-
+      const report = await reportCollection.find().count();
       console.log("report", report);
-      res.redirect("/admin");
+      // res.json({report})
+      res.render("admin/admindashboard",{report})
     } else {
       const message = "Invalid admin credentials";
       res.redirect(`/admin?success=${encodeURIComponent(message)}`);
