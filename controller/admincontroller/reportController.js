@@ -10,7 +10,7 @@ const ExcelJS = require("exceljs");
 // conroller for downloading the yearly sales report as pdf
 exports.downloadYearlySalesPdf = async (req, res) => {
   try {
-    const selectedYear = req.query.year; // Assuming you are sending the selected year in the request body
+    const selectedYear = req.query.year; 
     console.log("selectedYear", selectedYear);
 
     const yearlySales = await reportCollection
@@ -127,7 +127,7 @@ exports.downloadYearlySalesExcel = async (req, res) => {
 // controller for downloading the monthly sales report as pdf
 exports.downloadMonthlySalesPdf = async (req, res) => {
   try {
-    const selectedMonthName = req.query.month; // Assuming you are sending the selected month in the request body as a string (e.g., 'January')
+    const selectedMonthName = req.query.month; 
 
     const selectedMonth =
       new Date(Date.parse(`${selectedMonthName} 1, 2023`)).getMonth() + 1;
@@ -189,7 +189,7 @@ exports.downloadMonthlySalesPdf = async (req, res) => {
 // controller for downloading the monthly sales report as excel sheet
 exports.downloadMonthlySalesExcel = async (req, res) => {
   try {
-    const selectedMonthName = req.query.month; // Assuming you are sending the selected month in the request body as a string (e.g., 'January')
+    const selectedMonthName = req.query.month; 
 
     const selectedMonth =
       new Date(Date.parse(`${selectedMonthName} 1, 2023`)).getMonth() + 1;
@@ -253,5 +253,132 @@ exports.downloadMonthlySalesExcel = async (req, res) => {
   } catch (error) {
     console.error("Error generating Excel:", error);
     res.status(500).send("Internal Server Error");
+  }
+};
+
+// controller for downloading the daily sales report as pdf
+exports.downloadDailySalesPdf = async (req, res) => {
+  try {
+    const selectedDate = new Date(req.query.date); 
+    console.log("selectedDate", selectedDate);
+
+    const yearlySales = await reportCollection
+      .find({
+        "orderDetails.date": {
+          $gte: selectedDate, // Start of the selected date
+          $lt: new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000), // Start of the next day
+        },
+      })
+      .populate("orderDetails.cart orderDetails.products");
+
+    // Create a new PDF document
+    const doc = new PDFDocument();
+
+    // Set the response headers for PDF download
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=daily_sales_${
+        selectedDate.toISOString().split("T")[0]
+      }.pdf`
+    );
+
+    // Pipe the PDF document to the response
+    doc.pipe(res);
+
+    // Add content to the PDF
+    doc
+      .fontSize(16)
+      .text(
+        `Daily Sales Report - ${selectedDate.toISOString().split("T")[0]}`,
+        { align: "center" }
+      );
+
+    // Loop through daily sales and add details to the PDF
+    yearlySales.forEach((order) => {
+      order.orderDetails.forEach((orderDetail) => {
+        const orderDate = new Date(orderDetail.date);
+        if (
+          orderDate.toISOString().split("T")[0] ===
+          selectedDate.toISOString().split("T")[0]
+        ) {
+          doc.moveDown().fontSize(14).text(`Order ID: ${order._id}`);
+          doc.text(
+            `Product Name: ${orderDetail.products
+              .map((product) => product.name)
+              .join(", ")}`
+          );
+          doc.text(`Price: ${orderDetail.price}`);
+          doc.text(
+            `Selected Address: ${orderDetail.selectedAddress.join(", ")}`
+          );
+          doc.text(`Payment Method: ${orderDetail.paymentMethod}`);
+        }
+      });
+    });
+
+    // Finalize the PDF and end the response
+    doc.end();
+  } catch (error) {
+    console.error("Error generating PDF:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+// controller for downloading the daily sales report as excel sheet
+exports.downloadDailySalesExcel = async (req, res) => {
+  try {
+    const selectedDate = new Date(req.query.date); 
+    console.log("selectedDate", selectedDate);
+
+    const yearlySales = await reportCollection.find({
+      'orderDetails.date': {
+        $gte: selectedDate, // Start of the selected date
+        $lt: new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000), // Start of the next day
+      },
+    }).populate('orderDetails.cart orderDetails.products');
+
+    // Create a new Excel workbook and worksheet
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Daily Sales Report');
+
+    // Define the columns in the worksheet
+    worksheet.columns = [
+      { header: 'Order ID', key: 'orderId', width: 15 },
+      { header: 'Product Name', key: 'productName', width: 30 },
+      { header: 'Price', key: 'price', width: 15 },
+      { header: 'Selected Address', key: 'selectedAddress', width: 30 },
+      { header: 'Payment Method', key: 'paymentMethod', width: 20 },
+    ];
+
+    // Add data to the worksheet
+    yearlySales.forEach(order => {
+      order.orderDetails.forEach(orderDetail => {
+        const orderDate = new Date(orderDetail.date);
+        if (orderDate.toISOString().split('T')[0] === selectedDate.toISOString().split('T')[0]) {
+          worksheet.addRow({
+            orderId: order._id,
+            productName: orderDetail.products.map(product => product.name).join(', '),
+            price: orderDetail.price,
+            selectedAddress: orderDetail.selectedAddress.join(', '),
+            paymentMethod: orderDetail.paymentMethod,
+          });
+        }
+      });
+    });
+
+    // Set the response headers for Excel download
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', `attachment; filename=daily_sales_${selectedDate.toISOString().split('T')[0]}.xlsx`);
+
+    // Pipe the Excel workbook to the response
+    await workbook.xlsx.write(res);
+
+    // End the response
+    res.end();
+
+  } catch (error) {
+    console.error('Error generating Excel:', error);
+    res.status(500).send('Internal Server Error');
   }
 };

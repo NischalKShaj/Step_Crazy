@@ -276,4 +276,18 @@ router.get(
   reportController.downloadMonthlySalesExcel
 );
 
+// router for downloading the pdf for the daily sales report
+router.get(
+  "/dailyReportPDF",
+  adminAuth.adminAuth,
+  reportController.downloadDailySalesPdf
+);
+
+// router for downloading the excel sheet for the daily sales report
+router.get(
+  "/dailyReportXLS",
+  adminAuth.adminAuth,
+  reportController.downloadDailySalesExcel
+);
+
 module.exports = router;

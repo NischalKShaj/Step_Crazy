@@ -226,9 +226,9 @@
               <div class="card-body">
                   <h6 class="card-title">Daily</h6>
                   <div class="button-group">
-                      <input type="text" class="form-control" placeholder="yyyy-mm-dd" pattern="\d{4}-\d{2}-\d{2}" title="Please use the yyyy-mm-dd format" required>
-                      <button class="btn btn-primary">Download PDF</button>
-                      <button class="btn btn-success">Download Excel</button>
+                      <input type="text" id="date" class="form-control" name="search" placeholder="yyyy-mm-dd" pattern="\d{4}-\d{2}-\d{2}" title="Please use the yyyy-mm-dd format" required>
+                      <button id="downloadPdfBtnDate" class="btn btn-primary">Download PDF</button>
+                      <button id="downloadXLSBtnDate" class="btn btn-success">Download Excel</button>
                   </div>
               </div>
             </div>
@@ -395,7 +395,7 @@
     var dataDaily = {
       labels: sortedLabels.map(date => date.toISOString().split('T')[0]), // Format dates as needed
       datasets: [{
-        label: 'Report Count',
+        label: 'Daily Report',
         data: dailyCounts.data,
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderColor: 'rgba(75, 192, 192, 1)',
@@ -454,6 +454,23 @@
     document.getElementById('downloadXLSBtnMonth').addEventListener('click', function () {
       var selectedMonth = document.getElementById('month').value;
       var pdfUrl = '/admin/monthlyReportXLS?month=' + selectedMonth;
+      window.location.href = pdfUrl;
+    });
+  </script>
+
+  <!-- script for downloading the data according to the date -->
+  <script>
+    // for downloading the pdf
+    document.getElementById('downloadPdfBtnDate').addEventListener('click', function () {
+      var selectedDate = document.getElementById('date').value;
+      var pdfUrl = '/admin/dailyReportPDF?date=' + selectedDate;
+      window.location.href = pdfUrl;
+    });
+
+    // for downloading the excel sheet for the project
+    document.getElementById('downloadXLSBtnDate').addEventListener('click', function () {
+      var selectedDate = document.getElementById('date').value;
+      var pdfUrl = '/admin/dailyReportXLS?date=' + selectedDate;
       window.location.href = pdfUrl;
     });
   </script>
