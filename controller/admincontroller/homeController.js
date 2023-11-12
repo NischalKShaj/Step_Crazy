@@ -61,8 +61,38 @@ exports.getAdminHome = async (req, res) => {
       const years = Object.keys(yearlyCounts).map((year) => parseInt(year));
       const count = Object.values(yearlyCounts);
 
+      // Count daily orders
+      const dailyCounts = {}; // Object to store daily counts
+
+      orders.forEach((order) => {
+        order.orderDetails.forEach((orderDetail) => {
+          const date =
+            orderDetail.date instanceof Date
+              ? orderDetail.date.toISOString().split("T")[0]
+              : "Invalid Date";
+
+          if (dailyCounts[date]) {
+            dailyCounts[date]++;
+          } else {
+            dailyCounts[date] = 1;
+          }
+
+          // Include other details as needed
+        });
+      });
+
+      // Convert dailyCounts object to an array for chart data
+      const labels = Object.keys(dailyCounts);
+      const data = Object.values(dailyCounts);
+
       // Render the page with the data
-      res.render("admin/admindashboard", { months, counts, years, count });
+      res.render("admin/admindashboard", {
+        months,
+        counts,
+        years,
+        count,
+        dailyCounts: { labels, data },
+      });
     }
   } catch (error) {
     console.log("error", error);
@@ -134,8 +164,37 @@ exports.postAdminHome = async (req, res) => {
       const years = Object.keys(yearlyCounts).map((year) => parseInt(year));
       const count = Object.values(yearlyCounts);
 
+      const dailyCounts = {}; // Object to store daily counts
+
+      orders.forEach((order) => {
+        order.orderDetails.forEach((orderDetail) => {
+          const date =
+            orderDetail.date instanceof Date
+              ? orderDetail.date.toISOString().split("T")[0]
+              : "Invalid Date";
+
+          if (dailyCounts[date]) {
+            dailyCounts[date]++;
+          } else {
+            dailyCounts[date] = 1;
+          }
+
+          // Include other details as needed
+        });
+      });
+
+      // Convert dailyCounts object to an array for chart data
+      const labels = Object.keys(dailyCounts);
+      const data = Object.values(dailyCounts);
+
       // Render the page with the data
-      res.render("admin/admindashboard", { months, counts, years, count });
+      res.render("admin/admindashboard", {
+        months,
+        counts,
+        years,
+        count,
+        dailyCounts: { labels, data },
+      });
     } else {
       const message = "Invalid admin credentials";
       res.redirect(`/admin?success=${encodeURIComponent(message)}`);

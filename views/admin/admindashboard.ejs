@@ -4,35 +4,45 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Step-Crazy/Admindashboard</title>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyFRRUQRiq+2LlGy+8iH2p1u7L8pvpOp" crossorigin="anonymous">
+
+        <!-- Bootstrap Datepicker CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha384-qsiIhV3amE01/WhFQEdeQ4sez3Sf5sU9MqEtJ0F6zOn1MCpYsrqHjDVUpnPZ0Ga" crossorigin="anonymous">
+    
+        <link rel="stylesheet" href="../../CSS/admin/style.css">
+        <link rel="stylesheet" href="../.../CSS/admin/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      
+      <!-- Bootstrap Datepicker CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha384-qsiIhV3amE01/WhFQEdeQ4sez3Sf5sU9MqEtJ0F6zOn1MCpYsrqHjDVUpnPZ0Ga" crossorigin="anonymous">
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+          crossorigin="anonymous"
+        />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/css/bootstrap-utilities.rtl.min.css"
+          integrity="sha512-g/9zc34RrAHk9cSFEodVsDR+TjDAhw9+VjWHnbK6kZe6sK4xTpPJ6cqJYd3WXfFmQuNLIkhDetQdm6fOOzj/nQ=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"
+        />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+          integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
   </head>
-  <link rel="stylesheet" href="../../CSS/admin/style.css">
-  <link rel="stylesheet" href="../.../CSS/admin/bootstrap.min.css">
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-    crossorigin="anonymous"
-  />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/css/bootstrap-utilities.rtl.min.css"
-    integrity="sha512-g/9zc34RrAHk9cSFEodVsDR+TjDAhw9+VjWHnbK6kZe6sK4xTpPJ6cqJYd3WXfFmQuNLIkhDetQdm6fOOzj/nQ=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap"
-    rel="stylesheet"
-  />
   <style>
     .dimmed-background {
       position: fixed;
@@ -68,6 +78,7 @@
   <body>
     <div class="dimmed-background" id="dimmedBackground"></div>
     <div class="loader" id="loader"></div>
+
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <a href="/admin/dashboard">
@@ -139,47 +150,101 @@
     <div class="container-fluid pt-4 px-4">
       <div class="row g-4">
         
-        <!-- Yearly Sales Report -->
+        <!-- Daily Sales Report -->
         <div class="col-sm-12 col-xl-6">
           <div class="bg-light rounded h-100 p-4">
-            <h6 class="mb-4">Yearly Sales Report</h6>
-            <canvas id="bar-chart-yearly" data-years="<%= JSON.stringify(years) %>" data-yearly-counts="<%= JSON.stringify(count) %>"></canvas>
-            <button id="showTotalButton" class="btn btn-primary">Download Pdf</button>
-            <button id="showAverageButton" class="btn btn-success">Download XL Sheet</button>
+            <h6 class="mb-4">Daily Sales Report</h6>
+            <canvas id="bar-chart-daily" data-daily-counts="<%= JSON.stringify(dailyCounts) %>"></canvas>
           </div>
         </div>
-        
+                
         <!-- Monthly Sales Report -->
         <div class="col-sm-12 col-xl-6">
           <div class="bg-light rounded h-100 p-4">
             <h6 class="mb-4">Monthly Sales Report</h6>
             <canvas id="bar-chart" data-months="<%= JSON.stringify(months) %>" data-counts="<%= JSON.stringify(counts) %>"></canvas>
-            <button id="showTotalButton" class="btn btn-primary">Download Pdf</button>
-            <button id="showAverageButton" class="btn btn-success">Download XL Sheet</button>
           </div>
         </div>
         
-
-        
+        <!-- Yearly Sales Report -->
         <div class="col-sm-12 col-xl-6">
           <div class="bg-light rounded h-100 p-4">
-            <h6 class="mb-4">Multiple Line Chart</h6>
-            <canvas id="salse-revenue"></canvas>
+            <h6 class="mb-4">Yearly Sales Report</h6>
+            <canvas id="bar-chart-yearly" data-years="<%= JSON.stringify(years) %>" data-yearly-counts="<%= JSON.stringify(count) %>"></canvas>
           </div>
         </div>
-
+             
         <div class="col-sm-12 col-xl-6">
           <div class="bg-light rounded h-100 p-4">
-            <h6 class="mb-4">Multiple Bar Chart</h6>
-            <canvas id="worldwide-sales"></canvas>
+            <h6 class="mb-4">Sales Report</h6>
+            <div class="card mb-4">
+              <div class="card-body">
+                  <h6 class="card-title">Yearly</h6>
+                  <div class="button-group">
+                      <select class="form-control" id="year">
+                          <option value="2022">2022</option>
+                          <option value="2023">2023</option>
+                          <option value="2024">2024</option>
+                          <option value="2025">2025</option>
+                          <option value="2026">2026</option>
+                          <option value="2027">2027</option>
+                          <option value="2028">2028</option>
+                          <option value="2029">2029</option>
+                      </select>
+                      <button id="downloadPdfBtn" class="btn btn-primary">Download PDF</button>
+                      <button id="downloadXLSBtn" class="btn btn-success">Download Excel</button>
+                  </div>
+              </div>
+            </div>
+
+            <div class="card mb-4">
+              <div class="card-body">
+                  <h6 class="card-title">Monthly</h6>
+                  <div class="button-group">
+                      <select class="form-control" id="month">
+                          <option value="January">January</option>
+                          <option value="February">February</option>
+                          <option value="March">March</option>
+                          <option value="April">April</option>
+                          <option value="May">May</option>
+                          <option value="June">June</option>
+                          <option value="July">July</option>
+                          <option value="August">August</option>
+                          <option value="September">September</option>
+                          <option value="October">October</option>
+                          <option value="November">November</option>
+                          <option value="December">December</option>
+                      </select>
+                      <button id="downloadPdfBtnMonth" class="btn btn-primary">Download PDF</button>
+                      <button id="downloadXLSBtnMonth" class="btn btn-success">Download Excel</button>
+                  </div>
+              </div>
+            </div>
+          
+
+            <div class="card">
+              <div class="card-body">
+                  <h6 class="card-title">Daily</h6>
+                  <div class="button-group">
+                      <input type="text" class="form-control" placeholder="yyyy-mm-dd" pattern="\d{4}-\d{2}-\d{2}" title="Please use the yyyy-mm-dd format" required>
+                      <button class="btn btn-primary">Download PDF</button>
+                      <button class="btn btn-success">Download Excel</button>
+                  </div>
+              </div>
+            </div>
+             
           </div>
         </div>
-        
-       
-        
       </div>
     </div>
   </body>
+  <!-- Bootstrap JS, Popper.js, and jQuery -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  
+  <!-- Bootstrap Datepicker JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha384-ssG6/A6dh4lYYjLlU0Jn5J45po4QhHUrGsJn9PHzzIePl/DI8NOgs2h8el00oew1" crossorigin="anonymous"></script>
+  
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="../../js/chart.min.js"></script>
@@ -191,6 +256,7 @@
     crossorigin = "anonymous";
     referrerpolicy = "no-referrer";
   </script>
+  
   <script>
     const Logout = document.getElementById("logout");
 
@@ -211,6 +277,8 @@
         });
     });
   </script>
+
+  
  
  <!-- script for monthly sales -->
  <script>
@@ -314,103 +382,81 @@
   });
 </script>
 
-
- <script>
-  document.addEventListener("DOMContentLoaded", function () {
-     // Data for the multiple line chart
-     var data = {
-        labels: ['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5'],
-        datasets: [
-           {
-              label: 'Line 1',
-              data: [10, 20, 15, 25, 18],
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 2,
-              fill: false
-           },
-           {
-              label: 'Line 2',
-              data: [5, 10, 8, 15, 12],
-              borderColor: 'rgba(255, 99, 132, 1)',
-              borderWidth: 2,
-              fill: false
-           }
-           // Add more datasets as needed
-        ]
-     };
-
-     // Configuration options
-     var options = {
-        scales: {
-           y: {
-              beginAtZero: true
-           }
-        }
-     };
-
-     // Get the canvas element
-     var ctx = document.getElementById('salse-revenue').getContext('2d');
-
-     // Create the multiple line chart
-     var lineChart = new Chart(ctx, {
-        type: 'line',
-        data: data,
-        options: options
-     });
-  });
-</script>
+<!-- script for showing the Daily status -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-     // Data for the multiple bar chart
-     var data = {
-        labels: ['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5'],
-        datasets: [
-           {
-              label: 'Bar 1',
-              data: [10, 20, 15, 25, 18],
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1
-           },
-           {
-              label: 'Bar 2',
-              data: [5, 10, 8, 15, 12],
-              backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              borderColor: 'rgba(255, 99, 132, 1)',
-              borderWidth: 1
-           },
-           {
-              label: 'Bar 2',
-              data: [5, 10, 8, 15, 12],
-              backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              borderColor: 'rgba(255, 99, 132, 1)',
-              borderWidth: 1
-           }
-           // Add more datasets as needed
-        ]
-     };
+    const canvasDaily = document.getElementById('bar-chart-daily');
+    const dailyCounts = JSON.parse(canvasDaily.getAttribute('data-daily-counts'));
 
-     // Configuration options
-     var options = {
-        scales: {
-           y: {
-              beginAtZero: true
-           }
+    // Convert the labels to dates and sort them
+    const sortedLabels = dailyCounts.labels.map(label => new Date(label)).sort((a, b) => a - b);
+    
+    // Data for the Daily Bar Chart
+    var dataDaily = {
+      labels: sortedLabels.map(date => date.toISOString().split('T')[0]), // Format dates as needed
+      datasets: [{
+        label: 'Report Count',
+        data: dailyCounts.data,
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1,
+        barPercentage: 0.5
+      }]
+    };
+
+    // Configuration options for Daily Bar Chart
+    var optionsDaily = {
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: Math.max(...dailyCounts.data) * 2
         }
-     };
+      }
+    };
 
-     // Get the canvas element
-     var ctx = document.getElementById('worldwide-sales').getContext('2d');
+    // Get the canvas element for Daily Bar Chart
+    var ctxDaily = canvasDaily.getContext('2d');
 
-     // Create the multiple bar chart
-     var barChart = new Chart(ctx, {
-        type: 'bar',
-        data: data,
-        options: options
-     });
+    // Create the Daily Bar Chart
+    var barChartDaily = new Chart(ctxDaily, {
+      type: 'bar',
+      data: dataDaily,
+      options: optionsDaily
+    });
   });
 </script>
 
+<!-- script for downloading the data according to the year -->
+<script>
+  // for downloading the pdf 
+  document.getElementById('downloadPdfBtn').addEventListener('click', function () {
+    var selectedYear = document.getElementById('year').value;
+    var pdfUrl = '/admin/yearlyReportPDF?year=' + selectedYear;
+    window.location.href = pdfUrl;
+  });
+
+  // downloading the excel sheet
+  document.getElementById('downloadXLSBtn').addEventListener('click', function () {
+    var selectedYear = document.getElementById('year').value;
+    var xlsUrl = '/admin/yearlyReportXLS?year=' + selectedYear;
+    window.location.href = xlsUrl;
+  });
+</script>
+<!-- script for downloading the data according to the month -->
+  <script>
+    // for downloading the pdf
+    document.getElementById('downloadPdfBtnMonth').addEventListener('click', function () {
+      var selectedMonth = document.getElementById('month').value;
+      var pdfUrl = '/admin/monthlyReportPDF?month=' + selectedMonth;
+      window.location.href = pdfUrl;
+    });
+    // for downloading the excel sheet
+    document.getElementById('downloadXLSBtnMonth').addEventListener('click', function () {
+      var selectedMonth = document.getElementById('month').value;
+      var pdfUrl = '/admin/monthlyReportXLS?month=' + selectedMonth;
+      window.location.href = pdfUrl;
+    });
+  </script>
 
   <script>
     $(document).ready(function() {

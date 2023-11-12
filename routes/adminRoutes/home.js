@@ -248,11 +248,32 @@ router.delete(
   couponController.deleteCoupon
 );
 
-// // router for showing the count in the chart
-// router.get(
-//   "/dashboard/chart",
-//   adminAuth.adminAuth,
-//   reportController.showSalesReport
-// );
+// router for downloading the pdf of yearly sales report
+router.get(
+  "/yearlyReportPDF",
+  adminAuth.adminAuth,
+  reportController.downloadYearlySalesPdf
+);
+
+// router for downloading the excel sheet for the yearly sales report
+router.get(
+  "/yearlyReportXLS",
+  adminAuth.adminAuth,
+  reportController.downloadYearlySalesExcel
+);
+
+// router for downloading the pdf of monthly sales report
+router.get(
+  "/monthlyReportPDF",
+  adminAuth.adminAuth,
+  reportController.downloadMonthlySalesPdf
+);
+
+// router for downloading the excel sheet for the monthly sales report
+router.get(
+  "/monthlyReportXLS",
+  adminAuth.adminAuth,
+  reportController.downloadMonthlySalesExcel
+);
 
 module.exports = router;
