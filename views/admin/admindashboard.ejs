@@ -139,20 +139,35 @@
     <div class="container-fluid pt-4 px-4">
       <div class="row g-4">
         
-       
+        <!-- Yearly Sales Report -->
+        <div class="col-sm-12 col-xl-6">
+          <div class="bg-light rounded h-100 p-4">
+            <h6 class="mb-4">Yearly Sales Report</h6>
+            <canvas id="bar-chart-yearly" data-years="<%= JSON.stringify(years) %>" data-yearly-counts="<%= JSON.stringify(count) %>"></canvas>
+            <button id="showTotalButton" class="btn btn-primary">Download Pdf</button>
+            <button id="showAverageButton" class="btn btn-success">Download XL Sheet</button>
+          </div>
+        </div>
+        
+        <!-- Monthly Sales Report -->
+        <div class="col-sm-12 col-xl-6">
+          <div class="bg-light rounded h-100 p-4">
+            <h6 class="mb-4">Monthly Sales Report</h6>
+            <canvas id="bar-chart" data-months="<%= JSON.stringify(months) %>" data-counts="<%= JSON.stringify(counts) %>"></canvas>
+            <button id="showTotalButton" class="btn btn-primary">Download Pdf</button>
+            <button id="showAverageButton" class="btn btn-success">Download XL Sheet</button>
+          </div>
+        </div>
+        
+
+        
         <div class="col-sm-12 col-xl-6">
           <div class="bg-light rounded h-100 p-4">
             <h6 class="mb-4">Multiple Line Chart</h6>
             <canvas id="salse-revenue"></canvas>
           </div>
         </div>
-        <!-- Your EJS template -->
-        <div class="col-sm-12 col-xl-6">
-          <div class="bg-light rounded h-100 p-4">
-            <h6 class="mb-4">Total Sales Report</h6>
-            <canvas id="bar-chart" data-report="<%= report %>" ></canvas>
-          </div>
-        </div>
+
         <div class="col-sm-12 col-xl-6">
           <div class="bg-light rounded h-100 p-4">
             <h6 class="mb-4">Multiple Bar Chart</h6>
@@ -197,50 +212,109 @@
     });
   </script>
  
+ <!-- script for monthly sales -->
  <script>
   document.addEventListener("DOMContentLoaded", function () {
-     const canvas = document.getElementById('bar-chart');
-     const report = JSON.parse(canvas.getAttribute('data-report'));
+    const canvas = document.getElementById('bar-chart');
+    const months = JSON.parse(canvas.getAttribute('data-months'));
+    const counts = JSON.parse(canvas.getAttribute('data-counts'));
 
-     // Data for the Bar Chart
-     var data = {
-        labels: ['January','February','March','April','May','June','July','August','September','October','November','December'],
-        datasets: [{
-          label: 'Total Sales',
-           data: [report],
-           backgroundColor: 'rgba(75, 192, 192, 0.2)',
-           borderColor: 'rgba(75, 192, 192, 1)',
-           borderWidth: 1,
-           barPercentage: 0.5
-        }]
-     };
+    // Data for the Bar Chart
+    var data = {
+      labels: [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+      ],
+      datasets: [{
+        label: 'Monthly Report',
+        data: Array(12).fill(0),  // Initialize an array with zeros for all months
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1,
+        barPercentage: 0.5
+      }]
+    };
 
-     // Configuration options
-     var options = {
-        scales: {
-           y: {
-              beginAtZero: true,
-              max: report*2 // Set the maximum value of the y-axis
-           }
+    // Update the data with actual counts for each month
+    months.forEach((month, index) => {
+      const monthIndex = data.labels.indexOf(month);
+      if (monthIndex !== -1) {
+        data.datasets[0].data[monthIndex] = counts[index];
+      }
+    });
+
+    // Configuration options
+    var options = {
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: Math.max(...counts) * 2 // Set the maximum value of the y-axis
         }
-     };
+      }
+    };
 
-     // Get the canvas element
-     var ctx = canvas.getContext('2d');
+    // Get the canvas element
+    var ctx = canvas.getContext('2d');
 
-     // Create the Bar Chart
-     var barChart = new Chart(ctx, {
-        type: 'bar',
-        data: data,
-        options: options
-     });
+    // Create the Bar Chart
+    var barChart = new Chart(ctx, {
+      type: 'bar',
+      data: data,
+      options: options
+    });
   });
 </script>
 
 
 
 
- 
+<!-- script for yearly sales -->
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const canvasYearly = document.getElementById('bar-chart-yearly');
+    const years = JSON.parse(canvasYearly.getAttribute('data-years'));
+    const yearlyCounts = JSON.parse(canvasYearly.getAttribute('data-yearly-counts'));
+
+    // Predefined array of years
+    const allYears = [2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029];
+
+    // Data for the Yearly Bar Chart
+    var dataYearly = {
+      labels: allYears.map(String), // Convert years to strings
+      datasets: [{
+        label: 'Yearly Report',
+        data: allYears.map(year => yearlyCounts[years.indexOf(year)] || 0), // Match the counts to the predefined years
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1,
+        barPercentage: 0.5
+      }]
+    };
+
+    // Configuration options for Yearly Bar Chart
+    var optionsYearly = {
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: Math.max(...yearlyCounts) * 2
+        }
+      }
+    };
+
+    // Get the canvas element for Yearly Bar Chart
+    var ctxYearly = canvasYearly.getContext('2d');
+
+    // Create the Yearly Bar Chart
+    var barChartYearly = new Chart(ctxYearly, {
+      type: 'bar',
+      data: dataYearly,
+      options: optionsYearly
+    });
+  });
+</script>
+
+
  <script>
   document.addEventListener("DOMContentLoaded", function () {
      // Data for the multiple line chart
