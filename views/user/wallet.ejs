@@ -57,30 +57,16 @@
     <!-- navbar for the wallet page -->
     <nav class="navbar navbar-expand-lg navbar-light shadow">
       <div class="container d-flex justify-content-between align-items-center">
-       
         <a href="/">
-          <img src="../../Img/login/logo.png" alt="logo" class="img-fluid w-50"
-        /></a>
-        <button
-          class="navbar-toggler border-0"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#templatemo_main_nav"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
+          <img src="../../Img/login/logo.png" alt="logo" class="img-fluid w-50" />
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-
-        <div
-          class="align-self-center collapse navbar-collapse flex-fill d-lg-flex justify-content-lg-between"
-          id="templatemo_main_nav"
-        >
+  
+        <div class="align-self-center collapse navbar-collapse flex-fill d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
           <div class="flex-fill">
-            <ul
-              class="nav navbar-nav d-flex justify-content-between mx-lg-auto"
-            >
+            <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
               <li class="nav-item">
                 <a class="nav-link" href="/">Home</a>
               </li>
@@ -95,106 +81,57 @@
               </li>
             </ul>
           </div>
-          <div class="navbar align-self-center d-flex">
-            <div
-              class="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3"
-            >
-              <div class="input-group">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="inputMobileSearch"
-                  placeholder="Search ..."
-                />
-                <div class="input-group-text">
-                  <i class="fa fa-fw fa-search"></i>
-                </div>
-              </div>
-            </div>
-            <a
-              class="nav-icon d-none d-lg-inline"
-              href="#"
-              data-bs-toggle="modal"
-              data-bs-target="#templatemo_search"
-            >
-              <i class="fa fa-fw fa-search text-dark mr-2"></i>
-            </a>
-          </div>
+          
         </div>
       </div>
     </nav>
-    
+  
     <!-- section for the wallet page  -->
     <section class="gradient-custom" style="margin-bottom: 50px;">
-      
-
-      
+      <div class="container">
         <div class="row">
           <div class="col-lg-4">
             <div class="card mb-4 mx-2 mt-1">
               <div class="card-body text-center">
-                <img
-                  src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
-                  alt="avatar"
-                  class="rounded-circle img-fluid"
-                  style="width: 150px"
-                />
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar" class="rounded-circle img-fluid" style="width: 150px" />
                 <h5 class="my-3"><%= user.first_name %></h5>
                 <p class="text-muted mb-1">Full Stack Developer</p>
-                
-                
               </div>
             </div>
-            
+            <!-- Wallet balance card -->
+            <div class="card mx-2 mb-4 mb-md-0 bg-primary">
+              <div class="card-body">
+                <h3 class="mb-4">
+                  <span class="text-light font-italic me-1">Wallet</span>
+                </h3>
+                <h4 class="text-muted">Available Balance:-</h4>
+                <h4>&#8377 <%= user.wallet %></h4>
+              </div>
+            </div>
           </div>
-        </div>
-      
-    </section>
-          
+  
+          <!-- Order history section -->
           <div class="col-lg-8">
-            <div class="col-md-6">
-              <div class="card mx-2 mb-4 mb-md-0 bg-primary">
-                <div class="card-body">
-                  <h3 class="mb-4">
-                    <span class="text-light font-italic me-1">Wallet</span>
-                    
-                  </h3>
-                  <h4 class="text-muted">Available Balance:-</h4>
-                  <h4>&#8377 <%= user.wallet %></h4>
-                  
-                </div>
-              </div>
-                </div>
-              </div>
-            
-            <br>
-            <!-- wallet payment history -->
             <section class="h-100 gradient-custom">
               <div class="container py-5 h-100">
-                <div class="row d-flex justify-content-center align-items-center h-100">
-                  <div class="col-lg-10 col-xl-8">
+                <div class="row d-flex justify-content-start align-items-center h-100">
+                  <div class="col-lg-12 col-xl-10"> <!-- Adjusted width here -->
                     <div class="card" style="border-radius: 10px">
                       <div class="card-header px-4 py-5">
                         <h5 class="text-muted mb-0">
                           Order history
-                          
                         </h5>
                       </div>
                       <div class="card-body p-4">
-                        <div
-                          class="d-flex justify-content-between align-items-center mb-4"
-                        >
+                        <div class="d-flex justify-content-between align-items-center mb-4">
                           <p class="lead fw-normal mb-0" style="color: #a8729a">
                             Receipt
                           </p>
-                          
                         </div>
-                        
                         <% if (orders.length > 0) { %>
                           <div class="card-body">
                             <% for (let i = 0; i < orders.length; i++) { %>
                               <div class="card mb-3">
-                                
                                 <div class="card-body">
                                   <ul class="list-group">
                                     <% let totalPrice = 0; %>
@@ -202,22 +139,15 @@
                                       <li class="list-group-item d-flex justify-content-between align-items-center">
                                         <div>
                                           <p class="text-muted mb-0 small">Date: <%= orders[i].date.toLocaleDateString() %></p>
-        
-        
-        
                                           <strong>Product Name:</strong> <%= orderDetails[i][j].name %><br>
                                           <strong>Quantity:</strong> <%= orders[i].quantity[j] %><br>
                                           <% totalPrice += orders[i].price[j] * orders[i].quantity[j]; %>
                                           <strong>Price:</strong> &#8377 <%= totalPrice %><br>
-                                          
                                         </div>
-                                        <!-- Display the product image -->
                                         <a href="/product/details/<%= orderDetails[i][j].id %>"><img src="<%= orderDetails[i][j].image[0] %>" alt="<%= orderDetails[i][j].name %>" class="img-fluid" style="max-height: 80px;"></a>
                                       </li>
-                                    <!-- Progress Bars -->
-                                    
+                                    <% } %>
                                   </ul>
-                                  <% } %>
                                 </div>
                               </div>
                             <% } %>
@@ -225,13 +155,19 @@
                         <% } else { %>
                           <p>No orders found.</p>
                         <% } %>
-                        </div>              
                       </div>
                     </div>
                   </div>
                 </div>
-              
+              </div>
             </section>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+
+    
             
             
             <!-- footer -->

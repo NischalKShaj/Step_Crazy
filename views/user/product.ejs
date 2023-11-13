@@ -63,87 +63,18 @@
     <div class="dimmed-background" id="dimmedBackground"></div>
     <div class="loader" id="loader"></div>
     <!-- Start Top Nav -->
-    <nav
-      class="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block"
-      id="templatemo_nav_top"
-    >
-      <div class="container text-light">
-        <div class="w-100 d-flex justify-content-between">
-          <div>
-            <i class="fa fa-envelope mx-2"></i>
-            <a
-              class="navbar-sm-brand text-light text-decoration-none"
-              href="mailto:info@company.com"
-              >info@company.com</a
-            >
-            <i class="fa fa-phone mx-2"></i>
-            <a
-              class="navbar-sm-brand text-light text-decoration-none"
-              href="tel:010-020-0340"
-              >010-020-0340</a
-            >
-          </div>
-          <div>
-            <a
-              class="text-light"
-              href="https://fb.com/templatemo"
-              target="_blank"
-              rel="sponsored"
-              ><i class="fab fa-facebook-f fa-sm fa-fw me-2"></i
-            ></a>
-            <a
-              class="text-light"
-              href="https://www.instagram.com/"
-              target="_blank"
-              ><i class="fab fa-instagram fa-sm fa-fw me-2"></i
-            ></a>
-            <a class="text-light" href="https://twitter.com/" target="_blank"
-              ><i class="fab fa-twitter fa-sm fa-fw me-2"></i
-            ></a>
-            <a
-              class="text-light"
-              href="https://www.linkedin.com/"
-              target="_blank"
-              ><i class="fab fa-linkedin fa-sm fa-fw"></i
-            ></a>
-          </div>
-        </div>
-      </div>
-    </nav>
-    <!-- Close Top Nav -->
-
-    <!-- Header -->
     <nav class="navbar navbar-expand-lg navbar-light shadow">
       <div class="container d-flex justify-content-between align-items-center">
-        <!-- <a
-          class="navbar-brand text-success logo h1 align-self-center"
-          href="index.html"
-        >
-          
-        </a> -->
         <a href="/">
-          <img src="../Img/login/logo.png" alt="logo" class="img-fluid w-50"
-        /></a>
-        <button
-          class="navbar-toggler border-0"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#templatemo_main_nav"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
+          <img src="../../Img/login/logo.png" alt="logo" class="img-fluid w-50" />
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-
-        <div
-          class="align-self-center collapse navbar-collapse flex-fill d-lg-flex justify-content-lg-between"
-          id="templatemo_main_nav"
-        >
+  
+        <div class="align-self-center collapse navbar-collapse flex-fill d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
           <div class="flex-fill">
-            <ul
-              class="nav navbar-nav d-flex justify-content-between mx-lg-auto"
-            >
+            <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
               <li class="nav-item">
                 <a class="nav-link" href="/">Home</a>
               </li>
@@ -158,51 +89,12 @@
               </li>
             </ul>
           </div>
-          <div class="navbar align-self-center d-flex">
-            <div
-              class="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3"
-            >
-              <div class="input-group">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="inputMobileSearch"
-                  placeholder="Search ..."
-                />
-                <!-- <div class="input-group-text">
-                  <i class="fa fa-fw fa-search"></i>
-                </div> -->
-              </div>
-            </div>
-            <!-- <a
-              class="nav-icon d-none d-lg-inline"
-              href="#"
-              data-bs-toggle="modal"
-              data-bs-target="#templatemo_search"
-            > -->
-              
-            
-            <!-- <a class="nav-icon position-relative text-decoration-none" href="#">
-              <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
-              <span
-                class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark"
-                >7</span
-              >
-            </a>
-            <a class="nav-icon position-relative text-decoration-none" href="#">
-              <i class="fa fa-fw fa-user text-dark mr-3"></i>
-              <span
-                class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark"
-                >+99</span
-              >
-            </a> -->
-          </div>
+          
         </div>
       </div>
     </nav>
-    <!-- Close Header -->
+    <!-- Close Top Nav -->
 
-    <!-- Modal -->
     <div
       class="modal fade bg-white"
       id="templatemo_search"
@@ -318,49 +210,37 @@
               
             </form>
           </div>
-          <div class="row">
+          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
             <% product.forEach((singleProduct) => { %>
               <% if (singleProduct.status === true) { %>
-               
-             
-            <div class="col-md-4">
-              <div class="card mb-4 product-wap rounded-0">
-                <div class="card rounded-0" style="position: relative;">
-                 
-                  <img src="/<%= singleProduct.image[0] %>" width="303" height="400" alt="<%= singleProduct.name %>" />
-                  <% console.log("Image URL:", singleProduct.image[0]); %>
-                  <% console.log("Product Status:", singleProduct.status); %>
-                  <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
-                    <% if (singleProduct.stock == 0) { %>
-                      <p style="color: red; text-align: center;">Product out of stock</p>
-                    <% } else if (singleProduct.stock <= 5) { %>
-                      <p style="color: red; text-align: center;">Only <%= singleProduct.stock %> product is available</p>
-                    <% } %>
+                <div class="col">
+                  <div class="card mb-4 product-wap rounded-0">
+                    <div class="card rounded-0" style="position: relative; overflow: hidden;">
+                      <img src="/<%= singleProduct.image[0] %>" class="card-img-top img-fluid" alt="<%= singleProduct.name %>" style="object-fit: cover; height: 250px;" />
+                      <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                        <% if (singleProduct.stock == 0) { %>
+                          <p style="color: red; text-align: center;">Product out of stock</p>
+                        <% } else if (singleProduct.stock <= 5) { %>
+                          <p style="color: red; text-align: center;">Only <%= singleProduct.stock %> product is available</p>
+                        <% } %>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <a href="/product/details/<%= singleProduct._id %>" class="h3 text-decoration-none"><%= singleProduct.name %></a>
+                      <ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
+                        <li><%= singleProduct.category %></li>
+                        <li>M/L/X/XL</li>
+                      </ul>
+                      <p class="text-center mb-0"><strong>&#8377 <%= singleProduct.price %></strong></p>
+                    </div>
                   </div>
                 </div>
-                
-                <div class="card-body">
-                  
-                     
-                  
-                  <a href="/product/details/<%= singleProduct._id  %>" class="h3 text-decoration-none"
-                    ><%= singleProduct.name %></a
-                  >
-                  <ul
-                    class="w-100 list-unstyled d-flex justify-content-between mb-0"
-                  >
-                    <li><%= singleProduct.category %></li>
-                    <li>M/L/X/XL</li>
-                    
-                  </ul>
-                   
-                  <p class="text-center mb-0"> <strong>&#8377 <%= singleProduct.price %></strong></p>
-                </div>
-              </div>
-            </div>
-            <% } %>
+              <% } %>
             <% }) %>
           </div>
+          
+          
+          
           <div div="row">
             <ul class="pagination pagination-lg justify-content-end" id="pagination">
               <li class="page-item">

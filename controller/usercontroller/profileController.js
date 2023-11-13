@@ -31,10 +31,13 @@ exports.getAddressAdd = (req, res) => {
 // for redirecting to the profile page
 exports.postProfilePage = async (req, res) => {
   const user = req.session.user;
+  console.log("user",user);
   const User = await userCollection.find({ email: user });
+  console.log("User", User);
   try {
-    if (user && User.blocked === false) {
-      const filter = { email: req.body.email };
+    if (user) {
+      const filter = { email: user };
+      console.log("filter",filter);
       const userAddress = {
         pincode: req.body.pincode,
         locality: req.body.locality,
@@ -54,6 +57,7 @@ exports.postProfilePage = async (req, res) => {
       res.redirect("/profile");
     }
   } catch (error) {
+    console.error("error while adding the porfile", error);
     res.redirect("/profile/add-address");
   }
 };
@@ -216,6 +220,7 @@ exports.postNewAddress = async (req, res) => {
         pincode,
       };
 
+      console.log(newAddress);
       // Add the new address to the user's address array
       user.address.push(newAddress);
 
