@@ -146,7 +146,9 @@
         </div>
       </div>
     </nav>
-    <h1>welcome to the admin panel</h1>
+    <div style="background-color: #007bff; color: #ffffff; padding: 20px; text-align: center;">
+      <h1 style="font-size: 2em; margin: 0;">Admin Control Center</h1>
+    </div>
     <div class="container-fluid pt-4 px-4">
       <div class="row g-4">
         
@@ -174,6 +176,14 @@
           </div>
         </div>
              
+        <!-- Stoke of the products -->
+        <div class="col-sm-12 col-xl-6">
+          <div class="bg-light rounded h-100 p-4">
+              <h6 class="mb-4">Product Stock Report</h6>
+              <canvas id="bar-chart-stock" data-product-names="<%= JSON.stringify(productNames) %>" data-stock-values="<%= JSON.stringify(stockValues) %>"></canvas>
+          </div>
+      </div>
+  
         <div class="col-sm-12 col-xl-6">
           <div class="bg-light rounded h-100 p-4">
             <h6 class="mb-4">Sales Report</h6>
@@ -235,7 +245,21 @@
              
           </div>
         </div>
-      </div>
+        <div class="col-sm-12 col-xl-6">
+          <div class="bg-light rounded h-100 p-4">
+            <h6 class="mb-4">Total Stock Report</h6>
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title">Stock</h6>
+                    <div class="button-group">
+                      <a href="/admin/stockReportPDF"><button id="downloadPdfBtnDate" class="btn btn-primary">Download PDF</button></a>
+                      <a href="/admin/stockReportXLS"><button id="downloadXLSBtnDate" class="btn btn-success">Download Excel</button></a>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
   </body>
   <!-- Bootstrap JS, Popper.js, and jQuery -->
@@ -423,6 +447,48 @@
       data: dataDaily,
       options: optionsDaily
     });
+  });
+</script>
+
+<!-- script for showing the products stock  -->
+
+<script>
+  // Retrieve data attributes using DOM
+  const canvasStock = document.getElementById('bar-chart-stock');
+  const productNames = JSON.parse(canvasStock.getAttribute('data-product-names'));
+  const stockValues = JSON.parse(canvasStock.getAttribute('data-stock-values'));
+
+  // Data for the Product Stock Bar Chart
+  const dataStock = {
+      labels: productNames,
+      datasets: [{
+          label: 'Stock',
+          data: stockValues,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1,
+          barPercentage: 0.5
+      }]
+  };
+
+  // Configuration options for Product Stock Bar Chart
+  const optionsStock = {
+      scales: {
+          y: {
+              beginAtZero: true,
+              max: Math.max(...stockValues) * 2
+          }
+      }
+  };
+
+  // Get the canvas element for Product Stock Bar Chart
+  const ctxStock = canvasStock.getContext('2d');
+
+  // Create the Product Stock Bar Chart
+  new Chart(ctxStock, {
+      type: 'bar',
+      data: dataStock,
+      options: optionsStock
   });
 </script>
 

@@ -2,6 +2,7 @@
 // modules required for the admin login
 const collection = require("../../models/admin/adminDatabase");
 const reportCollection = require("../../models/reports/reportDetails");
+const productCollection = require("../../models/product/productDetails");
 
 // for rendering the admin page
 exports.getAdminPage = async (req, res) => {
@@ -9,6 +10,7 @@ exports.getAdminPage = async (req, res) => {
   console.log("admin", admin);
   if (admin) {
     const orders = await reportCollection.find({}, { "orderDetails.date": 1 });
+    const stockData = await productCollection.find({}, { name: 1, stock: 1 });
 
     // Initialize an object to store the counts for each month
     const monthlyCounts = {};
@@ -77,6 +79,10 @@ exports.getAdminPage = async (req, res) => {
     const labels = Object.keys(dailyCounts);
     const data = Object.values(dailyCounts);
 
+    // Extract product names and stock values
+    const productNames = stockData.map((product) => product.name);
+    const stockValues = stockData.map((product) => product.stock);
+
     // Render the page with the data
     res.render("admin/admindashboard", {
       months,
@@ -84,6 +90,8 @@ exports.getAdminPage = async (req, res) => {
       years,
       count,
       dailyCounts: { labels, data },
+      productNames,
+      stockValues,
     });
   } else {
     const invalid = req.query.success;

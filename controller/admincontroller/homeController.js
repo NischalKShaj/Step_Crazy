@@ -3,6 +3,7 @@
 // importing the modules for the data in the admins database
 const collection = require("../../models/admin/adminDatabase");
 const reportCollection = require("../../models/reports/reportDetails");
+const productCollection = require("../../models/product/productDetails");
 
 let admin;
 
@@ -16,6 +17,7 @@ exports.getAdminHome = async (req, res) => {
         {},
         { "orderDetails.date": 1 }
       );
+      const stockData = await productCollection.find({}, { name: 1, stock: 1 });
 
       // Initialize an object to store the counts for each month
       const monthlyCounts = {};
@@ -85,6 +87,10 @@ exports.getAdminHome = async (req, res) => {
       const labels = Object.keys(dailyCounts);
       const data = Object.values(dailyCounts);
 
+      // Extract product names and stock values
+      const productNames = stockData.map((product) => product.name);
+      const stockValues = stockData.map((product) => product.stock);
+
       // Render the page with the data
       res.render("admin/admindashboard", {
         months,
@@ -92,6 +98,8 @@ exports.getAdminHome = async (req, res) => {
         years,
         count,
         dailyCounts: { labels, data },
+        productNames,
+        stockValues,
       });
     }
   } catch (error) {
@@ -119,6 +127,7 @@ exports.postAdminHome = async (req, res) => {
         {},
         { "orderDetails.date": 1 }
       );
+      const stockData = await productCollection.find({}, { name: 1, stock: 1 });
 
       // Initialize an object to store the counts for each month
       const monthlyCounts = {};
@@ -187,6 +196,10 @@ exports.postAdminHome = async (req, res) => {
       const labels = Object.keys(dailyCounts);
       const data = Object.values(dailyCounts);
 
+      // Extract product names and stock values
+      const productNames = stockData.map((product) => product.name);
+      const stockValues = stockData.map((product) => product.stock);
+
       // Render the page with the data
       res.render("admin/admindashboard", {
         months,
@@ -194,6 +207,8 @@ exports.postAdminHome = async (req, res) => {
         years,
         count,
         dailyCounts: { labels, data },
+        productNames,
+        stockValues,
       });
     } else {
       const message = "Invalid admin credentials";

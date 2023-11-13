@@ -290,4 +290,18 @@ router.get(
   reportController.downloadDailySalesExcel
 );
 
+// router for downloading the pdf for the stocks of the product
+router.get(
+  "/stockReportPDF",
+  adminAuth.adminAuth,
+  reportController.downloadProductStockPdf
+);
+
+// router for downloading the excel for the stockes for the product
+router.get(
+  "/stockReportXLS",
+  adminAuth.adminAuth,
+  reportController.downloadProductStockExcel
+);
+
 module.exports = router;
