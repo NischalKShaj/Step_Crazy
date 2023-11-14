@@ -205,7 +205,7 @@ exports.postNewAddress = async (req, res) => {
     // Find the user by their email
     const user = await userCollection.findOne({ email: userEmail });
 
-    if (user && user.blocked === false) {
+    if (user) {
       // Initialize the address array if it's undefined
       if (!user.address) {
         user.address = [];
