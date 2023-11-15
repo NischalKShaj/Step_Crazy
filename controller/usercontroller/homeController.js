@@ -23,9 +23,8 @@ exports.getHomePage = async (req, res) => {
 
 // getting the loginpage
 exports.getLoginPage = (req, res) => {
-  const invalid = req.query.success;
-  console.log(invalid);
-  res.render("user/login", { invalid });
+  const message = req.query.success;
+  res.render("user/login", { message });
 };
 
 // getting the signup page

@@ -45,9 +45,16 @@ exports.postHomePage = async (req, res) => {
     ) {
       req.session.user = req.body.email;
       res.redirect("/");
+    } else if (
+      data.email === req.body.email &&
+      data.password === req.body.password &&
+      data.blocked === true
+    ) {
+      const message = "User blocked";
+      res.render("user/login", {message});
     } else {
       const message = "Invalid username or password";
-      res.redirect(`/login?success=${encodeURIComponent(message)}`);
+      res.render("user/login", {message});
     }
   } catch {
     const message = "Invalid username or password";
@@ -119,31 +126,28 @@ try {
 
 // to update the password
 exports.postForgotLogin = async (req, res) => {
-  try{
-
+  try {
     const OTP = req.body.otp;
     console.log(OTP, otp);
     if (otp === OTP) {
       console.log(userDetails);
-        const filter = {email:userDetails.email}
-        const update = {password :userDetails.password}
-        console.log(filter,update);
-        const updateResult = await collection.findOneAndUpdate(filter, {$set:update});
-      
-        
-        console.log(userDetails.email,userDetails.password);
-        // sending the confirmation mail to the user
-          mailContent = {
-          from: "nischalkshaj5@gmail.com",
-          to: userDetails.email,
-          subject: "User password is changed successfully",
-          text: "Your password is changed successfully now you can change use the changed password while loggin in.",
-        };
-        console.log("password changed successfully");
-      
-  
-      
-  
+      const filter = { email: userDetails.email };
+      const update = { password: userDetails.password };
+      console.log(filter, update);
+      const updateResult = await collection.findOneAndUpdate(filter, {
+        $set: update,
+      });
+
+      console.log(userDetails.email, userDetails.password);
+      // sending the confirmation mail to the user
+      mailContent = {
+        from: "nischalkshaj5@gmail.com",
+        to: userDetails.email,
+        subject: "User password is changed successfully",
+        text: "Your password is changed successfully now you can change use the changed password while loggin in.",
+      };
+      console.log("password changed successfully");
+
       // sending the email to the specified email address
       transporter.sendMail(mailContent, (error, info) => {
         if (error) {
@@ -158,8 +162,8 @@ exports.postForgotLogin = async (req, res) => {
     } else {
       res.redirect("/login");
     }
-  }catch(error){
-    res.send("eror updating the value",error)
+  } catch (error) {
+    res.send("eror updating the value", error);
   }
 };
 

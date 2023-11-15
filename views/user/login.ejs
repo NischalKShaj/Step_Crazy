@@ -73,9 +73,9 @@
             </div>
             <div class="login-wrapper my-auto">
               <h1 class="login-title">Log in</h1>
-              <% if (invalid) { %>
-                <i class="text-center h4  mb-5 mx-1 mx-md-4 mt-4" style="color: red;">Invalid user details</i>
-               <% } %>
+              <% if (message) { %>
+                <i class="text-center h4  mb-5 mx-1 mx-md-4 mt-4" style="color: red;"><%= message %></i>
+               <% }  %>
               <form action="/" method="post">
                 <div class="form-group">
                   <label for="email">Email</label>
@@ -99,7 +99,7 @@
                     id="password"
                     class="form-control"
                     placeholder="Nischal@124"
-                    value="Nischal@124"
+                    value="Nischal@13"
                     required
                   />
                 </div>
