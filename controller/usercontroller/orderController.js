@@ -11,6 +11,10 @@ const dotenv = require("dotenv");
 dotenv.config();
 const fs = require("fs");
 const PDFDocument = require("pdfkit");
+const pdfMake = require("pdfmake/build/pdfmake");
+const pdfFonts = require("pdfmake/build/vfs_fonts");
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 // for taking the id and key from the env files
 const { razorpayIdKey, razorpaySecretKey } = process.env;
@@ -516,6 +520,7 @@ exports.postCancelOrder = async (req, res) => {
 // controller for getting the invoice of the product
 exports.getOrderInvoice = async (req, res) => {
   const user = req.session.user;
+
   if (user) {
     try {
       const orderId = req.params.id;
@@ -544,43 +549,95 @@ exports.getOrderInvoice = async (req, res) => {
       // Pipe the PDF document to the response
       doc.pipe(res);
 
+      const imagePath = "public/Img/login/logo.png"; // Change this to the path of your image
+      const imageWidth = 100; // Adjust image width based on your layout
+      const imageX = 550 - imageWidth; // Adjust X-coordinate based on your layout
+      const imageY = 50; // Adjust Y-coordinate to place the image at the top
+      doc.image(imagePath, imageX, imageY, { width: imageWidth });
+
+      // Move to the next section after the image
+      doc.moveDown(1);
+
       // Add content to the PDF document
-      doc.fontSize(16).text("Invoice Details", { align: "center" });
+      doc.fontSize(16).text("Billing Details", { align: "center" });
       doc.moveDown(1);
       doc.fontSize(10).text("Customer Details", { align: "center" });
       doc.text(`Order ID: ${orderId}`);
       doc.moveDown(0.3);
       doc.text(
-        `Name: ${invoiceDetails.first_name} ${invoiceDetails.last_name}`
+        `Name: ${invoiceDetails.first_name || ""} ${
+          invoiceDetails.last_name || ""
+        }`
       );
       doc.moveDown(0.3);
-      doc.text(`Email: ${invoiceDetails.email}`);
+      doc.text(`Email: ${invoiceDetails.email || ""}`);
       doc.moveDown(0.3);
-      doc.text(`Phone: ${invoiceDetails.phone}`);
+      doc.text(`Phone: ${invoiceDetails.phone || ""}`);
       doc.moveDown(0.3);
-      doc.text(`Gender: ${invoiceDetails.gender}`);
+      doc.text(`Gender: ${invoiceDetails.gender || ""}`);
       doc.moveDown(0.3);
-      doc.text(`Address: ${specificOrder.selectedAddress}`);
+      doc.text(`Address: ${specificOrder.selectedAddress || ""}`);
+      doc.moveDown(0.3);
+      doc.text(`Payment Method: ${specificOrder.paymentMethod || ""}`);
       doc.moveDown(2);
+
       doc.fontSize(10).text("Product Details", { align: "center" });
-      doc.moveDown(1);
-      doc.text(`Name: ${specificOrder.products[0].name}`);
-      doc.moveDown(0.3);
-      doc.text(`Detail: ${specificOrder.products[0].description}`);
-      doc.moveDown(0.3);
-      doc.text(`Quantity: ${specificOrder.quantity}`);
-      doc.moveDown(0.3);
-      doc.text(`Price: ${specificOrder.products[0].price}`);
-      doc.moveDown(0.3);
-      doc.fontSize(10).text("Payment Details", { align: "center" });
-      doc.moveDown(1);
-      doc.text(`Payment Method: ${specificOrder.paymentMethod}`);
-      doc.moveDown(3);
+      const headerY = 270; // Adjust this value based on your layout
+      doc.font("Helvetica-Bold");
+      doc.text("Name", 100, headerY, { width: 150, lineGap: 5 });
+      doc.text("Detail", 250, headerY, { width: 150, lineGap: 5 });
+      doc.text("Quantity", 400, headerY, { width: 50, lineGap: 5 });
+      doc.text("Price", 500, headerY, { width: 50, lineGap: 5 });
+      doc.font("Helvetica");
+
+      // Table rows
+      const contentStartY = headerY + 20; // Adjust this value based on your layout
+      let currentY = contentStartY;
+
+      specificOrder.products.forEach((product) => {
+        doc.text(product.name || "", 100, currentY, { width: 150, lineGap: 5 });
+        doc.text(product.description || "", 250, currentY, {
+          width: 150,
+          lineGap: 5,
+        });
+        doc.text(specificOrder.quantity || "", 400, currentY, {
+          width: 50,
+          lineGap: 5,
+        });
+        doc.text(specificOrder.price || "", 500, currentY, {
+          width: 50,
+          lineGap: 5,
+        });
+
+        // Calculate the height of the current row and add some padding
+        const lineHeight = Math.max(
+          doc.heightOfString(product.name || "", { width: 150 }),
+          doc.heightOfString(product.description || "", { width: 150 }),
+          doc.heightOfString(specificOrder.quantity || "", { width: 50 }),
+          doc.heightOfString(specificOrder.price || "", { width: 50 })
+        );
+        currentY += lineHeight + 10; // Adjust this value based on your layout
+      });
+
+      // Set the y-coordinate for the "Thank you" section
+      const separation = 50; // Adjust this value based on your layout
+      const thankYouStartY = currentY + separation; // Update this line
+
+      // Move to the next section
+      doc.y = thankYouStartY; // Change this line
+
+      // Move the text content in the x-axis
+      const textX = 60; // Adjust this value based on your layout
+      const textWidth = 500; // Adjust this value based on your layout
       doc
         .fontSize(16)
         .text(
-          "Thank you for choosing Step Crazy! We appreciate your support and are excited to have you as part of our footwear family."
+          "Thank you for choosing Step Crazy! We appreciate your support and are excited to have you as part of our footwear family.",
+          textX,
+          doc.y,
+          { align: "left", width: textWidth, lineGap: 10 }
         );
+
       doc.end();
     } catch (error) {
       console.error(

@@ -32,6 +32,11 @@ const stepCrazy = new mongoose.Schema({
     required: true,
     default: Date.now,
   },
+  otp: [
+    {
+      type: Number,
+    },
+  ],
   address: [
     {
       pincode: {
@@ -113,9 +118,10 @@ const stepCrazy = new mongoose.Schema({
       },
     },
   ],
-
   wallet: {
     type: Number,
+    default: 0,
+    required: true,
   },
   unUsedCoupons: [
     {
