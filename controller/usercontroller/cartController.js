@@ -78,9 +78,14 @@ exports.addProducts = async (req, res) => {
           product: productId,
           quantity: req.body.quantity,
         });
+        await userCollection.updateOne(
+          { email: userEmail },
+          { $inc: { cartQuantity: 1 } }
+        );
         console.log("cartItem ", cartItem);
         await cartItem.save();
         console.log("Product added to the cart successfully");
+        
       }
 
       const cartItems = await cartCollection
@@ -203,6 +208,10 @@ exports.getCheckout = async (req, res) => {
       console.log(useAdd);
 
       res.render("user/checkout", { address, useAdd, cartItem, user, coupon });
+      await userCollection.updateOne(
+        { email: userEmail },
+        { $inc: { cartQuantity: -1 } }
+      );
 
       // Clear cartItem after rendering the page
       cartItem = [];
@@ -217,6 +226,8 @@ exports.getCheckout = async (req, res) => {
 
 // controller for removing the content from the cart
 exports.deleteProduct = async (req, res) => {
+  const userEmail = req.session.user;
+  const user = await userCollection.findOne({email:userEmail})
   try {
     const cartId = req.params.id;
 
@@ -225,6 +236,10 @@ exports.deleteProduct = async (req, res) => {
     const removedCartItem = await cartCollection.findOneAndRemove({
       _id: cartId,
     });
+    await userCollection.updateOne(
+      { email: userEmail },
+      { $inc: { cartQuantity: -1 } }
+    );
     console.log(cartId);
     console.log(removedCartItem);
     if (removedCartItem) {

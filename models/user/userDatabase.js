@@ -35,6 +35,10 @@ const stepCrazy = new mongoose.Schema({
   otp: {
     type: Number,
   },
+  cartQuantity:{
+    type:Number,
+    default: 0,
+  },
   address: [
     {
       pincode: {

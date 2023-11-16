@@ -8,7 +8,7 @@ exports.getHomePage = async (req, res) => {
   const user = req.session.user;
   const data = await collection.findOne(
     { email: user },
-    { first_name: 1, _id: 0 }
+    { first_name: 1, cartQuantity: 1, _id: 0 }
   );
   // for adding the bannerslides
   const bannerData = [
