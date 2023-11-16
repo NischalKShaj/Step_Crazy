@@ -32,11 +32,9 @@ const stepCrazy = new mongoose.Schema({
     required: true,
     default: Date.now,
   },
-  otp: [
-    {
-      type: Number,
-    },
-  ],
+  otp: {
+    type: Number,
+  },
   address: [
     {
       pincode: {

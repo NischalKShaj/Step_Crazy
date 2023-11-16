@@ -3,75 +3,68 @@ const nodemailer = require("nodemailer");
 const express = require("express");
 const collection = require("../../models/user/userDatabase");
 
-let otp;
-let userDetails;
-const router = express.Router();
-
 //  Create a Nodemailer transporter for sending OTP emails
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "nischalkshaj5@gmail.com",
-    pass: "scojovjuumwsqxnm",
-  },
-});
+const createTransporter = () => {
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "nischalkshaj5@gmail.com",
+      pass: "scojovjuumwsqxnm",
+    },
+  });
+};
 
-// store generated otp and the mails
-const optMap = new Map();
 
 // generate a random otp
-
 const generateOtp = () => {
   return Math.floor(1000 + Math.random() * 9000).toString();
 };
+
+// controller for getting the otp page
 exports.getOtpPage = (req, res) => {
   res.render("home/otp");
 };
+
 // posting the login page after signing the user
-let flag= true
-try {
-  exports.postOtpPage = async (req, res) => {
-    const check = await collection.find({},{email:1,_id:0})
-    console.log(check[0].email);
-    for(let i = 0; i<check.length;i++){
-      if(check[i].email === req.body.email){
-        console.log("running");
-        
-        
-         flag = false;
-        break;
-    } 
-  }
-  if(flag === false){
-    console.log("running2");
-    const successMessage = 'User already exists..'
-        
-        
-    res.redirect(`/signup?success=${encodeURIComponent(successMessage)}`)
-    return
-  } else {
+exports.postOtpPage = async (req, res) => {
+  try {
+    const transporter = createTransporter(); // Create a transporter for sending OTP emails
+    const otp = generateOtp();
+    console.log(`OTP sent: ${otp}`);
+
+    // Check if the email already exists in the collection
+    const existingUser = await collection.findOne({ email: req.body.email });
+
+    if (existingUser) {
+      console.log("User already exists");
+      const successMessage = "User already exists..";
+      res.redirect(`/signup?success=${encodeURIComponent(successMessage)}`);
+      return;
+    }
+
     console.log(req.body.email, req.body.Phone, req.body.password);
-    userDetails = {
+    const userDetails = {
+      email: req.body.email,
       first_name: req.body.first_name,
       last_name: req.body.last_name,
-      gender : req.body.gender,
-      email: req.body.email,
+      gender: req.body.gender,
       phone: req.body.Phone,
       password: req.body.password,
+      otp: otp,
     };
 
-    otp = generateOtp();
-    console.log(otp);
-    optMap.set(userDetails.email, otp);
+    // Store the generated OTP and user details in the session
+    req.session.userDetailsArray = req.session.userDetailsArray || [];
+    req.session.userDetailsArray.push(userDetails);
 
-    // configuring the email
+    // Configure the email options
     const mailOptions = {
       from: "nischalkshaj5@gmail.com",
       to: userDetails.email,
       subject: "OTP Verification",
       text: `Your OTP is: ${otp}. Please don't share your otp with others`,
     };
-    // sending the email to the specified email address
+
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.log(error);
@@ -83,41 +76,63 @@ try {
     });
 
     res.redirect("/signup/otp");
+  } catch (error) {
+    console.log(
+      "Error occurred while entering the values in the database",
+      error
+    );
+    res.status(500).json({ message: "Internal server error" });
   }
-    
-  
-  };
-} catch(error) {
-  // res.redirect("/signup");
-  console.log("error occured while entering the values in the database",error);
-}
+};
 
-// inserting the value to the database if the otp is valid
+// controller for checking the otp 
 exports.checkOtp = async (req, res) => {
-  const OTP = req.body.otp;
-  console.log(OTP, otp);
-  if (otp === OTP) {
+  const enteredOTP = req.body.otp;
+
+  console.log(
+    `entered otp: ${enteredOTP} userdetailsArry: ${JSON.stringify(
+      req.session.userDetailsArray
+    )}`
+  );
+
+  const userDetailsIndex = req.session.userDetailsArray.findIndex(
+    (user) => user.otp === enteredOTP
+  );
+
+  if (userDetailsIndex !== -1) {
+    const userDetails = req.session.userDetailsArray[userDetailsIndex];
+
     console.log(userDetails);
 
     await collection.insertMany([userDetails]);
-    // sending the confirmation mail to the user
+    await collection.updateOne(
+      { email: userDetails.email },
+      { $unset: { otp: 1 } }
+    );
+
+    // Remove the used OTP from the session
+    req.session.userDetailsArray.splice(userDetailsIndex, 1);
+
+    const transporter = createTransporter(); // Create a transporter for sending confirmation emails
+
     const mailContent = {
       from: "nischalkshaj5@gmail.com",
       to: userDetails.email,
       subject: "User Registration Success",
       text: "Thank you for choosing Step Crazy, you have successfully registered with Step Crazy. Enjoy shopping with us.",
     };
-    
-    // sending the email to the specified email address
+
     transporter.sendMail(mailContent, (error, info) => {
       if (error) {
         console.log(error);
         res.status(500).json({ message: "Failed to register user" });
       } else {
-        console.log("user registered");
+        console.log("User registered");
+
         res.status(200).json({ message: "User registration success" });
       }
     });
+
     res.redirect("/login");
   } else {
     res.redirect("/signup/otp");

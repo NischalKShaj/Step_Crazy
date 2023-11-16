@@ -142,7 +142,6 @@ body {
 
 .navbar-links {
   display: inline-block;
-  float: right;
   margin-right: 15px;
   text-transform: uppercase;
 }
@@ -256,13 +255,7 @@ li a:hover {
   position: absolute;
   top: 12%;
   left: 25%;
-  /*
-    transform: rotate(0deg);
-    transition: transform ease-in 99999999999s;
-*/
-}
 
-.earth-moon {
 }
 
 .object_astronaut {

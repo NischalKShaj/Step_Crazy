@@ -51,10 +51,10 @@ exports.postHomePage = async (req, res) => {
       data.blocked === true
     ) {
       const message = "User blocked";
-      res.render("user/login", {message});
+      res.render("user/login", { message });
     } else {
       const message = "Invalid username or password";
-      res.render("user/login", {message});
+      res.render("user/login", { message });
     }
   } catch {
     const message = "Invalid username or password";
@@ -68,9 +68,9 @@ exports.getForgetPassword = (req, res) => {
 };
 
 // router for entering the password for otp for forgot password
-let flag = true;
 try {
   exports.postOTP = async (req, res) => {
+    let flag = true;
     const check = await collection.find({}, { email: 1, _id: 0 });
     console.log(check[0].email);
     for (let i = 0; i < check.length; i++) {
@@ -88,9 +88,18 @@ try {
         password: req.body.password,
       };
 
-      otp = generateOtp();
+      const otp = generateOtp();
       console.log(otp);
       optMap.set(userDetails.email, otp);
+      try {
+        await collection.updateOne(
+          { email: userDetails.email },
+          { $set: { otp: otp } }
+        );
+      } catch (error) {
+        console.error("There is an error while updating the otp field", error);
+        return;
+      }
 
       // configuring the email
       const mailOptions = {
@@ -127,18 +136,20 @@ try {
 // to update the password
 exports.postForgotLogin = async (req, res) => {
   try {
+    const otp = await collection.findOne({ email: userDetails.email });
     const OTP = req.body.otp;
     console.log(OTP, otp);
-    if (otp === OTP) {
+    if (otp.otp == OTP) {
       console.log(userDetails);
       const filter = { email: userDetails.email };
-      const update = { password: userDetails.password };
+      // const update = { password: userDetails.password };
+      const update = {
+        $set: { password: userDetails.password },
+        $unset: { otp: 1 }, // Unset the 'otp' field
+      };
       console.log(filter, update);
-      const updateResult = await collection.findOneAndUpdate(filter, {
-        $set: update,
-      });
 
-      console.log(userDetails.email, userDetails.password);
+      console.log(userDetails.email, userDetails.password, userDetails.otp);
       // sending the confirmation mail to the user
       mailContent = {
         from: "nischalkshaj5@gmail.com",
@@ -163,7 +174,7 @@ exports.postForgotLogin = async (req, res) => {
       res.redirect("/login");
     }
   } catch (error) {
-    res.send("eror updating the value", error);
+    res.status(500).send("Error updating the value: " + error);
   }
 };
 
