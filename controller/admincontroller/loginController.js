@@ -3,6 +3,7 @@
 const collection = require("../../models/admin/adminDatabase");
 const reportCollection = require("../../models/reports/reportDetails");
 const productCollection = require("../../models/product/productDetails");
+const userCollection = require("../../models/user/userDatabase");
 
 // for rendering the admin page
 exports.getAdminPage = async (req, res) => {
@@ -10,7 +11,15 @@ exports.getAdminPage = async (req, res) => {
   console.log("admin", admin);
   if (admin) {
     const orders = await reportCollection.find({}, { "orderDetails.date": 1 });
+
+    // for getting the total number of products stock report
     const stockData = await productCollection.find({}, { name: 1, stock: 1 });
+
+    // for getting the total number of orders
+    const totalSales = await reportCollection.find().count();
+
+    // for getting the total number of users
+    const totalUsers = await userCollection.find().count();
 
     // Initialize an object to store the counts for each month
     const monthlyCounts = {};
@@ -92,6 +101,8 @@ exports.getAdminPage = async (req, res) => {
       dailyCounts: { labels, data },
       productNames,
       stockValues,
+      totalSales,
+      totalUsers,
     });
   } else {
     const invalid = req.query.success;

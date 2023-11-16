@@ -4,6 +4,7 @@
 const collection = require("../../models/admin/adminDatabase");
 const reportCollection = require("../../models/reports/reportDetails");
 const productCollection = require("../../models/product/productDetails");
+const userCollection = require("../../models/user/userDatabase");
 
 let admin;
 
@@ -17,7 +18,14 @@ exports.getAdminHome = async (req, res) => {
         {},
         { "orderDetails.date": 1 }
       );
+      // for getting the stock of the product
       const stockData = await productCollection.find({}, { name: 1, stock: 1 });
+
+      // for getting the total number of orders
+      const totalSales = await reportCollection.find().count();
+
+      // for getting the users signup
+      const totalUsers = await userCollection.find().count();
 
       // Initialize an object to store the counts for each month
       const monthlyCounts = {};
@@ -100,6 +108,8 @@ exports.getAdminHome = async (req, res) => {
         dailyCounts: { labels, data },
         productNames,
         stockValues,
+        totalSales,
+        totalUsers,
       });
     }
   } catch (error) {
@@ -127,7 +137,13 @@ exports.postAdminHome = async (req, res) => {
         {},
         { "orderDetails.date": 1 }
       );
+      // for getting total number of products stock
       const stockData = await productCollection.find({}, { name: 1, stock: 1 });
+
+      const totalUsers = await userCollection.find().count();
+
+      // for getting the total number of orders
+      const totalSales = await reportCollection.find().count();
 
       // Initialize an object to store the counts for each month
       const monthlyCounts = {};
@@ -209,6 +225,8 @@ exports.postAdminHome = async (req, res) => {
         dailyCounts: { labels, data },
         productNames,
         stockValues,
+        totalSales,
+        totalUsers,
       });
     } else {
       const message = "Invalid admin credentials";

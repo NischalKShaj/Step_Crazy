@@ -477,3 +477,13 @@ exports.downloadProductStockExcel = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
+
+// controller for downloading the total sales report as pdf
+exports.downloadSalesReportPdf = async (req,res)=>{
+  try {
+    const report = await reportCollection.find();
+  } catch (error) {
+    
+  }
+}
