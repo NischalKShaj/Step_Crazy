@@ -304,4 +304,32 @@ router.get(
   reportController.downloadProductStockExcel
 );
 
+// router for downloading the pdf for the total sales
+router.get(
+  "/salesReportPDF",
+  adminAuth.adminAuth,
+  reportController.downloadSalesReportPdf
+);
+
+// router for downloading the excel for the total sales
+router.get(
+  "/salesReportXLS",
+  adminAuth.adminAuth,
+  reportController.downloadSalesReportExcel
+);
+
+// router for downloading the pdf for the total users
+router.get(
+  "/userReportPDF",
+  adminAuth.adminAuth,
+  reportController.downloadTotalUsers
+);
+
+// router for downloading the excel for the total users
+router.get(
+  "/userReportXLS",
+  adminAuth.adminAuth,
+  reportController.downloadTotalUsersExcel
+);
+
 module.exports = router;

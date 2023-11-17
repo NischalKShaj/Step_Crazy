@@ -31,13 +31,13 @@ exports.getAddressAdd = (req, res) => {
 // for redirecting to the profile page
 exports.postProfilePage = async (req, res) => {
   const user = req.session.user;
-  console.log("user",user);
+  console.log("user", user);
   const User = await userCollection.find({ email: user });
   console.log("User", User);
   try {
     if (user) {
       const filter = { email: user };
-      console.log("filter",filter);
+      console.log("filter", filter);
       const userAddress = {
         pincode: req.body.pincode,
         locality: req.body.locality,
@@ -237,5 +237,53 @@ exports.postNewAddress = async (req, res) => {
       success: false,
       message: "An error occurred while saving the address",
     });
+  }
+};
+
+// controller for getting the page for changing the password
+exports.getNewPassword = async (req, res) => {
+  const userEmail = req.session.user;
+  const id = req.params.id;
+
+  try {
+    if (userEmail) {
+      const user = await userCollection.findById(id);
+      res.render("user/changePassword", { user, error: null });
+    } else {
+      res.redirect("/");
+    }
+  } catch (error) {
+    console.error("There is was an error while getting the password", error);
+    res.render("error/500");
+  }
+};
+
+// controller for changing the password
+exports.postNewPassword = async (req, res) => {
+  const userEmail = req.session.user;
+  const id = req.params.id;
+  const user = await userCollection.findById(id);
+  console.log("req.body", req.body);
+  console.log("old password", req.body.password);
+  console.log("user password", user.password);
+  try {
+    if (userEmail) {
+      if (req.body.password === user.password) {
+        const userPassword = await userCollection.findByIdAndUpdate(id, {
+          password: req.body.password2,
+        });
+        res.redirect("/profile");
+      } else {
+        res.render("user/changePassword", {
+          user,
+          error: "Entered password is wrong",
+        });
+      }
+    } else {
+      res.redirect("/");
+    }
+  } catch (error) {
+    console.error("There is an error while changing the password", error);
+    res.render("error/500");
   }
 };

@@ -6,6 +6,7 @@ const productCollection = require("../../models/product/productDetails");
 const userCollection = require("../../models/user/userDatabase");
 const PDFDocument = require("pdfkit");
 const ExcelJS = require("exceljs");
+const fs = require("fs");
 
 // conroller for downloading the yearly sales report as pdf
 exports.downloadYearlySalesPdf = async (req, res) => {
@@ -34,6 +35,12 @@ exports.downloadYearlySalesPdf = async (req, res) => {
 
     // Pipe the PDF document to the response
     doc.pipe(res);
+
+    const imagePath = "public/Img/login/logo.png"; // Change this to the path of your image
+    const imageWidth = 100; // Adjust image width based on your layout
+    const imageX = 550 - imageWidth; // Adjust X-coordinate based on your layout
+    const imageY = 50; // Adjust Y-coordinate to place the image at the top
+    doc.image(imagePath, imageX, imageY, { width: imageWidth });
 
     // Add content to the PDF
     doc
@@ -157,6 +164,12 @@ exports.downloadMonthlySalesPdf = async (req, res) => {
 
     // Pipe the PDF document to the response
     doc.pipe(res);
+
+    const imagePath = "public/Img/login/logo.png"; // Change this to the path of your image
+    const imageWidth = 100; // Adjust image width based on your layout
+    const imageX = 550 - imageWidth; // Adjust X-coordinate based on your layout
+    const imageY = 50; // Adjust Y-coordinate to place the image at the top
+    doc.image(imagePath, imageX, imageY, { width: imageWidth });
 
     // Add content to the PDF
     doc
@@ -285,6 +298,12 @@ exports.downloadDailySalesPdf = async (req, res) => {
 
     // Pipe the PDF document to the response
     doc.pipe(res);
+
+    const imagePath = "public/Img/login/logo.png"; // Change this to the path of your image
+    const imageWidth = 100; // Adjust image width based on your layout
+    const imageX = 550 - imageWidth; // Adjust X-coordinate based on your layout
+    const imageY = 50; // Adjust Y-coordinate to place the image at the top
+    doc.image(imagePath, imageX, imageY, { width: imageWidth });
 
     // Add content to the PDF
     doc
@@ -417,6 +436,12 @@ exports.downloadProductStockPdf = async (req, res) => {
     // Pipe the PDF document to the response
     doc.pipe(res);
 
+    const imagePath = "public/Img/login/logo.png"; // Change this to the path of your image
+    const imageWidth = 100; // Adjust image width based on your layout
+    const imageX = 550 - imageWidth; // Adjust X-coordinate based on your layout
+    const imageY = 50; // Adjust Y-coordinate to place the image at the top
+    doc.image(imagePath, imageX, imageY, { width: imageWidth });
+
     // Add content to the PDF
     doc.fontSize(16).text("Product Stock Report", { align: "center" });
     doc.moveDown();
@@ -478,12 +503,299 @@ exports.downloadProductStockExcel = async (req, res) => {
   }
 };
 
-
 // controller for downloading the total sales report as pdf
-exports.downloadSalesReportPdf = async (req,res)=>{
+exports.downloadSalesReportPdf = async (req, res) => {
   try {
-    const report = await reportCollection.find();
+    // Fetch the sales report data from the database
+    const reportData = await reportCollection.find();
+
+    // Create a new PDF document
+    const doc = new PDFDocument();
+
+    // Set response headers for PDF download
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=sales_report.pdf"
+    );
+
+    // Pipe the PDF document directly to the response
+    doc.pipe(res);
+
+    const imagePath = "public/Img/login/logo.png"; // Change this to the path of your image
+    const imageWidth = 100; // Adjust image width based on your layout
+    const imageX = 550 - imageWidth; // Adjust X-coordinate based on your layout
+    const imageY = 50; // Adjust Y-coordinate to place the image at the top
+    doc.image(imagePath, imageX, imageY, { width: imageWidth });
+
+    // Add heading to the PDF
+    doc
+      .font("Helvetica-Bold")
+      .fontSize(16)
+      .text("Sales Report", { align: "center" });
+
+    // Loop through report data and add them to the PDF
+    for (const entry of reportData) {
+      const orderDetails = entry.orderDetails[0]; // Assuming there is only one orderDetails entry
+
+      // Fetch product name from product ID (replace 'productId' with the actual field in your data)
+      const productName = await getProductFromId(orderDetails.products[0]);
+
+      // Move down before each entry
+      doc.moveDown();
+
+      doc.font("Helvetica-Bold").text("ID: ", { continued: true });
+      doc.font("Helvetica").text(orderDetails._id);
+
+      doc.font("Helvetica-Bold").text("Product Name: ", { continued: true });
+      doc.font("Helvetica").text(productName);
+
+      doc.font("Helvetica-Bold").text("Quantity: ", { continued: true });
+      doc.font("Helvetica").text(orderDetails.quantity[0]);
+
+      doc.font("Helvetica-Bold").text("Price: ", { continued: true });
+      doc.font("Helvetica").text(orderDetails.price[0].toString());
+
+      doc.font("Helvetica-Bold").text("Status: ", { continued: true });
+      doc.font("Helvetica").text(orderDetails.status);
+
+      doc.font("Helvetica-Bold").text("Address:", { continued: true });
+      doc.font("Helvetica").text(orderDetails.selectedAddress.join(", "));
+
+      doc.font("Helvetica-Bold").text("Payment Method: ", { continued: true });
+      doc.font("Helvetica").text(orderDetails.paymentMethod);
+
+      doc.font("Helvetica-Bold").text("Date: ", { continued: true });
+      doc.font("Helvetica").text(orderDetails.date);
+    }
+    // Finalize the PDF and end the response
+    doc.end();
   } catch (error) {
-    
+    console.error("Error generating PDF:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+// Function to fetch product name from product ID for both pdf and the excel sheet
+async function getProductFromId(productId) {
+  try {
+    const product = await productCollection.findOne({ _id: productId });
+    console.log(product);
+    return product ? product.name : "Unknown Product";
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    return "Unknown Product";
   }
 }
+
+//downloading the sales report as excel sheet
+exports.downloadSalesReportExcel = async (req, res) => {
+  try {
+    // Fetch the sales report data from the database
+    const reportData = await reportCollection.find();
+
+    // Create a new Excel workbook and worksheet
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Sales Report");
+
+    // Add column headers to the worksheet
+    worksheet.columns = [
+      { header: "ID", key: "id", width: 15 },
+      { header: "Product Name", key: "productName", width: 30 },
+      { header: "Quantity", key: "quantity", width: 15 },
+      { header: "Price", key: "price", width: 15 },
+      { header: "Status", key: "status", width: 15 },
+      { header: "Address", key: "address", width: 80 },
+      { header: "Payment Method", key: "paymentMethod", width: 20 },
+      { header: "Date", key: "date", width: 40 },
+    ];
+
+    // Loop through report data and add them to the worksheet
+    for (const entry of reportData) {
+      const orderDetails = entry.orderDetails[0]; // Assuming there is only one orderDetails entry
+
+      // Fetch product name from product ID (replace 'productId' with the actual field in your data)
+      const productName = await getProductFromId(orderDetails.products[0]);
+
+      // Add each entry to the worksheet
+      worksheet.addRow({
+        id: orderDetails._id,
+        productName,
+        quantity: orderDetails.quantity[0],
+        price: orderDetails.price[0].toString(),
+        status: orderDetails.status,
+        address: orderDetails.selectedAddress.join(", "),
+        paymentMethod: orderDetails.paymentMethod,
+        date: orderDetails.date,
+      });
+    }
+
+    // Set response headers for Excel download
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=sales_report.xlsx"
+    );
+
+    // Pipe the Excel workbook to the response
+    await workbook.xlsx.write(res);
+
+    // End the response
+    res.end();
+  } catch (error) {
+    console.error("Error generating Excel:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+// controller for downloading the total users details as pdf
+exports.downloadTotalUsers = async (req, res) => {
+  try {
+    // Fetch the total users' details from the database
+    const users = await userCollection.find();
+
+    // Create a new PDF document
+    const doc = new PDFDocument();
+
+    // Set response headers for PDF download
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=total_users_report.pdf"
+    );
+
+    // Pipe the PDF document directly to the response
+    doc.pipe(res);
+
+    const imagePath = "public/Img/login/logo.png"; // Change this to the path of your image
+    const imageWidth = 100; // Adjust image width based on your layout
+    const imageX = 550 - imageWidth; // Adjust X-coordinate based on your layout
+    const imageY = 50; // Adjust Y-coordinate to place the image at the top
+    doc.image(imagePath, imageX, imageY, { width: imageWidth });
+
+    // Add heading to the PDF
+    doc
+      .font("Helvetica-Bold")
+      .fontSize(16)
+      .text("Total Users Report", { align: "center" });
+
+    // Loop through user data and add them to the PDF
+    for (const user of users) {
+      // Move down before each user entry
+      doc.moveDown();
+
+      doc
+        .font("Helvetica-Bold")
+        .text(`Name: ${user.first_name} ${user.last_name}`);
+      doc.font("Helvetica").text(`Email: ${user.email}`);
+      doc.font("Helvetica").text(`Phone: ${user.phone}`);
+      doc.font("Helvetica").text(`Gender: ${user.gender}`);
+      doc.font("Helvetica-Bold").text("Address:");
+
+      // Check if the address array is empty
+      if (user.address.length === 0) {
+        doc.font("Helvetica").text("Empty");
+      } else {
+        // Loop through addresses and add them to the PDF
+        for (const address of user.address) {
+          doc.font("Helvetica").text(`- Pincode: ${address.pincode}`);
+          doc.font("Helvetica").text(`  Locality: ${address.locality}`);
+          doc.font("Helvetica").text(`  Full Address: ${address.fullAddress}`);
+          doc.font("Helvetica").text(`  City: ${address.city}`);
+          doc.font("Helvetica").text(`  State: ${address.state}`);
+        }
+      }
+
+      doc.font("Helvetica-Bold").text(`Wallet: ${user.wallet}`);
+
+      // Check if the usedCoupons array is empty
+      if (user.usedCoupons.length === 0) {
+        doc.font("Helvetica-Bold").text("Used Coupons: Empty");
+      } else {
+        // Extract coupon names and join them with commas
+        const couponNames = user.usedCoupons
+          .map((coupon) => coupon.coupon)
+          .join(", ");
+        doc.font("Helvetica-Bold").text(`Used Coupons: ${couponNames}`);
+      }
+    }
+
+    // Finalize the PDF and end the response
+    doc.end();
+  } catch (error) {
+    console.error("Error generating PDF:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+// Controller for downloading the total users' details as Excel
+exports.downloadTotalUsersExcel = async (req, res) => {
+  try {
+    // Fetch the total users' details from the database
+    const users = await userCollection.find();
+
+    // Create a new Excel workbook and worksheet
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Total Users Report");
+
+    // Add column headers to the worksheet
+    worksheet.columns = [
+      { header: "Name", key: "name", width: 20 },
+      { header: "Email", key: "email", width: 30 },
+      { header: "Phone", key: "phone", width: 15 },
+      { header: "Gender", key: "gender", width: 15 },
+      { header: "Address", key: "address", width: 40 },
+      { header: "Wallet", key: "wallet", width: 15 },
+      { header: "Used Coupons", key: "usedCoupons", width: 30 },
+    ];
+
+    // Loop through user data and add them to the worksheet
+    for (const user of users) {
+      // Extract coupon names and join them with commas
+      const couponNames = user.usedCoupons
+        .map((coupon) => coupon.coupon)
+        .join(", ");
+
+      // Add each user entry to the worksheet
+      worksheet.addRow({
+        name: `${user.first_name} ${user.last_name}`,
+        email: user.email,
+        phone: user.phone,
+        gender: user.gender,
+        address:
+          user.address.length > 0
+            ? user.address
+                .map(
+                  (a) =>
+                    `${a.pincode}, ${a.locality}, ${a.fullAddress}, ${a.city}, ${a.state}`
+                )
+                .join("\n")
+            : "Empty",
+        wallet: user.wallet,
+        usedCoupons: user.usedCoupons.length > 0 ? couponNames : "Empty",
+      });
+    }
+
+    // Set response headers for Excel download
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=total_users_report.xlsx"
+    );
+
+    // Pipe the Excel workbook to the response
+    await workbook.xlsx.write(res);
+
+    // End the response
+    res.end();
+  } catch (error) {
+    console.error("Error generating Excel:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};

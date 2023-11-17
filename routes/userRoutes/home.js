@@ -101,6 +101,20 @@ router.post(
 // router for adding new address
 router.post("/profile/save_address", ProfileController.postNewAddress);
 
+// router for getting  the password changing page
+router.get(
+  "/profile/changePassword/:id",
+  usersAuth.userAuth,
+  ProfileController.getNewPassword
+);
+
+// router for changing the password
+router.post(
+  "/profile/changePassword/:id",
+  usersAuth.userAuth,
+  ProfileController.postNewPassword
+);
+
 // router for showing the edited user profile
 router.get(
   "/profile/edit-profile/:id",
