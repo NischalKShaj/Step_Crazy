@@ -115,6 +115,11 @@
                 >
                   
                   <div class="form-outline mb-2">
+                    <% if (error) { %>
+                      <div id="errorMessage" class="form-group mb-4 text-danger">
+                        <%= error %>
+                      </div>
+                      <% } %>
                     <label for="code">Code</label>
                     <input
                       type="text"

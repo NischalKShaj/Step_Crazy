@@ -6,17 +6,30 @@ const couponCollection = require("../../models/coupons/couponCollection");
 // controller for rendering the coupons page
 exports.getCouponPage = async (req, res) => {
   const admin = req.session.admin;
-  if (admin) {
-    try {
-      const coupon = await couponCollection.find();
-      console.log("coupon", coupon);
-      res.render("admin/coupon", { coupon });
-    } catch (error) {
-      console.error("error while rendering the page", error);
-      res.render("error/404");
+
+  try {
+    if (admin) {
+      const page = parseInt(req.query.page) || 1;
+      const ITEMS_PER_PAGE = 5;
+      const skip = (page - 1) * ITEMS_PER_PAGE;
+      // Fetch coupon items with pagination
+      const coupons = await couponCollection
+        .find()
+        .skip(skip)
+        .limit(ITEMS_PER_PAGE)
+        .exec();
+
+      // Calculate total count of coupons for pagination
+      const totalCount = await couponCollection.countDocuments();
+      const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+
+      res.render("admin/coupon", { coupons, totalPages, currentPage: page });
+    } else {
+      res.redirect("/admin");
     }
-  } else {
-    res.redirect("/admin");
+  } catch (error) {
+    console.error("There is an error while rendering the coupon page", error);
+    res.render("error/500");
   }
 };
 
@@ -24,7 +37,7 @@ exports.getCouponPage = async (req, res) => {
 exports.getCouponAdd = (req, res) => {
   const admin = req.session.admin;
   if (admin) {
-    res.render("admin/add_coupon");
+    res.render("admin/add_coupon", { error: null });
   } else {
     res.redirect("/admin");
   }
@@ -33,23 +46,37 @@ exports.getCouponAdd = (req, res) => {
 // controller for adding the value in the coupons
 exports.postCoupnPage = async (req, res) => {
   const admin = req.session.admin;
+
   if (admin) {
     try {
-      const couponData = {
+      // Check if the coupon code already exists
+      const existingCoupon = await couponCollection.findOne({
         code: req.body.code,
-        discount: req.body.discount,
-        minAmount: req.body.minAmount,
-        expiryDate: req.body.expiryDate,
-        description: req.body.description,
-      };
-      await couponCollection.insertMany([couponData]);
-      res.redirect("/admin/dashboard/coupon");
+      });
+
+      if (existingCoupon) {
+        // Coupon code already exists, handle accordingly (e.g., show an error message)
+        console.error("Coupon code already exists");
+        res.render("admin/add_coupon", { error: "Coupon already exists" });
+      } else {
+        // Coupon code doesn't exist, proceed with insertion
+        const couponData = {
+          code: req.body.code,
+          discount: req.body.discount,
+          minAmount: req.body.minAmount,
+          expiryDate: req.body.expiryDate,
+          description: req.body.description,
+        };
+
+        await couponCollection.insertMany([couponData]);
+        res.redirect("/admin/dashboard/coupon");
+      }
     } catch (error) {
       console.error(
-        "Unexpected error occured while inserting the value",
+        "Unexpected error occurred while inserting the value",
         error
       );
-      res.render("error/404");
+      res.render("error/500");
     }
   } else {
     res.redirect("/admin");

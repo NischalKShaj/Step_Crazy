@@ -21,9 +21,9 @@ exports.uploads = multer({
 // for getting the product page
 exports.getProductPage = async (req, res) => {
   const search = req.query.search;
-  const page = parseInt(req.query.page);
-  const limit = 5;
-
+  const page = parseInt(req.query.page) || 1;
+  const ITEMS_PER_PAGE = 8;
+  const limit = ITEMS_PER_PAGE;
   const skip = (page - 1) * limit;
 
   // Define a base query
@@ -38,11 +38,26 @@ exports.getProductPage = async (req, res) => {
   }
 
   const admin = req.session.admin;
-  if (admin) {
-    const product = await collection.find(query).skip(skip).limit(limit);
-    res.render("admin/product", { product });
-  } else {
-    res.redirect("/admin");
+
+  try {
+    if (admin) {
+      // Fetch products with pagination
+      const products = await collection.find(query).skip(skip).limit(limit);
+
+      // Calculate total count of products for pagination
+      const totalCount = await collection.countDocuments(query);
+      const totalPages = Math.ceil(totalCount / limit);
+
+      res.render("admin/product", { products, totalPages, currentPage: page });
+    } else {
+      res.redirect("/admin");
+    }
+  } catch (error) {
+    console.error(
+      "There is an unexpected error while fetching products",
+      error
+    );
+    res.render("error/500");
   }
 };
 
@@ -51,7 +66,7 @@ exports.getAddProduct = async (req, res) => {
   const admin = req.session.admin;
   if (admin) {
     const category = await categoryCollection.find();
-    res.render("admin/add_product", { category });
+    res.render("admin/add_product", { category, error: null });
   } else {
     res.redirect("/admin");
   }
@@ -60,24 +75,45 @@ exports.getAddProduct = async (req, res) => {
 // for adding the values in the database
 exports.postProductPage = async (req, res) => {
   const admin = req.session.admin;
-  console.log(req.body.name, req.body.description, req.body.price);
-  const imageArray = [];
-  if (admin) {
-    for (const file of req.files) {
-      imageArray.push(file.filename);
-    }
 
-    const productDetails = {
-      name: req.body.name,
-      description: req.body.description,
-      price: req.body.price,
-      stock: req.body.stock,
-      category: req.body.category,
-      image: imageArray,
-    };
-    console.log(productDetails);
-    await collection.insertMany([productDetails]);
-    res.redirect("/admin/dashboard/product");
+  if (admin) {
+    try {
+      // Check if a product with the same name already exists
+      const existingProduct = await collection.findOne({ name: req.body.name });
+      const category = await categoryCollection.find();
+      if (existingProduct) {
+        // Product with the same name already exists, handle accordingly (e.g., show an error message)
+        console.error("Product with the same name already exists");
+        res.render("admin/add_product", {
+          category,
+          error: "Product with the same name already exists",
+        });
+      } else {
+        // Product with the same name doesn't exist, proceed with insertion
+        const imageArray = [];
+        for (const file of req.files) {
+          imageArray.push(file.filename);
+        }
+
+        const productDetails = {
+          name: req.body.name,
+          description: req.body.description,
+          price: req.body.price,
+          stock: req.body.stock,
+          category: req.body.category,
+          image: imageArray,
+        };
+
+        await collection.insertMany([productDetails]);
+        res.redirect("/admin/dashboard/product");
+      }
+    } catch (error) {
+      console.error(
+        "Unexpected error occurred while inserting the product",
+        error
+      );
+      res.render("error/404");
+    }
   } else {
     res.redirect("/admin");
   }

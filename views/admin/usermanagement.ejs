@@ -204,20 +204,28 @@
             <% } else {%>
             <h1>There is no data in the database</h1>
             <% } %>
-          </div>
-          <div class="row">
-            <ul class="pagination pagination-lg justify-content-end" id="pagination1" style=" padding: 5px;">
-                <li class="page-item">
-                    <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="/admin/dashboard/user/search?page=1" tabindex="-1">1</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link active mr-3 shadow-sm border-top-0 border-left-0" href="/admin/dashboard/user/search?page=2">2</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link active rounded-0 shadow-sm border-top-0 border-left-0" href="/admin/dashboard/user/search?page=3">3</a>
-                </li>
-            </ul>
-          </div>
+            <div class="row">
+              <ul class="pagination pagination-lg justify-content-end" id="pagination">
+                <% if (currentPage > 1) { %>
+                  <li class="page-item">
+                    <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="/admin/dashboard/user/search?page=<%= currentPage - 1 %>">Previous</a>
+                  </li>
+                <% } %>
+            
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                  <li class="page-item">
+                    <a class="page-link<%= i === currentPage ? ' active' : '' %> rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="/admin/dashboard/user/search?page=<%= i %>"><%= i %></a>
+                  </li>
+                <% } %>
+            
+                <% if (currentPage < totalPages) { %>
+                  <li class="page-item">
+                    <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="/admin/dashboard/user/search?page=<%= currentPage + 1 %>">Next</a>
+                  </li>
+                <% } %>
+              </ul>
+            </div>
+            
         </div>
       </div>
     </div>

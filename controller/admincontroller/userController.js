@@ -7,24 +7,36 @@ let users;
 exports.getUserPage = async (req, res) => {
   const search = req.query.search;
   const page = parseInt(req.query.page) || 1;
-  const limit = 10;
+  const ITEMS_PER_PAGE = 10;
+  const limit = ITEMS_PER_PAGE;
   const skip = (page - 1) * limit;
-
   const query = {};
-
   const admin = req.session.admin;
-  if (admin) {
-    if (search) {
-      query.$or = [
-        { first_name: { $regex: ".*" + search + ".*", $options: "i" } },
-        { last_name: { $regex: ".*" + search + ".*", $options: "i" } },
-        { email: { $regex: ".*" + search + ".*", $options: "i" } },
-      ];
+
+  try {
+    if (admin) {
+      if (search) {
+        query.$or = [
+          { first_name: { $regex: ".*" + search + ".*", $options: "i" } },
+          { last_name: { $regex: ".*" + search + ".*", $options: "i" } },
+          { email: { $regex: ".*" + search + ".*", $options: "i" } },
+        ];
+      }
+
+      // Fetch users with pagination
+      const users = await collection.find(query).skip(skip).limit(limit);
+
+      // Calculate total count of users for pagination
+      const totalCount = await collection.countDocuments(query);
+      const totalPages = Math.ceil(totalCount / limit);
+
+      res.render("admin/usermanagement", { users, totalPages, currentPage: page });
+    } else {
+      res.redirect("/admin");
     }
-    const users = await collection.find(query).skip(skip).limit(limit);
-    res.render("admin/usermanagement", { users });
-  } else {
-    res.redirect("/admin");
+  } catch (error) {
+    console.error("There is an unexpected error while fetching users", error);
+    res.render("error/500");
   }
 };
 

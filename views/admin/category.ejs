@@ -64,7 +64,7 @@
       <div class="container-fluid">
         <a href="/admin/dashboard">
           <img
-            src="../../Img/product/logo.png"
+            src="/../../Img/product/logo.png"
             alt="logo"
             class="img-fluid w-25"
           />
@@ -132,7 +132,7 @@
       <div class="row my-4">
         <div class="col-lg-14">
           <div class="table-responsive">
-            <% if (category !== '') { %>
+            <% if (categories !== '') { %>
             <table class="table table-striped text-center">
               <thead>
                 <tr class="table-dark">
@@ -143,7 +143,7 @@
                 </tr>
               </thead>
               <tbody>
-                <% category.forEach((row, index) => { %>
+                <% categories.forEach((row, index) => { %>
                 <tr>
                   <td><%= index+1 %></td>
                   <td style="max-width: 80px; overflow-wrap: break-word;"><%= row.category %></td>
@@ -170,16 +170,24 @@
             <% } %>
           </div>
           <div class="row">
-            <ul class="pagination pagination-lg justify-content-end" id="pagination1" style=" padding: 5px;">
+            <ul class="pagination pagination-lg justify-content-end" id="pagination">
+              <% if (currentPage > 1) { %>
                 <li class="page-item">
-                    <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="/admin/dashboard/category/search?page=1" tabindex="-1">1</a>
+                  <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="/admin/dashboard/category/search?page=<%= currentPage - 1 %>">Previous</a>
                 </li>
+              <% } %>
+          
+              <% for (let i = 1; i <= totalPages; i++) { %>
                 <li class="page-item">
-                    <a class="page-link active mr-3 shadow-sm border-top-0 border-left-0" href="/admin/dashboard/category/search?page=2">2</a>
+                  <a class="page-link<%= i === currentPage ? ' active' : '' %> rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="/admin/dashboard/category/search?page=<%= i %>"><%= i %></a>
                 </li>
+              <% } %>
+          
+              <% if (currentPage < totalPages) { %>
                 <li class="page-item">
-                    <a class="page-link active rounded-0 shadow-sm border-top-0 border-left-0" href="/admin/dashboard/category/search?page=3">3</a>
+                  <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="/admin/dashboard/category/search?page=<%= currentPage + 1 %>">Next</a>
                 </li>
+              <% } %>
             </ul>
           </div>
         </div>

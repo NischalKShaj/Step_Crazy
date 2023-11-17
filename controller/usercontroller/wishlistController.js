@@ -11,22 +11,40 @@ const User = mongoose.model("userCollection");
 exports.getWishlist = async (req, res) => {
   const userId = req.session.user;
   const user = await userCollection.findOne({ email: userId });
+  const ITEMS_PER_PAGE = 9;
   try {
     if (!user) {
       res.redirect("/login");
     } else if (user && user.blocked === false) {
       const userId = user._id;
+      const page = parseInt(req.query.page) || 1;
+      const skip = (page - 1) * ITEMS_PER_PAGE;
+
+      // Fetch wishlist items with pagination
       const wishlistItems = await wishlistCollection
         .find({ user: userId })
         .populate("product")
+        .skip(skip)
+        .limit(ITEMS_PER_PAGE)
         .exec();
-      res.render("user/wishlist", { wishlistItems });
+
+      // Calculate total count of wishlist items for pagination
+      const totalCount = await wishlistCollection.countDocuments({
+        user: userId,
+      });
+      const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+
+      res.render("user/wishlist", {
+        wishlistItems,
+        totalPages,
+        currentPage: page,
+      });
     } else {
       res.redirect("/login");
     }
   } catch (error) {
     console.error("There is an unexpected error while showing the wishlist");
-    res.redirect("error/404");
+    res.redirect("error/500");
   }
 };
 

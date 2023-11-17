@@ -41,17 +41,24 @@ exports.getProductPage = async (req, res) => {
       }
     }
 
-    // Perform the database query with pagination
-    const product = await collection
-      .find(query)
-      .skip(skip)
-      .limit(limit);
+    // Perform the database query to get the total count of products
+    const totalCount = await collection.countDocuments(query);
 
-    console.log("product", product);
-    res.render("user/product", { product });
+    // Calculate the total number of pages
+    const totalPages = Math.ceil(totalCount / limit);
+
+    // Perform the database query with pagination
+    const productsCursor = await collection.find(query).skip(skip).limit(limit);
+    const products = [];
+    await productsCursor.forEach((product) => {
+      products.push(product);
+    });
+
+    console.log("products", products);
+    res.render("user/product", { products, totalPages, currentPage: page });
   } catch (error) {
     console.error("There is an error while loading the page", error);
-    res.render("error/404");
+    res.render("error/500");
   }
 };
 

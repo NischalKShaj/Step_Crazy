@@ -87,6 +87,11 @@
                         <form action="/admin/dashboard/category" method="post" id="add-form" onsubmit="return validateForm()">
                             
                             <div class="form-outline mb-2">
+                                <% if (error) { %>
+                                    <div id="errorMessage" class="form-group mb-4 text-danger">
+                                      <%= error %>
+                                    </div>
+                                    <% } %>
                                 <label  for="category">Category Name</label>
                                 <input  type="text" name="category" id="categoryInput">
                                 

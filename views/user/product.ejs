@@ -211,12 +211,12 @@
             </form>
           </div>
           <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-            <% product.forEach((singleProduct) => { %>
+            <% products.forEach((singleProduct) => { %>
               <% if (singleProduct.status === true) { %>
                 <div class="col">
-                  <div class="card mb-4 product-wap rounded-0">
-                    <div class="card rounded-0" style="position: relative; overflow: hidden;">
-                      <img src="/<%= singleProduct.image[0] %>" class="card-img-top img-fluid" alt="<%= singleProduct.name %>" style="object-fit: cover; height: 250px;" />
+                  <div class="card mb-4 product-wap rounded-0" style="height: 400px;">
+                    <div class="card rounded-0" style="position: relative; overflow: hidden; height: 100%;">
+                      <img src="/<%= singleProduct.image[0] %>" class="card-img-top img-fluid" alt="<%= singleProduct.name %>" style="object-fit: cover; height: 100%;" />
                       <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
                         <% if (singleProduct.stock == 0) { %>
                           <p style="color: red; text-align: center;">Product out of stock</p>
@@ -241,32 +241,31 @@
           
           
           
-          <div div="row">
+          
+          <div class="row">
             <ul class="pagination pagination-lg justify-content-end" id="pagination">
-              <li class="page-item">
-                <a
-                  class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
-                  href="/products/search?page=1"
-                  tabindex="-1"
-                  >1</a
-                >
-              </li>
-              <li class="page-item">
-                <a
-                  class="page-link active  mr-3 shadow-sm border-top-0 border-left-0"
-                  href="/products/search?page=2"
-                  >2</a
-                >
-              </li>
-              <li class="page-item">
-                <a
-                  class="page-link active rounded-0 shadow-sm border-top-0 border-left-0"
-                  href="/products/search?page=3"
-                  >3</a
-                >
-              </li>
+              <% if (currentPage > 1) { %>
+                <li class="page-item">
+                  <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="/products/search?page=<%= currentPage - 1 %>">Previous</a>
+                </li>
+              <% } %>
+          
+              <% for (let i = 1; i <= totalPages; i++) { %>
+                <li class="page-item">
+                  <a class="page-link<%= i === currentPage ? ' active' : '' %> rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="/products/search?page=<%= i %>"><%= i %></a>
+                </li>
+              <% } %>
+          
+              <% if (currentPage < totalPages) { %>
+                <li class="page-item">
+                  <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="/products/search?page=<%= currentPage + 1 %>">Next</a>
+                </li>
+              <% } %>
             </ul>
           </div>
+          
+          
+          
         </div>
       </div>
     </div>

@@ -409,13 +409,11 @@ exports.postOnlinePayment = (req, res) => {
 // controller for rendering the order history page with status
 exports.getOrderDetails = async (req, res) => {
   try {
-    const search = req.query.search;
-    const page = parseInt(req.query.page) || 1;
-    const limit = 10;
     const userEmail = req.session.user;
     const user = await userCollection.findOne({ email: userEmail }).exec();
 
-    const skip = (page - 1) * limit;
+    const page = parseInt(req.query.page) || 1;
+    const limit = 7;
 
     if (user && user.blocked === false) {
       const orders = user.order;
@@ -423,6 +421,8 @@ exports.getOrderDetails = async (req, res) => {
       console.log("user.order", user.order);
 
       if (orders && orders.length > 0) {
+        const totalCount = orders.length;
+        const totalPages = Math.ceil(totalCount / limit);
         const startIndex = (page - 1) * limit;
         const endIndex = startIndex + limit;
 
@@ -452,6 +452,8 @@ exports.getOrderDetails = async (req, res) => {
         res.render("user/orderHistory", {
           orders: ordersForPage,
           orderDetails: allOrderDetails,
+          totalPages: totalPages,
+          currentPage: page,
         });
       } else {
         console.log("No orders found for the user");
@@ -705,16 +707,35 @@ exports.getReturnOrder = async (req, res) => {
 exports.getCoupon = async (req, res) => {
   const userId = req.session.user;
   const user = await userCollection.findOne({ email: userId });
-  const coupon = await couponCollection.find();
+  const ITEMS_PER_PAGE = 9;
   try {
     if (user && user.blocked === false) {
-      res.render("user/coupon", { coupon, user });
+      const page = parseInt(req.query.page) || 1;
+      const skip = (page - 1) * ITEMS_PER_PAGE;
+
+      // Fetch coupon items with pagination
+      const coupons = await couponCollection
+        .find()
+        .skip(skip)
+        .limit(ITEMS_PER_PAGE)
+        .exec();
+
+      // Calculate total count of coupons for pagination
+      const totalCount = await couponCollection.countDocuments();
+      const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+
+      res.render("user/coupon", {
+        coupons,
+        user,
+        totalPages,
+        currentPage: page,
+      });
     } else {
       res.redirect("/login");
     }
   } catch (error) {
-    console.error("There is an error while showing the coupons", coupon);
-    res.render("error/404");
+    console.error("There is an error while showing the coupons", error);
+    res.render("error/500");
   }
 };
 

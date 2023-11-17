@@ -146,6 +146,20 @@
           </div>
         </div>
       </div>
+      <div class="pagination">
+        <% if (currentPage > 1) { %>
+          <a href="/wishlist?page=<%= currentPage - 1 %>" class="page-link">Previous</a>
+        <% } %>
+      
+        <% for (let i = 1; i <= totalPages; i++) { %>
+          <a href="/wishlist?page=<%= i %>" class="<%= i === currentPage ? 'active' : '' %> page-link"><%= i %></a>
+        <% } %>
+      
+        <% if (currentPage < totalPages) { %>
+          <a href="/wishlist?page=<%= currentPage + 1 %>" class="page-link">Next</a>
+        <% } %>
+      </div>
+    
     </section>
     <!-- footer -->
 

@@ -6,24 +6,39 @@ const productCollection = require("../../models/product/productDetails");
 exports.getCategoryPage = async (req, res) => {
   const admin = req.session.admin;
   const search = req.query.search;
-  const page = parseInt(req.query.page);
-  const limit = 5;
-
+  const page = parseInt(req.query.page) || 1;
+  const ITEMS_PER_PAGE = 5;
+  const limit = ITEMS_PER_PAGE;
   const skip = (page - 1) * limit;
 
-  // define the base query
+  // Define the base query
   const query = {};
 
-  // add the search criteria
+  // Add the search criteria to the query
   if (search) {
     query.$or = [{ category: { $regex: ".*" + search + ".*", $options: "i" } }];
   }
 
-  if (admin) {
-    const category = await collection.find(query).skip(skip).limit(limit);
-    res.render("admin/category", { category });
-  } else {
-    res.redirect("/admin");
+  try {
+    if (admin) {
+      // Fetch categories with pagination
+      const categories = await collection.find(query).skip(skip).limit(limit);
+
+      // Calculate total count of categories for pagination
+      const totalCount = await collection.countDocuments(query);
+      const totalPages = Math.ceil(totalCount / limit);
+
+      res.render("admin/category", {
+        categories,
+        totalPages,
+        currentPage: page,
+      });
+    } else {
+      res.redirect("/admin");
+    }
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    res.render("error/500");
   }
 };
 
@@ -31,7 +46,7 @@ exports.getCategoryPage = async (req, res) => {
 exports.getCategoryAdd = (req, res) => {
   const admin = req.session.admin;
   if (admin) {
-    res.render("admin/add_category");
+    res.render("admin/add_category", { error: null });
   } else {
     res.redirect("/admin");
   }
@@ -57,7 +72,7 @@ exports.postCategory = async (req, res) => {
       await collection.insertMany([categoryDetails]);
       res.redirect("/admin/dashboard/category");
     } else {
-      res.redirect("/admin/dashboard/category/add");
+      res.render("admin/add_category", { error: "category already exists" });
     }
   } else {
     res.redirect("/admin");
