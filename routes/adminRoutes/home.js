@@ -12,6 +12,7 @@ const orderController = require("../../controller/admincontroller/orderControlle
 const couponController = require("../../controller/admincontroller/couponController");
 const reportController = require("../../controller/admincontroller/reportController");
 const adminAuth = require("../../middleware/authentication/adminAuth");
+const bannerController = require("../../controller/admincontroller/bannerController");
 
 // router for getting the admin login page
 router.get("/", homecontroller.getAdminPage);
@@ -330,6 +331,57 @@ router.get(
   "/userReportXLS",
   adminAuth.adminAuth,
   reportController.downloadTotalUsersExcel
+);
+
+// router for getting the banner page
+router.get(
+  "/dashboard/banner",
+  adminAuth.adminAuth,
+  bannerController.getBanner
+);
+
+// router for getting the page for adding the new banner
+router.get(
+  "/dashboard/banner/add",
+  adminAuth.adminAuth,
+  bannerController.getAddBanner
+);
+
+// router for adding the values in the database
+router.post(
+  "/dashboard/banner",
+  adminAuth.adminAuth,
+  bannerController.uploads,
+  bannerController.postBannerPage
+);
+
+// router for getting the edit page for the banner
+router.get(
+  "/dashboard/banner/edit/:id",
+  adminAuth.adminAuth,
+  bannerController.getUpdateBanner
+);
+
+// router for updating the banner page
+router.post(
+  "/dashboard/banner/update/:id",
+  adminAuth.adminAuth,
+  bannerController.uploads,
+  bannerController.postUpdatedBanner
+);
+
+// router for deleting the banner
+router.delete(
+  "/dashboard/banner/delete/:bannerId",
+  adminAuth.adminAuth,
+  bannerController.deleteBanner
+);
+
+// router for deleting the banner image
+router.get(
+  "/dashboard/banner/delete/:image/:bannerId",
+  adminAuth.adminAuth,
+  bannerController.deleteImage
 );
 
 module.exports = router;

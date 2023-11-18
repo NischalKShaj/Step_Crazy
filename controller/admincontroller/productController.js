@@ -124,7 +124,7 @@ exports.getEditProduct = async (req, res) => {
   const admin = req.session.admin;
   if (admin) {
     const category = await categoryCollection.find();
-    let id = req.params.id;
+    const id = req.params.id;
     collection
       .findById(id)
       .then((product) => {
@@ -148,7 +148,7 @@ exports.postUpdateProduct = async (req, res) => {
   const admin = req.session.admin;
   if (admin) {
     try {
-      let id = req.params.id;
+      const id = req.params.id;
       const updateProduct = await collection.findByIdAndUpdate(
         id,
         {

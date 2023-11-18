@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Step-Crazy/Banners</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/css/bootstrap-utilities.rtl.min.css"
+      integrity="sha512-g/9zc34RrAHk9cSFEodVsDR+TjDAhw9+VjWHnbK6kZe6sK4xTpPJ6cqJYd3WXfFmQuNLIkhDetQdm6fOOzj/nQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      .dimmed-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Adjust the opacity as needed */
+        display: none;
+        z-index: 999;
+      }
+
+      .loader {
+        border: 8px solid #f3f3f3; /* Light gray */
+        border-top: 8px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+        display: none;
+        animation: spin 2s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dimmed-background" id="dimmedBackground"></div>
+    <div class="loader" id="loader"></div>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/admin/dashboard">
+          <img
+            src="/../../Img/product/logo.png"
+            alt="logo"
+            class="img-fluid w-25"
+          />
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav ml-auto">
+            <a class="nav-link" href="/admin/dashboard">Dashboard</a>
+            <a class="nav-link" href="/admin/dashboard/admins">Admins</a>
+            <a class="nav-link" href="/admin/dashboard/user">Users</a>
+            <a class="nav-link" href="/admin/dashboard/product">Product</a>
+            <a class="nav-link" href="/admin/dashboard/category">Category</a>
+            <a class="nav-link" href="/admin/dashboard/coupon">Coupons</a>
+            <a class="nav-link" href="/admin/dashboard/banner">Banner</a>
+            <a href="/admin/dashboard/banner/add">
+              <button type="submit" class="btn btn-primary">Add Banner</button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="row my-4">
+        <div class="col-lg-14">
+          <% if (banner !== " ") { %>
+
+          <div class="table-responsive">
+            <table class="table table-striped text-center">
+              <thead>
+                <tr class="table-dark">
+                  <th>No.</th>
+                  <th>Name</th>
+                  <th>Image</th>
+                  <th>Description</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% banner.forEach((row, index) => { %>
+
+                <tr>
+                  <td><%= index+1 %></td>
+                  <td><%= row.name %></td>
+                  <td>
+                    <% if (row.image) { %> <% row.image.forEach((imageName) =>{%>
+                    <img
+                      src="/../../<%= imageName %>"
+                      width="50"
+                      class="img-thumbnail"
+                    />
+                    <% }) %> <% } else { %>
+                    <h1>no image found</h1>
+                    <% } %>
+                  </td>
+                  <td><%= row.description %></td>
+                  <td>
+                    <a
+                      href="/admin/dashboard/banner/edit/<%= row.id %>"
+                      class="text-success"
+                      ><i class="fas fa-edit fa-lg"></i>
+                    </a>
+
+                    <a
+                      href="/admin/dashboard/banner/delete/<%= row._id %>"
+                      class="text-danger delete-banner"
+                      id="deleteBanner_<%= row._id %>"
+                      ><i class="fas fa-trash fa-lg mx-1"></i>
+                    </a>
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+          <% } else { %>
+          <h2>No banner found</h2>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha512-X/YkDZyjTf4wyc2Vy16YGCPHwAY8rZJY+POgokZjQB2mhIRFJCckEGc6YyX9eNsPfn0PzThEuNs+uaomE5CO6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+
+        const deleteBanner = document.querySelectorAll(".delete-banner");
+        
+  
+        deleteBanner.forEach((deleteBan) => {
+            deleteBan.addEventListener("click", function (e) {
+            e.preventDefault();
+        
+            const bannerId = this.id.split("_")[1];
+        
+            // Use SweetAlert for confirmation
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Are you sure you want to delete this banner?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                // Fetch method for deleting the coupon
+                fetch(`/admin/dashboard/banner/delete/${bannerId}`, {
+                    method: "delete",
+                })
+                    .then((response) => {
+                    if (response.ok) {
+                        console.log("The banner is deleted successfully");
+                        this.parentNode.parentNode.remove();
+                    } else {
+                        console.log(
+                        "Error deleting the banner",
+                        response.status,
+                        response.statusText
+                        );
+                    }
+                    })
+                    .catch((error) => {
+                    console.error("Network error");
+                    });
+                }
+            });
+            });
+        });
+  
+      </script>
+
+    <script>
+      $(document).ready(function () {
+        const loader = $("#loader");
+        const dimmedBackground = $("#dimmedBackground");
+
+        // Show the loader and dimmed background
+        loader.show();
+        dimmedBackground.show();
+
+        // After 2 seconds (adjust this delay as needed), hide the loader and dimmed background
+        setTimeout(function () {
+          loader.hide();
+          dimmedBackground.hide();
+        }, 1000); // 2 seconds
+      });
+    </script>
+  </body>
+</html>
