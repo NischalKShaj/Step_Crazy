@@ -142,11 +142,16 @@
                                           <strong>Product Name:</strong> <%= orderDetails[i][j].name %><br>
                                           <strong>Quantity:</strong> <%= orders[i].quantity[j] %><br>
                                           <% totalPrice += orders[i].price[j] * orders[i].quantity[j]; %>
-                                          <strong>Price:</strong> &#8377 <%= totalPrice %><br>
+                                          
                                         </div>
                                         <a href="/product/details/<%= orderDetails[i][j].id %>"><img src="<%= orderDetails[i][j].image[0] %>" alt="<%= orderDetails[i][j].name %>" class="img-fluid" style="max-height: 80px;"></a>
                                       </li>
-                                    <% } %>
+                                      <% } %>
+                                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                          <strong>Price:</strong> &#8377 <%= orders[i].price %><br>
+                                        </div>
+                                      </li>
                                   </ul>
                                 </div>
                               </div>

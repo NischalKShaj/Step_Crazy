@@ -32,7 +32,9 @@ exports.postOrderPage = async (req, res) => {
   try {
     const user = await userCollection.findOne({ email: userId });
     const unUsedCoupons = user.unUsedCoupons;
-    const usedCoupons = user.usedCoupons;
+    let usedCoupons = []; // Create an array to track used coupons
+    const Coupon = user.usedCoupons;
+
     if (!user) {
       console.log("User not found");
       return res.render("error/404");
@@ -47,6 +49,9 @@ exports.postOrderPage = async (req, res) => {
       const selectedAddress = req.query.addresses.split(",");
       const paymentMethod = req.query.paymentMethod;
       console.log("paymentmethod", paymentMethod);
+
+      // Calculate the total price of the cart
+      let cartTotalPrice = 0;
 
       for (const cartItem of cart) {
         const { quantity, product } = cartItem;
@@ -64,25 +69,8 @@ exports.postOrderPage = async (req, res) => {
         // Calculate the product price
         let productPrice = existingProduct.price * quantity;
 
-        // If a coupon code is provided in the request body, update the product price with the discount
-        if (unUsedCoupons && unUsedCoupons.length > 0) {
-          for (const unusedCoupon of unUsedCoupons) {
-            const couponCode = unusedCoupon.coupons;
-            console.log("Coupon Code:", couponCode);
-
-            // Now you can use `couponCode` to look up the coupon in your collection
-            const coupon = await couponCollection.findOne({ code: couponCode });
-            console.log("Coupon:", coupon);
-            if (coupon) {
-              const discount = coupon.discount;
-              productPrice = (productPrice * discount) / 100;
-
-              // Mark the coupon as used in the user collection
-              usedCoupons.push({ coupon: couponCode });
-              unUsedCoupons.pop();
-            }
-          }
-        }
+        // Add the product price to the total
+        cartTotalPrice += productPrice;
 
         const currentStock = existingProduct.stock;
         const newStock = currentStock - quantity;
@@ -92,28 +80,6 @@ exports.postOrderPage = async (req, res) => {
             { _id: product },
             { $set: { stock: newStock } }
           );
-
-          // Add the cart and product details to the user's order
-          const details = {
-            cart: cartItem._id,
-            products: product,
-            quantity,
-            price: productPrice,
-            status: status,
-            selectedAddress: selectedAddress,
-            paymentMethod: paymentMethod,
-          };
-
-          user.order.push(details);
-          console.log("user.details", user.order);
-          // entering the values inside the report collection
-          const reportEntry = new reportCollection({
-            orderDetails: [details],
-          });
-          console.log("reportEntry", reportEntry);
-
-          // save the reports in the report collection
-          await reportEntry.save();
         } else {
           res.status(400).json({ message: "Out of stock", type: "danger" });
           return;
@@ -124,16 +90,63 @@ exports.postOrderPage = async (req, res) => {
         );
       }
 
+      // Apply coupon to the entire cart
+      if (unUsedCoupons && unUsedCoupons.length > 0) {
+        for (const unusedCoupon of unUsedCoupons) {
+          const couponCode = unusedCoupon.coupons;
+          console.log("Coupon Code:", couponCode);
+
+          // Now you can use `couponCode` to look up the coupon in your collection
+          const coupon = await couponCollection.findOne({ code: couponCode });
+          console.log("Coupon:", coupon);
+
+          if (coupon) {
+            const discount = coupon.discount;
+            cartTotalPrice = (cartTotalPrice * discount) / 100;
+
+            // Track the used coupon
+            usedCoupons.push({ coupon: couponCode });
+            Coupon.push({ coupon: couponCode });
+            // Mark the coupon as used in the user collection
+            unUsedCoupons.pop();
+          }
+        }
+      }
+
+      // Add the cart and product details to the user's order
+      const orderDetails = {
+        cart: cart.map((item) => item._id),
+        products: cart.map((item) => item.product),
+        quantity: cart.map((item) => item.quantity),
+        price: cartTotalPrice,
+        status: status,
+        selectedAddress: selectedAddress,
+        paymentMethod: paymentMethod,
+        usedCoupons: usedCoupons, // Add usedCoupons to orderDetails
+      };
+
+      user.order.push(orderDetails);
+
       // Save the updated user document with the order details
       await user.save();
 
-      await userCollection.updateOne(
+      await userCollection.findOneAndUpdate(
         { email: user.email },
         { $inc: { cartQuantity: -user.cartQuantity } }
       );
 
+      // entering the values inside the report collection
+      const reportEntry = new reportCollection({
+        orderDetails: [orderDetails],
+      });
+      console.log("reportEntry", reportEntry);
+
+      // save the reports in the report collection
+      await reportEntry.save();
+
       // Remove the cart items
       await cartCollection.deleteMany({ user: user._id });
+
       // Render the thank-you page with order details
       res.render("user/thank-you", {
         orderDetail: user.order,
@@ -151,10 +164,12 @@ exports.postOrderPage = async (req, res) => {
 exports.postOnlineConfirm = async (req, res) => {
   const userId = req.session.user;
   const status = "Pending";
+
   try {
     const user = await userCollection.findOne({ email: userId });
     const unUsedCoupons = user.unUsedCoupons;
-    const usedCoupons = user.usedCoupons;
+    let usedCoupons = [];
+    const Coupon = user.usedCoupons;
 
     if (!user) {
       console.log("User not found");
@@ -171,10 +186,11 @@ exports.postOnlineConfirm = async (req, res) => {
       const paymentMethod = req.query.paymentMethod;
       console.log("payment method", paymentMethod);
 
+      let totalOrderPrice = 0; // Track the total order price
+
       for (const cartItem of cart) {
         const { quantity, product } = cartItem;
 
-        // Retrieve the current stock for the product
         const existingProduct = await productCollection.findOne({
           _id: product,
         });
@@ -184,28 +200,8 @@ exports.postOnlineConfirm = async (req, res) => {
           continue;
         }
 
-        // Calculate the product price
         let productPrice = existingProduct.price * quantity;
-
-        // If a coupon code is provided in the request body, update the product price with the discount
-        if (unUsedCoupons && unUsedCoupons.length > 0) {
-          for (const unusedCoupon of unUsedCoupons) {
-            const couponCode = unusedCoupon.coupons;
-            console.log("Coupon Code:", couponCode);
-
-            // Now you can use `couponCode` to look up the coupon in your collection
-            const coupon = await couponCollection.findOne({ code: couponCode });
-            console.log("Coupon:", coupon);
-            if (coupon) {
-              const discount = coupon.discount;
-              productPrice = (productPrice * discount) / 100;
-
-              // Mark the coupon as used in the user collection
-              usedCoupons.push({ coupon: couponCode });
-              unUsedCoupons.pop();
-            }
-          }
-        }
+        totalOrderPrice += productPrice; // Accumulate the product prices
 
         const currentStock = existingProduct.stock;
         const newStock = currentStock - quantity;
@@ -215,28 +211,6 @@ exports.postOnlineConfirm = async (req, res) => {
             { _id: product },
             { $set: { stock: newStock } }
           );
-
-          // Add the cart and product details to the user's order
-          const details = {
-            cart: cartItem._id,
-            products: product,
-            quantity,
-            price: productPrice,
-            status: status,
-            selectedAddress: selectedAddress,
-            paymentMethod: paymentMethod,
-          };
-
-          user.order.push(details);
-          console.log("user.details", user.order);
-          // entering the values inside the report collection
-          const reportEntry = new reportCollection({
-            orderDetails: [details],
-          });
-          console.log("reportEntry", reportEntry);
-
-          // save the reports in the report collection
-          await reportEntry.save();
         } else {
           res.status(400).json({ message: "Out of stock", type: "danger" });
           return;
@@ -247,10 +221,51 @@ exports.postOnlineConfirm = async (req, res) => {
         );
       }
 
+      // Apply the coupon to the total order price
+      if (unUsedCoupons && unUsedCoupons.length > 0) {
+        for (const unusedCoupon of unUsedCoupons) {
+          const couponCode = unusedCoupon.coupons;
+          console.log("Coupon Code:", couponCode);
+
+          const coupon = await couponCollection.findOne({ code: couponCode });
+          console.log("Coupon:", coupon);
+          if (coupon) {
+            const discount = coupon.discount;
+            totalOrderPrice = (totalOrderPrice * discount) / 100;
+
+            Coupon.push({ coupon: couponCode });
+            usedCoupons.push({ coupon: couponCode });
+            unUsedCoupons.pop();
+          }
+        }
+      }
+
+      // Now, 'totalOrderPrice' contains the discounted total order price
+
+      // Add the order details to the user's order
+      const orderDetails = {
+        cart: cart.map((cartItem) => cartItem._id),
+        products: cart.map((cartItem) => cartItem.product),
+        quantity: cart.map((cartItem) => cartItem.quantity),
+        price: totalOrderPrice, // Use the discounted total order price
+        status: status,
+        selectedAddress: selectedAddress,
+        paymentMethod: paymentMethod,
+        usedCoupons: usedCoupons,
+      };
+
+      user.order.push(orderDetails);
+
+      const reportEntry = new reportCollection({
+        orderDetails: [orderDetails],
+      });
+
+      await reportEntry.save();
+
       // Save the updated user document with the order details
       await user.save();
 
-      await userCollection.updateOne(
+      await userCollection.findOneAndUpdate(
         { email: user.email },
         { $inc: { cartQuantity: -user.cartQuantity } }
       );
@@ -258,7 +273,6 @@ exports.postOnlineConfirm = async (req, res) => {
       // Remove the cart items
       await cartCollection.deleteMany({ user: user._id });
 
-      // Render the thank-you page with order details
       res.render("user/thank-you", {
         orderDetail: user.order,
       });
@@ -280,7 +294,8 @@ exports.getWalletPayment = async (req, res) => {
   try {
     const user = await userCollection.findOne({ email: userId });
     const unUsedCoupons = user.unUsedCoupons;
-    const usedCoupons = user.usedCoupons;
+    let usedCoupons = [];
+    const Coupon = user.usedCoupons;
 
     if (!user) {
       console.log("User not found");
@@ -297,14 +312,13 @@ exports.getWalletPayment = async (req, res) => {
       const paymentMethod = req.query.paymentMethod;
       console.log("payment method", paymentMethod);
 
+      // Calculate the total product price for all products in the cart
       for (const cartItem of cart) {
         const { quantity, product } = cartItem;
 
-        // Retrieve the current stock for the product
         const existingProduct = await productCollection.findOne({
           _id: product,
         });
-        console.log("existingProduct", existingProduct);
 
         if (!existingProduct) {
           console.log(`Product with ID ${product} not found.`);
@@ -314,26 +328,6 @@ exports.getWalletPayment = async (req, res) => {
         // Calculate the product price
         let productPrice = existingProduct.price * quantity;
 
-        // If a coupon code is provided in the request body, update the product price with the discount
-        if (unUsedCoupons && unUsedCoupons.length > 0) {
-          for (const unusedCoupon of unUsedCoupons) {
-            const couponCode = unusedCoupon.coupons;
-            console.log("Coupon Code:", couponCode);
-
-            // Now you can use `couponCode` to look up the coupon in your collection
-            const coupon = await couponCollection.findOne({ code: couponCode });
-            console.log("Coupon:", coupon);
-            if (coupon) {
-              const discount = coupon.discount;
-              productPrice = (productPrice * discount) / 100;
-
-              // Mark the coupon as used in the user collection
-              usedCoupons.push({ coupon: couponCode });
-              unUsedCoupons.pop();
-            }
-          }
-        }
-        console.log("user.usedCoupons", user.usedCoupons);
         // Add the product price to the total payment
         totalPayment += productPrice;
 
@@ -345,28 +339,6 @@ exports.getWalletPayment = async (req, res) => {
             { _id: product },
             { $set: { stock: newStock } }
           );
-
-          // Add the cart and product details to the user's order
-          const details = {
-            cart: cartItem._id,
-            products: product,
-            quantity,
-            price: totalPayment,
-            status: status,
-            selectedAddress: selectedAddress,
-            paymentMethod: paymentMethod,
-          };
-
-          user.order.push(details);
-          console.log("user.details", user.order);
-          // entering the values inside the report collection
-          const reportEntry = new reportCollection({
-            orderDetails: [details],
-          });
-          console.log("reportEntry", reportEntry);
-
-          // save the reports in the report collection
-          await reportEntry.save();
         } else {
           res.status(400).json({ message: "Out of stock", type: "danger" });
           return;
@@ -377,10 +349,55 @@ exports.getWalletPayment = async (req, res) => {
         );
       }
 
+      // Apply the coupon discount to the total payment
+      if (unUsedCoupons && unUsedCoupons.length > 0) {
+        for (const unusedCoupon of unUsedCoupons) {
+          const couponCode = unusedCoupon.coupons;
+          console.log("Coupon Code:", couponCode);
+
+          const coupon = await couponCollection.findOne({ code: couponCode });
+          console.log("Coupon:", coupon);
+          if (coupon) {
+            const discount = coupon.discount;
+            // Calculate the discount on the total payment
+            totalPayment = (totalPayment * discount) / 100;
+
+            // Mark the coupon as used in the user collection
+            Coupon.push({ coupon: couponCode });
+            usedCoupons.push({ coupon: couponCode });
+            unUsedCoupons.pop();
+          }
+        }
+      }
+
       // Deduct the total payment from the user's wallet
       if (totalPayment > 0) {
         user.wallet -= totalPayment;
       }
+
+      // Add the cart and product details to the user's order
+      const details = {
+        cart: cart.map((cartItem) => cartItem._id),
+        products: cart.map((cartItem) => cartItem.product),
+        quantity: cart.map((cartItem) => cartItem.quantity),
+        price: totalPayment, // Use the discounted total payment
+        status: status,
+        selectedAddress: selectedAddress,
+        paymentMethod: paymentMethod,
+        usedCoupons: usedCoupons,
+      };
+
+      user.order.push(details);
+      console.log("user.details", user.order);
+
+      // entering the values inside the report collection
+      const reportEntry = new reportCollection({
+        orderDetails: [details],
+      });
+      console.log("reportEntry", reportEntry);
+
+      // save the reports in the report collection
+      await reportEntry.save();
 
       // Save the updated user document with the order details and used coupons
       await user.save();
@@ -594,13 +611,21 @@ exports.getOrderInvoice = async (req, res) => {
       doc.text(`Address: ${specificOrder.selectedAddress || ""}`);
       doc.moveDown(0.3);
       doc.text(`Payment Method: ${specificOrder.paymentMethod || ""}`);
-      doc.moveDown(2);
+
+      // Display Used Coupons
+      doc.moveDown(0.3);
+      doc.text(`Used Coupons:`);
+      specificOrder.usedCoupons.forEach((coupon) => {
+        doc.text(`${coupon.coupon || "No coupons used"}`);
+      });
+
+      doc.moveDown(0.05);
 
       doc.fontSize(10).text("Product Details", { align: "center" });
       const headerY = 270; // Adjust this value based on your layout
       doc.font("Helvetica-Bold");
       doc.text("Name", 100, headerY, { width: 150, lineGap: 5 });
-      doc.text("Detail", 250, headerY, { width: 150, lineGap: 5 });
+
       doc.text("Quantity", 400, headerY, { width: 50, lineGap: 5 });
       doc.text("Price", 500, headerY, { width: 50, lineGap: 5 });
       doc.font("Helvetica");
@@ -609,17 +634,14 @@ exports.getOrderInvoice = async (req, res) => {
       const contentStartY = headerY + 20; // Adjust this value based on your layout
       let currentY = contentStartY;
 
-      specificOrder.products.forEach((product) => {
+      specificOrder.products.forEach((product, index) => {
         doc.text(product.name || "", 100, currentY, { width: 150, lineGap: 5 });
-        doc.text(product.description || "", 250, currentY, {
-          width: 150,
-          lineGap: 5,
-        });
-        doc.text(specificOrder.quantity || "", 400, currentY, {
+
+        doc.text(specificOrder.quantity[index] || "", 400, currentY, {
           width: 50,
           lineGap: 5,
         });
-        doc.text(specificOrder.price || "", 500, currentY, {
+        doc.text(product.price || "", 500, currentY, {
           width: 50,
           lineGap: 5,
         });
@@ -628,11 +650,14 @@ exports.getOrderInvoice = async (req, res) => {
         const lineHeight = Math.max(
           doc.heightOfString(product.name || "", { width: 150 }),
           doc.heightOfString(product.description || "", { width: 150 }),
-          doc.heightOfString(specificOrder.quantity || "", { width: 50 }),
-          doc.heightOfString(specificOrder.price || "", { width: 50 })
+          doc.heightOfString(specificOrder.quantity[index] || "", {
+            width: 50,
+          }),
+          doc.heightOfString(product.price || "", { width: 50 })
         );
         currentY += lineHeight + 10; // Adjust this value based on your layout
       });
+      doc.text(`Total Price: ${specificOrder.price || ""}`);
 
       // Set the y-coordinate for the "Thank you" section
       const separation = 50; // Adjust this value based on your layout

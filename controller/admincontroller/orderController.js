@@ -9,7 +9,9 @@ const cartCollection = require("../../models/cart/cartDetail");
 exports.getOrderPage = async (req, res) => {
   const admin = req.session.admin;
   const page = parseInt(req.query.page) || 1;
-  const limit = 25;
+  const ITEMS_PER_PAGE = 5;
+  const limit = ITEMS_PER_PAGE;
+
   if (admin) {
     try {
       const id = req.params.id;
@@ -50,10 +52,15 @@ exports.getOrderPage = async (req, res) => {
           console.log("allorderdetails", allOrderDetails);
           console.log("orders", orders);
 
+          const totalCount = orders.length;
+          const totalPages = Math.ceil(totalCount / limit);
+
           res.render("admin/orderManagement", {
             user,
             orders: ordersForPage,
             orderDetails: allOrderDetails,
+            totalPages,
+            currentPage: page,
           });
         } else {
           console.log("No orders found for the user");

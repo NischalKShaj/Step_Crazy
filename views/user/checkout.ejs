@@ -230,29 +230,27 @@
                   </div>
                   <% let isWalletDisabled = false; %>
                   <% cartItem.forEach((item) => { %>
-                  <div class="checkout_order_total">
-                    <ul>
+                    <div class="checkout_order_total">
                       <ul>
                         <% if (user.wallet <= item.quantity * item.product.price) { %>
                           <p style="color: red;">Insufficient balance in the wallet</p>
                           <% isWalletDisabled = true; %>
                         <% } %>
                         <li>Subtotal <span>&#x20B9;<i id="grandtotal"><%= item.product.price * item.quantity %></i></span></li>
-                        <% }) %>
-                        <div id="clear"></div>
-                        <section id="discountSection" hidden>
-                          <li><span id="discountPercent"></span></li>
-                          <li><span id="amountAfterDiscount"></span></li>
-                          <button class="btn btn-primary" type="button" id="clear-coupon" style="display: none;">Clear</button>              
-
-                        </section>
-                        <section hidden id="coupenid"></section>
-                        <i id="clear"></i>
-                        
                       </ul>
+                    </div>
+                  <% }) %>
+                  <div id="clear"></div>
+                  <section id="discountSection" hidden>
+                    <ul>
+                      <li><span id="discountPercent"></span></li>
+                      <li><span id="amountAfterDiscount"></span></li>
+                      <button class="btn btn-primary" type="button" id="clear-coupon" style="display: none;">Clear</button>
                     </ul>
-                    
-                  </div>
+                  </section>
+                  <section hidden id="couponid"></section>
+                  <i id="clear"></i>
+                  
                   <div class="checkout_order_widget">
                     <div class="form-check">
                       <form id="coupon-form">

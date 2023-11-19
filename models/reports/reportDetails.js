@@ -55,6 +55,13 @@ const stepCrazy = new mongoose.Schema({
         enum: ["cod", "onlinepayment", "wallet"],
         required: true,
       },
+      usedCoupons: [
+        {
+          coupon: {
+            type: String,
+          },
+        },
+      ],
       date: {
         type: Date,
         required: true,

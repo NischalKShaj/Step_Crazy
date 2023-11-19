@@ -35,8 +35,8 @@ const stepCrazy = new mongoose.Schema({
   otp: {
     type: Number,
   },
-  cartQuantity:{
-    type:Number,
+  cartQuantity: {
+    type: Number,
     default: 0,
   },
   address: [
@@ -113,6 +113,13 @@ const stepCrazy = new mongoose.Schema({
         enum: ["cod", "onlinepayment", "wallet"],
         required: true,
       },
+      usedCoupons: [
+        {
+          coupon: {
+            type: String,
+          },
+        },
+      ],
       date: {
         type: Date,
         required: true,
