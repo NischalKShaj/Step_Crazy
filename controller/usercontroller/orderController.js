@@ -127,9 +127,13 @@ exports.postOrderPage = async (req, res) => {
       // Save the updated user document with the order details
       await user.save();
 
+      await userCollection.updateOne(
+        { email: user.email },
+        { $inc: { cartQuantity: -user.cartQuantity } }
+      );
+
       // Remove the cart items
       await cartCollection.deleteMany({ user: user._id });
-
       // Render the thank-you page with order details
       res.render("user/thank-you", {
         orderDetail: user.order,
@@ -245,6 +249,11 @@ exports.postOnlineConfirm = async (req, res) => {
 
       // Save the updated user document with the order details
       await user.save();
+
+      await userCollection.updateOne(
+        { email: user.email },
+        { $inc: { cartQuantity: -user.cartQuantity } }
+      );
 
       // Remove the cart items
       await cartCollection.deleteMany({ user: user._id });
@@ -376,6 +385,10 @@ exports.getWalletPayment = async (req, res) => {
       // Save the updated user document with the order details and used coupons
       await user.save();
 
+      await userCollection.updateOne(
+        { email: user.email },
+        { $inc: { cartQuantity: -user.cartQuantity } }
+      );
       // Remove the cart items
       await cartCollection.deleteMany({ user: user._id });
 

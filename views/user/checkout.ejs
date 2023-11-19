@@ -233,8 +233,12 @@
                   <div class="checkout_order_total">
                     <ul>
                       <ul>
+                        <% if (user.wallet <= item.quantity * item.product.price) { %>
+                          <p style="color: red;">Insufficient balance in the wallet</p>
+                          <% isWalletDisabled = true; %>
+                        <% } %>
                         <li>Subtotal <span>&#x20B9;<i id="grandtotal"><%= item.product.price * item.quantity %></i></span></li>
-                        
+                        <% }) %>
                         <div id="clear"></div>
                         <section id="discountSection" hidden>
                           <li><span id="discountPercent"></span></li>
@@ -254,7 +258,7 @@
                       <form id="coupon-form">
                         <div class="input-group">
                           <input id="coupon" type="text" placeholder="Enter your coupon code" class="form-control" name="code">
-                          <button class="btn btn-primary" type="button" id="check-coupon">Check</button> <!-- Change type to "button" -->
+                          <button class="btn btn-primary" type="button" id="check-coupon">Check</button>
                         </div>
                       </form>
                        
@@ -289,11 +293,8 @@
                     
                     
                     
-                      <% if (user.wallet <= item.quantity * item.product.price) { %>
-                        <p style="color: red;">Insufficient balance in the wallet</p>
-                        <% isWalletDisabled = true; %>
-                      <% } %>
-                    <% }) %>
+                     
+                   
                     
                     <div class="form-check">
                       <input

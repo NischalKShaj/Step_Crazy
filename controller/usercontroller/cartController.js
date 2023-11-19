@@ -78,14 +78,13 @@ exports.addProducts = async (req, res) => {
           product: productId,
           quantity: req.body.quantity,
         });
-        await userCollection.updateOne(
-          { email: userEmail },
+        await userCollection.findOneAndUpdate(
+          { email: user.email },
           { $inc: { cartQuantity: 1 } }
         );
         console.log("cartItem ", cartItem);
         await cartItem.save();
         console.log("Product added to the cart successfully");
-        
       }
 
       const cartItems = await cartCollection
@@ -197,6 +196,7 @@ exports.getCheckout = async (req, res) => {
       throw new Error("User not found");
     } else if (user && user.blocked === false) {
       const userId = user._id;
+      const userEmail = user.email;
       console.log("userId", userId);
 
       let cartItem = await cartCollection
@@ -208,11 +208,6 @@ exports.getCheckout = async (req, res) => {
       console.log(useAdd);
 
       res.render("user/checkout", { address, useAdd, cartItem, user, coupon });
-      await userCollection.updateOne(
-        { email: userEmail },
-        { $inc: { cartQuantity: -1 } }
-      );
-
       // Clear cartItem after rendering the page
       cartItem = [];
     } else {
@@ -227,7 +222,7 @@ exports.getCheckout = async (req, res) => {
 // controller for removing the content from the cart
 exports.deleteProduct = async (req, res) => {
   const userEmail = req.session.user;
-  const user = await userCollection.findOne({email:userEmail})
+  const user = await userCollection.findOne({ email: userEmail });
   try {
     const cartId = req.params.id;
 
