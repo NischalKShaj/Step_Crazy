@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Step-Crazy/coupons</title>
+    <title>Step-Crazy/offers</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -35,7 +35,7 @@
         display: none;
         z-index: 999;
       }
-    
+
       .loader {
         border: 8px solid #f3f3f3; /* Light gray */
         border-top: 8px solid #3498db; /* Blue */
@@ -50,10 +50,14 @@
         display: none;
         animation: spin 2s linear infinite;
       }
-    
+
       @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
     </style>
   </head>
@@ -86,41 +90,41 @@
               class="nav-link active"
               aria-current="page"
               href="/admin/dashboard"
-            >Dashboard</a
+              >Dashboard</a
             >
             <a
               class="nav-link active"
               aria-current="page"
               href="/admin/dashboard/admins"
-            >Admins</a
+              >Admins</a
             >
             <a
               class="nav-link active"
               aria-current="page"
               href="/admin/dashboard/user"
-            >Users</a
+              >Users</a
             >
             <a
               class="nav-link active"
               aria-current="page"
               href="/admin/dashboard/product"
-            >Product</a
+              >Product</a
             >
             <a
               class="nav-link active"
               aria-current="page"
               href="/admin/dashboard/category"
-            >Category</a
+              >Category</a
             >
             <a
               class="nav-link active"
               aria-current="page"
               href="/admin/dashboard/coupon"
-            >Coupons</a
+              >Coupons</a
             >
-            <a href="/admin/dashboard/coupon/add">
+            <a href="/admin/dashboard/offer/add">
               <button type="submit" class="btn btn-primary">
-                Add Coupons
+                Add Offers
               </button></a
             >
           </div>
@@ -136,36 +140,31 @@
               <thead>
                 <tr class="table-dark">
                   <th>No.</th>
-                  <th>Code</th>
+                  <th>Category</th>
                   <th>Discount</th>
-                  <th>Description</th>
-                  <th>Min Amount</th>
                   <th>Expiry Date</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                <% coupons.forEach((row, index) => { %>
-                 
-                
+                <% offer.forEach((row, index) => { %>
+
                 <tr>
                   <td><%= index+1 %></td>
-                  <td><%= row.code %></td>
-                  <td><%= row.discount %>%</td>
-                  <td><%= row.description %></td>
-                  <td><%= row.minAmount %></td>
+                  <td><%= row.category %></td>
+                  <td>&#8377 <%= row.discount %></td>
                   <td><%= row.expiryDate %></td>
                   <td>
                     <a
-                      href="/admin/dashboard/coupon/edit/<%= row.id %>"
+                      href="/admin/dashboard/offer/edit/<%= row.id %>"
                       class="text-success"
                       ><i class="fas fa-edit fa-lg"></i>
                     </a>
 
                     <a
-                      href="/admin/dashboard/coupon/delete/<%= row._id %>"
-                      class="text-danger delete-Coupon"
-                      id="deleteCoupon_<%= row._id %>"
+                      href="/admin/dashboard/offer/delete/<%= row._id %>"
+                      class="text-danger delete-offer"
+                      id="deleteOffer_<%= row._id %>"
                       ><i class="fas fa-trash fa-lg mx-1"></i>
                     </a>
                   </td>
@@ -173,97 +172,75 @@
                 <% }) %>
               </tbody>
             </table>
-
-            
           </div>
         </div>
       </div>
-      <div class="row">
-        <ul class="pagination pagination-lg justify-content-end" id="pagination">
-          <% if (currentPage > 1) { %>
-            <li class="page-item">
-              <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="/admin/dashboard/coupon?page=<%= currentPage - 1 %>">Previous</a>
-            </li>
-          <% } %>
       
-          <% for (let i = 1; i <= totalPages; i++) { %>
-            <li class="page-item">
-              <a class="page-link<%= i === currentPage ? ' active' : '' %> rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="/admin/dashboard/coupon?page=<%= i %>"><%= i %></a>
-            </li>
-          <% } %>
-      
-          <% if (currentPage < totalPages) { %>
-            <li class="page-item">
-              <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="/admin/dashboard/coupon?page=<%= currentPage + 1 %>">Next</a>
-            </li>
-          <% } %>
-        </ul>
-      </div>      
     </div>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha512-X/YkDZyjTf4wyc2Vy16YGCPHwAY8rZJY+POgokZjQB2mhIRFJCckEGc6YyX9eNsPfn0PzThEuNs+uaomE5CO6A=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha512-X/YkDZyjTf4wyc2Vy16YGCPHwAY8rZJY+POgokZjQB2mhIRFJCckEGc6YyX9eNsPfn0PzThEuNs+uaomE5CO6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+      const deleteOffer = document.querySelectorAll(".delete-offer");
 
-      const deleteCoupon = document.querySelectorAll(".delete-Coupon");
-      
+      deleteOffer.forEach((deleteOff) => {
+        deleteOff.addEventListener("click", function (e) {
+          e.preventDefault();
 
-      deleteCoupon.forEach((deleteCoup) => {
-  deleteCoup.addEventListener("click", function (e) {
-    e.preventDefault();
+          const offerId = this.id.split("_")[1];
 
-    const couponId = this.id.split("_")[1];
-
-    // Use SweetAlert for confirmation
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Are you sure you want to delete this coupon?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Fetch method for deleting the coupon
-        fetch(`/admin/dashboard/coupon/delete/${couponId}`, {
-          method: "delete",
-        })
-          .then((response) => {
-            if (response.ok) {
-              console.log("The coupon is deleted successfully");
-              this.parentNode.parentNode.remove();
-            } else {
-              console.log(
-                "Error deleting the coupon",
-                response.status,
-                response.statusText
-              );
+          // Use SweetAlert for confirmation
+          Swal.fire({
+            title: "Are you sure?",
+            text: "Are you sure you want to delete this coupon?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Fetch method for deleting the coupon
+              fetch(`/admin/dashboard/offer/delete/${offerId}`, {
+                method: "delete",
+              })
+                .then((response) => {
+                  if (response.ok) {
+                    console.log("The coupon is deleted successfully");
+                    this.parentNode.parentNode.remove();
+                  } else {
+                    console.log(
+                      "Error deleting the coupon",
+                      response.status,
+                      response.statusText
+                    );
+                  }
+                })
+                .catch((error) => {
+                  console.error("Network error");
+                });
             }
-          })
-          .catch((error) => {
-            console.error("Network error");
           });
-      }
-    });
-  });
-});
-
+        });
+      });
     </script>
     <script>
-      $(document).ready(function() {
-        const loader = $('#loader');
-        const dimmedBackground = $('#dimmedBackground');
-    
+      $(document).ready(function () {
+        const loader = $("#loader");
+        const dimmedBackground = $("#dimmedBackground");
+
         // Show the loader and dimmed background
         loader.show();
         dimmedBackground.show();
-    
+
         // After 2 seconds (adjust this delay as needed), hide the loader and dimmed background
-        setTimeout(function() {
+        setTimeout(function () {
           loader.hide();
           dimmedBackground.hide();
         }, 1000); // 2 seconds

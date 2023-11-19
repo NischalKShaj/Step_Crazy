@@ -6,6 +6,7 @@ const userCollection = require("../../models/user/userDatabase");
 const productCollection = require("../../models/product/productDetails");
 const couponCollection = require("../../models/coupons/couponCollection");
 const reportCollection = require("../../models/reports/reportDetails");
+const offerCollection = require("../../models/offer/offerDetails");
 const Razorpay = require("razorpay");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -66,6 +67,7 @@ exports.postOrderPage = async (req, res) => {
           continue;
         }
 
+        
         // Calculate the product price
         let productPrice = existingProduct.price * quantity;
 
@@ -109,6 +111,26 @@ exports.postOrderPage = async (req, res) => {
             Coupon.push({ coupon: couponCode });
             // Mark the coupon as used in the user collection
             unUsedCoupons.pop();
+          }
+        }
+      } else {
+        // If no coupon is applied, apply the offer based on the product category
+        const cartProducts = await cartCollection
+          .find({ user: user._id })
+          .populate({ path: "product", model: "product" });
+
+        for (const cartProduct of cartProducts) {
+          const productCategory = cartProduct.product.category;
+
+          // Modify the condition based on your criteria to select the offer
+          const offer = await offerCollection.findOne({
+            category: productCategory,
+          });
+
+          if (offer) {
+            const discount = offer.discount;
+            cartTotalPrice = cartTotalPrice - discount;
+            break; // Break the loop after applying the first offer
           }
         }
       }
@@ -236,6 +258,25 @@ exports.postOnlineConfirm = async (req, res) => {
             Coupon.push({ coupon: couponCode });
             usedCoupons.push({ coupon: couponCode });
             unUsedCoupons.pop();
+          }
+        }
+      } else {
+        const cartProducts = await cartCollection
+          .find({ user: user._id })
+          .populate({ path: "product", model: "product" });
+
+        for (const cartProduct of cartProducts) {
+          const productCategory = cartProduct.product.category;
+
+          // Modify the condition based on your criteria to select the offer
+          const offer = await offerCollection.findOne({
+            category: productCategory,
+          });
+
+          if (offer) {
+            const discount = offer.discount;
+            totalOrderPrice = totalOrderPrice - discount;
+            break; // Break the loop after applying the first offer
           }
         }
       }
@@ -366,6 +407,25 @@ exports.getWalletPayment = async (req, res) => {
             Coupon.push({ coupon: couponCode });
             usedCoupons.push({ coupon: couponCode });
             unUsedCoupons.pop();
+          }
+        }
+      } else {
+        const cartProducts = await cartCollection
+          .find({ user: user._id })
+          .populate({ path: "product", model: "product" });
+
+        for (const cartProduct of cartProducts) {
+          const productCategory = cartProduct.product.category;
+
+          // Modify the condition based on your criteria to select the offer
+          const offer = await offerCollection.findOne({
+            category: productCategory,
+          });
+
+          if (offer) {
+            const discount = offer.discount;
+            totalPayment = totalPayment - discount;
+            break; // Break the loop after applying the first offer
           }
         }
       }
@@ -816,6 +876,16 @@ exports.checkCoupons = async (req, res) => {
             let amount = 0;
             for (const item of cartItem) {
               amount += item.quantity * item.product.price;
+            }
+
+            // Check if the cart amount is greater than or equal to the minimum amount specified in the coupon
+            if (amount < coupon.minAmount) {
+              res.json({
+                success: false,
+                message:
+                  "Cart amount does not meet the minimum requirement for this coupon",
+              });
+              return; // Exit the function early
             }
 
             const discount = coupon.discount;

@@ -13,6 +13,7 @@ const couponController = require("../../controller/admincontroller/couponControl
 const reportController = require("../../controller/admincontroller/reportController");
 const adminAuth = require("../../middleware/authentication/adminAuth");
 const bannerController = require("../../controller/admincontroller/bannerController");
+const offerController = require("../../controller/admincontroller/offerController");
 
 // router for getting the admin login page
 router.get("/", homecontroller.getAdminPage);
@@ -382,6 +383,48 @@ router.get(
   "/dashboard/banner/delete/:image/:bannerId",
   adminAuth.adminAuth,
   bannerController.deleteImage
+);
+
+// router for getting the offer page
+router.get(
+  "/dashboard/offer",
+  adminAuth.adminAuth,
+  offerController.getOfferPage
+);
+
+// router for getting the page for showing the offer adding page
+router.get(
+  "/dashboard/offer/add",
+  adminAuth.adminAuth,
+  offerController.getOfferAddPage
+);
+
+// router for posting the offer page after insertion of the values
+router.post(
+  "/dashboard/offer",
+  adminAuth.adminAuth,
+  offerController.postOfferPage
+);
+
+// router for getting the offer edit page
+router.get(
+  "/dashboard/offer/edit/:id",
+  adminAuth.adminAuth,
+  offerController.getEditPage
+);
+
+// router for inserting the updated values
+router.post(
+  "/dashboard/offer/update/:id",
+  adminAuth.adminAuth,
+  offerController.updateOffer
+);
+
+// router for deleting the offer
+router.delete(
+  "/dashboard/offer/delete/:offerId",
+  adminAuth.adminAuth,
+  offerController.deleteOffer
 );
 
 module.exports = router;

@@ -121,6 +121,8 @@ exports.postCouponUpdate = async (req, res) => {
         minAmount: req.body.minAmount,
       });
 
+      await updateCoupon.save();
+
       res.redirect("/admin/dashboard/coupon");
     } catch (error) {
       res.redirect("/admin/dashboard/coupon/edit/:id");
