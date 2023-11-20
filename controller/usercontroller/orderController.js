@@ -673,7 +673,7 @@ exports.getOrderInvoice = async (req, res) => {
 
       // Display Used Coupons
       doc.moveDown(0.3);
-      doc.text(`Used Coupons:`);
+      doc.text(`Coupons used (if any):`);
       specificOrder.usedCoupons.forEach((coupon) => {
         doc.text(`${coupon.coupon || "No coupons used"}`);
       });

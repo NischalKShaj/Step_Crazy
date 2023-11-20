@@ -199,9 +199,28 @@ exports.getCheckout = async (req, res) => {
       const userEmail = user.email;
       console.log("userId", userId);
 
-      let cartItem = await cartCollection
-        .find({ user: userId })
-        .populate({ path: "product", model: "product" });
+      // Validate stock before fetching cart items
+      const cartItems = await cartCollection.find({ user: userId }).populate({ path: "product", model: "product" });
+
+      for (const cartItem of cartItems) {
+        const { quantity, product } = cartItem;
+
+        // Retrieve the current stock for the product
+        const existingProduct = await productCollection.findOne({ _id: product });
+
+        if (!existingProduct) {
+          console.log(`Product with ID ${product} not found.`);
+          throw new Error(`Product with ID ${product} not found.`);
+        }
+
+        // Validate if the product is still in stock
+        if (quantity > existingProduct.stock) {
+          console.log(`Product with ID ${product} is out of stock.`);
+          throw new Error(`Product with ID ${product} is out of stock.`);
+        }
+      }
+
+      let cartItem = await cartCollection.find({ user: userId }).populate({ path: "product", model: "product" });
       const useAdd = await userCollection.find({ email: address });
 
       console.log("cartItems", cartItem);
@@ -218,6 +237,7 @@ exports.getCheckout = async (req, res) => {
     res.redirect("/product");
   }
 };
+
 
 // controller for removing the content from the cart
 exports.deleteProduct = async (req, res) => {
