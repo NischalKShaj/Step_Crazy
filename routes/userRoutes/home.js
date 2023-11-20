@@ -241,5 +241,12 @@ router.post(
 // router for deleting the coupon
 router.post("/clear-coupon", usersAuth.userAuth, orderController.clearCoupon);
 
+// router for showing the available offers
+router.get(
+  "/offers",
+  usersAuth.userAuth,
+  orderController.showOffers
+);
+
 // exporting the module to app.js
 module.exports = router;

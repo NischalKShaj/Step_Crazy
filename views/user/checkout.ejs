@@ -261,8 +261,10 @@
                       </form>
                        
                       <p id="errorMessage" style="color: red;"></p>
-            
-                     
+
+                      <button class="btn btn-primary" type="button" id="check-offers">Check Offers</button>
+                      <div id="offers-container" style="display: none;"></div>
+                      
                     </div>
                     <div class="form-check">
                       <input
@@ -660,6 +662,41 @@
             console.error('Error while clearing the coupon:', error);
         }
     });
+
+    // script for showing the available offers 
+
+    $(document).ready(function() {
+      $("#check-offers").on("click", function() {
+        $.ajax({
+          url: "/offers", // Update this with the correct endpoint
+          type: "GET",
+          dataType: "json",
+          success: function(response) {
+            if (response.success) {
+              // Assuming the 'offers' property is an array of offer objects
+              const offers = response.offers;
+
+              // Build HTML to display offers
+              let offersHTML = "<ul>";
+              offers.forEach(offer => {
+                offersHTML += `<li>${offer.category}: &#8377 ${offer.discount} off</li>`;
+                // Adjust this based on your offer object structure
+              });
+              offersHTML += "</ul>";
+
+              // Display the offers in the offers-container div
+              $("#offers-container").html(offersHTML).show();
+            } else {
+              console.error("Failed to retrieve offers:", response.message);
+            }
+          },
+          error: function(error) {
+            console.error("Error while fetching offers:", error);
+          }
+        });
+      });
+    });
+
 
     </script>
     <script

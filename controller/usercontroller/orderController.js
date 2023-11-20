@@ -67,7 +67,6 @@ exports.postOrderPage = async (req, res) => {
           continue;
         }
 
-        
         // Calculate the product price
         let productPrice = existingProduct.price * quantity;
 
@@ -944,6 +943,34 @@ exports.clearCoupon = async (req, res) => {
   } catch (error) {
     console.error(
       "There was an unexpected error while deleting the coupon",
+      error
+    );
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+// controller for checking the available offers
+exports.showOffers = async (req, res) => {
+  try {
+    const offers = await offerCollection.find();
+    const currentDate = new Date();
+    console.log("offer", offers);
+    // Assuming each offer has an 'expiryDate' property
+    const validOffers = offers.filter((offer) => {
+      const expiryDateParts = offer.expiryDate.split("/");
+      const expiryDate = new Date(
+        `${expiryDateParts[1]}/${expiryDateParts[0]}/${expiryDateParts[2]}`
+      );
+      return currentDate < expiryDate; // Include only offers that haven't expired
+    });
+
+    console.log("Offers:", validOffers);
+
+    // Send the valid offers to the client
+    res.json({ success: true, offers: validOffers });
+  } catch (error) {
+    console.error(
+      "There was an error while showing the available offers",
       error
     );
     res.status(500).json({ success: false, message: "Internal server error" });
