@@ -53,23 +53,16 @@ exports.getProductPage = async (req, res) => {
     await productsCursor.forEach((product) => {
       products.push(product);
     });
-
-    console.log("products", products);
     res.render("user/product", { products, totalPages, currentPage: page });
   } catch (error) {
-    console.error("There is an error while loading the page", error);
     res.render("error/500");
   }
 };
 
 // rendering the product details page
 exports.getProductDetail = async (req, res) => {
-  console.log("run.");
   const id = req.params.id;
-  console.log(id);
   const productDetail = await collection.findById(id);
   const cartDetail = await cartCollection.findOne({ product: id });
-  console.log(cartDetail);
-  console.log("product", productDetail);
   res.render("user/single_product", { productDetail, cartDetail });
 };

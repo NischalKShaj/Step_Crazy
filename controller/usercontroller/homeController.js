@@ -17,7 +17,6 @@ exports.getHomePage = async (req, res) => {
     { image: "../../Img/home/banner3.png", alt: "image3" },
   ];
   const cart = await cartCollection.find({}, { quantity: 1, _id: 0 });
-  console.log(data, user, cart);
   res.render("home/home", { data, user, cart, bannerData });
 };
 
@@ -42,5 +41,4 @@ exports.postLoginPage = (req, res) => {
 exports.Logout = (req, res) => {
   req.session.user = null;
   res.redirect("/");
-  console.log("Logout successful");
 };

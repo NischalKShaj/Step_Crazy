@@ -44,14 +44,8 @@ exports.getOrderPage = async (req, res) => {
               .find({ _id: { $in: productIds } })
 
               .exec();
-            console.log("orderdetails", orderDetails);
-
             allOrderDetails.push(orderDetails);
           }
-
-          console.log("allorderdetails", allOrderDetails);
-          console.log("orders", orders);
-
           const totalCount = orders.length;
           const totalPages = Math.ceil(totalCount / limit);
 
@@ -63,15 +57,12 @@ exports.getOrderPage = async (req, res) => {
             currentPage: page,
           });
         } else {
-          console.log("No orders found for the user");
           res.render("error/404");
         }
       } else {
-        console.log("User not found");
         res.render("error/404");
       }
     } catch (error) {
-      console.error("Error while fetching order details:", error);
       res.render("error/404");
     }
   } else {
@@ -92,10 +83,8 @@ exports.getUpdateStatus = async (req, res) => {
 
       const result = await userCollection.updateOne(filter, update);
 
-      console.log("Order status updated successfully");
       res.redirect("/admin/dashboard/user");
     } catch (error) {
-      console.error("An unexpected error occurred", error);
       res.render("error/404");
     }
   } else {

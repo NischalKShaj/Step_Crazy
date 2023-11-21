@@ -43,7 +43,6 @@ exports.getWishlist = async (req, res) => {
       res.redirect("/login");
     }
   } catch (error) {
-    console.error("There is an unexpected error while showing the wishlist");
     res.redirect("error/500");
   }
 };
@@ -86,7 +85,7 @@ exports.addToWishlist = async (req, res) => {
       res.redirect("/login");
     }
   } catch (error) {
-    res.render("error/404");
+    res.render("error/500");
   }
 };
 
@@ -102,12 +101,8 @@ exports.getRemoveProduct = async (req, res) => {
     const removeProduct = await wishlistCollection.findOneAndRemove({
       _id: wishlistId,
     });
-    if (removeProduct) {
-      console.log("Product removed succesefully", removeProduct);
-    }
     res.redirect("/wishlist");
   } catch (error) {
-    console.error("There is an error while removing the product from the cart");
-    res.render("error/404");
+    res.render("error/500");
   }
 };

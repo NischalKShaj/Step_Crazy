@@ -37,19 +37,16 @@ exports.postOrderPage = async (req, res) => {
     const Coupon = user.usedCoupons;
 
     if (!user) {
-      console.log("User not found");
       return res.render("error/404");
     } else if (user && user.blocked === false) {
       const cart = await cartCollection.find({ user: user._id });
 
       if (!cart || cart.length === 0) {
-        console.log("Cart is empty");
         return res.render("error/404");
       }
 
       const selectedAddress = req.query.addresses.split(",");
       const paymentMethod = req.query.paymentMethod;
-      console.log("paymentmethod", paymentMethod);
 
       // Calculate the total price of the cart
       let cartTotalPrice = 0;
@@ -63,7 +60,6 @@ exports.postOrderPage = async (req, res) => {
         });
 
         if (!existingProduct) {
-          console.log(`Product with ID ${product} not found.`);
           continue;
         }
 
@@ -85,21 +81,15 @@ exports.postOrderPage = async (req, res) => {
           res.status(400).json({ message: "Out of stock", type: "danger" });
           return;
         }
-
-        console.log(
-          `Stock for product with ID ${product} updated to ${newStock}.`
-        );
       }
 
       // Apply coupon to the entire cart
       if (unUsedCoupons && unUsedCoupons.length > 0) {
         for (const unusedCoupon of unUsedCoupons) {
           const couponCode = unusedCoupon.coupons;
-          console.log("Coupon Code:", couponCode);
 
           // Now you can use `couponCode` to look up the coupon in your collection
           const coupon = await couponCollection.findOne({ code: couponCode });
-          console.log("Coupon:", coupon);
 
           if (coupon) {
             const discount = coupon.discount;
@@ -160,7 +150,6 @@ exports.postOrderPage = async (req, res) => {
       const reportEntry = new reportCollection({
         orderDetails: [orderDetails],
       });
-      console.log("reportEntry", reportEntry);
 
       // save the reports in the report collection
       await reportEntry.save();
@@ -176,8 +165,7 @@ exports.postOrderPage = async (req, res) => {
       res.redirect("/login");
     }
   } catch (error) {
-    console.error("Error message", error);
-    res.render("error/404");
+    res.render("error/500");
   }
 };
 
@@ -193,19 +181,16 @@ exports.postOnlineConfirm = async (req, res) => {
     const Coupon = user.usedCoupons;
 
     if (!user) {
-      console.log("User not found");
-      return res.render("error/404");
+      return res.render("error/500");
     } else if (user && user.blocked === false) {
       const cart = await cartCollection.find({ user: user._id });
 
       if (!cart || cart.length === 0) {
-        console.log("Cart is empty");
-        return res.render("error/404");
+        return res.render("error/500");
       }
 
       const selectedAddress = req.query.addresses.split(",");
       const paymentMethod = req.query.paymentMethod;
-      console.log("payment method", paymentMethod);
 
       let totalOrderPrice = 0; // Track the total order price
 
@@ -217,7 +202,6 @@ exports.postOnlineConfirm = async (req, res) => {
         });
 
         if (!existingProduct) {
-          console.log(`Product with ID ${product} not found.`);
           continue;
         }
 
@@ -236,20 +220,14 @@ exports.postOnlineConfirm = async (req, res) => {
           res.status(400).json({ message: "Out of stock", type: "danger" });
           return;
         }
-
-        console.log(
-          `Stock for product with ID ${product} updated to ${newStock}.`
-        );
       }
 
       // Apply the coupon to the total order price
       if (unUsedCoupons && unUsedCoupons.length > 0) {
         for (const unusedCoupon of unUsedCoupons) {
           const couponCode = unusedCoupon.coupons;
-          console.log("Coupon Code:", couponCode);
 
           const coupon = await couponCollection.findOne({ code: couponCode });
-          console.log("Coupon:", coupon);
           if (coupon) {
             const discount = coupon.discount;
             totalOrderPrice = (totalOrderPrice * discount) / 100;
@@ -279,9 +257,6 @@ exports.postOnlineConfirm = async (req, res) => {
           }
         }
       }
-
-      // Now, 'totalOrderPrice' contains the discounted total order price
-
       // Add the order details to the user's order
       const orderDetails = {
         cart: cart.map((cartItem) => cartItem._id),
@@ -321,7 +296,7 @@ exports.postOnlineConfirm = async (req, res) => {
     }
   } catch (error) {
     console.error("Error message", error);
-    res.render("error/404");
+    res.render("error/500");
   }
 };
 
@@ -338,19 +313,16 @@ exports.getWalletPayment = async (req, res) => {
     const Coupon = user.usedCoupons;
 
     if (!user) {
-      console.log("User not found");
-      return res.render("error/404");
+      return res.render("error/500");
     } else if (user && user.blocked === false) {
       const cart = await cartCollection.find({ user: user._id });
 
       if (!cart || cart.length === 0) {
-        console.log("Cart is empty");
-        return res.render("error/404");
+        return res.render("error/500");
       }
 
       const selectedAddress = req.query.addresses.split(",");
       const paymentMethod = req.query.paymentMethod;
-      console.log("payment method", paymentMethod);
 
       // Calculate the total product price for all products in the cart
       for (const cartItem of cart) {
@@ -361,7 +333,6 @@ exports.getWalletPayment = async (req, res) => {
         });
 
         if (!existingProduct) {
-          console.log(`Product with ID ${product} not found.`);
           continue;
         }
 
@@ -383,20 +354,14 @@ exports.getWalletPayment = async (req, res) => {
           res.status(400).json({ message: "Out of stock", type: "danger" });
           return;
         }
-
-        console.log(
-          `Stock for product with ID ${product} updated to ${newStock}.`
-        );
       }
 
       // Apply the coupon discount to the total payment
       if (unUsedCoupons && unUsedCoupons.length > 0) {
         for (const unusedCoupon of unUsedCoupons) {
           const couponCode = unusedCoupon.coupons;
-          console.log("Coupon Code:", couponCode);
 
           const coupon = await couponCollection.findOne({ code: couponCode });
-          console.log("Coupon:", coupon);
           if (coupon) {
             const discount = coupon.discount;
             // Calculate the discount on the total payment
@@ -447,14 +412,11 @@ exports.getWalletPayment = async (req, res) => {
       };
 
       user.order.push(details);
-      console.log("user.details", user.order);
 
       // entering the values inside the report collection
       const reportEntry = new reportCollection({
         orderDetails: [details],
       });
-      console.log("reportEntry", reportEntry);
-
       // save the reports in the report collection
       await reportEntry.save();
 
@@ -477,7 +439,7 @@ exports.getWalletPayment = async (req, res) => {
     }
   } catch (error) {
     console.error("Error message", error);
-    res.render("error/404");
+    res.render("error/500");
   }
 };
 
@@ -506,9 +468,6 @@ exports.getOrderDetails = async (req, res) => {
 
     if (user && user.blocked === false) {
       const orders = user.order;
-
-      console.log("user.order", user.order);
-
       if (orders && orders.length > 0) {
         const totalCount = orders.length;
         const totalPages = Math.ceil(totalCount / limit);
@@ -525,18 +484,13 @@ exports.getOrderDetails = async (req, res) => {
           // Assuming each order has an array of product IDs in the "products" field
           const productIds = order.products;
 
-          console.log("productId", productIds);
-
           // Use populate to retrieve product details for each product ID
           const orderDetails = await productCollection
             .find({ _id: { $in: productIds } })
             .exec();
-          console.log("orderdetails", orderDetails);
 
           allOrderDetails.push(orderDetails);
         }
-
-        console.log("allorderdetails", allOrderDetails);
 
         res.render("user/orderHistory", {
           orders: ordersForPage,
@@ -545,16 +499,13 @@ exports.getOrderDetails = async (req, res) => {
           currentPage: page,
         });
       } else {
-        console.log("No orders found for the user");
         res.redirect("/");
       }
     } else {
-      console.log("User not found");
       res.redirect("/");
     }
   } catch (error) {
-    console.error("Error while fetching order details:", error);
-    res.render("error/404");
+    res.render("error/500");
   }
 };
 
@@ -579,29 +530,21 @@ exports.postCancelOrder = async (req, res) => {
       const specificOrder = order.order.find((order) =>
         order._id.equals(orderId)
       );
-      console.log("specificOrder", specificOrder);
-      console.log("order", order);
 
       const payment = specificOrder.paymentMethod;
       const product = specificOrder.products[0];
       const priceArray = specificOrder.price;
       const price = priceArray.reduce((total, amount) => total + amount, 0);
       console.log("price", price);
-
-      console.log("payment", payment);
       if (payment == "onlinepayment" || payment == "wallet") {
-        console.log("hello");
         user = await userCollection.updateOne(
           { email: userId },
           { $inc: { wallet: price } }
         );
       }
-
-      console.log("Order status updated to Cancel successfully");
       res.redirect("/order");
     } catch (error) {
-      console.error("An unexpected error occurred", error);
-      res.render("error/404");
+      res.render("error/500");
     }
   } else {
     res.redirect("/login");
@@ -675,7 +618,7 @@ exports.getOrderInvoice = async (req, res) => {
       doc.moveDown(0.3);
       doc.text(`Coupons used (if any):`);
       specificOrder.usedCoupons.forEach((coupon) => {
-        doc.text(`${coupon.coupon || "No coupons used"}`);
+        doc.text(`${coupon.coupon || " "}`);
       });
 
       doc.moveDown(0.05);
@@ -739,11 +682,7 @@ exports.getOrderInvoice = async (req, res) => {
 
       doc.end();
     } catch (error) {
-      console.error(
-        "An unexpected error occurred while generating the invoice",
-        error
-      );
-      res.render("error/404");
+      res.render("error/500");
     }
   } else {
     res.redirect("/login");
@@ -776,8 +715,6 @@ exports.getReturnOrder = async (req, res) => {
       const product = specificOrder.products[0];
       const priceArray = specificOrder.price;
       const price = priceArray.reduce((total, amount) => total + amount, 0);
-
-      console.log("payment", payment);
       if (
         payment == "onlinepayment" ||
         payment == "wallet" ||
@@ -788,12 +725,9 @@ exports.getReturnOrder = async (req, res) => {
           { $inc: { wallet: price } }
         );
       }
-
-      console.log("Order status updated to Cancel successfully");
       res.redirect("/order");
     } catch (error) {
-      console.error("An unexpected error occurred", error);
-      res.render("error/404");
+      res.render("error/500");
     }
   } else {
     res.redirect("/login");
@@ -831,7 +765,6 @@ exports.getCoupon = async (req, res) => {
       res.redirect("/login");
     }
   } catch (error) {
-    console.error("There is an error while showing the coupons", error);
     res.render("error/500");
   }
 };
@@ -889,12 +822,9 @@ exports.checkCoupons = async (req, res) => {
 
             const discount = coupon.discount;
             const totalDiscount = (amount * discount) / 100;
-            console.log("totalDiscount", totalDiscount);
 
             // Update the unUsedCoupons array
             unUsedCoupons.push({ coupons: couponCode });
-
-            console.log("user.unUsedCoupons", unUsedCoupons);
             // Save the updated user document with used coupons
             await user.save();
 
@@ -915,7 +845,6 @@ exports.checkCoupons = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("There was an error while checking the coupon", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
@@ -924,27 +853,19 @@ exports.checkCoupons = async (req, res) => {
 exports.clearCoupon = async (req, res) => {
   const userId = req.session.user;
   const couponCode = req.query.couponCode;
-  console.log("couponCode", couponCode);
   try {
     const user = await userCollection.findOne({ email: userId });
     const unUsedCoupons = user.unUsedCoupons;
-    console.log("working", unUsedCoupons);
     //for extracting the coupon from the array unUsedCoupons
     const extractedCoupons = unUsedCoupons.map((coupon) => coupon.coupons);
-    console.log("working", extractedCoupons);
     // checking the enterd couponcode and the extracted coupon code
     if (couponCode == extractedCoupons) {
-      console.log("checking..");
       unUsedCoupons.pop();
     }
     // commiting the changes
     user.save();
     res.json({ success: true, extractedCoupons });
   } catch (error) {
-    console.error(
-      "There was an unexpected error while deleting the coupon",
-      error
-    );
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
@@ -954,7 +875,6 @@ exports.showOffers = async (req, res) => {
   try {
     const offers = await offerCollection.find();
     const currentDate = new Date();
-    console.log("offer", offers);
     // Assuming each offer has an 'expiryDate' property
     const validOffers = offers.filter((offer) => {
       const expiryDateParts = offer.expiryDate.split("/");
@@ -964,15 +884,9 @@ exports.showOffers = async (req, res) => {
       return currentDate < expiryDate; // Include only offers that haven't expired
     });
 
-    console.log("Offers:", validOffers);
-
     // Send the valid offers to the client
     res.json({ success: true, offers: validOffers });
   } catch (error) {
-    console.error(
-      "There was an error while showing the available offers",
-      error
-    );
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };

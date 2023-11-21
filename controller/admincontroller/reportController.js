@@ -12,7 +12,6 @@ const fs = require("fs");
 exports.downloadYearlySalesPdf = async (req, res) => {
   try {
     const selectedYear = req.query.year;
-    console.log("selectedYear", selectedYear);
 
     const yearlySales = await reportCollection
       .find({
@@ -65,7 +64,6 @@ exports.downloadYearlySalesPdf = async (req, res) => {
     // Finalize the PDF and end the response
     doc.end();
   } catch (error) {
-    console.error("Error generating PDF:", error);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -74,7 +72,6 @@ exports.downloadYearlySalesPdf = async (req, res) => {
 exports.downloadYearlySalesExcel = async (req, res) => {
   try {
     const selectedYear = req.query.year;
-    console.log("selectedYear", selectedYear);
 
     const yearlySales = await reportCollection
       .find({
@@ -126,7 +123,6 @@ exports.downloadYearlySalesExcel = async (req, res) => {
     // Pipe the Excel workbook to the response
     await workbook.xlsx.write(res);
   } catch (error) {
-    console.error("Error generating Excel:", error);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -138,7 +134,6 @@ exports.downloadMonthlySalesPdf = async (req, res) => {
 
     const selectedMonth =
       new Date(Date.parse(`${selectedMonthName} 1, 2023`)).getMonth() + 1;
-    console.log("selectedMonth", selectedMonth);
 
     const startOfMonth = new Date(2023, selectedMonth - 1, 1);
     const endOfMonth = new Date(2023, selectedMonth, 1);
@@ -194,7 +189,6 @@ exports.downloadMonthlySalesPdf = async (req, res) => {
     // Finalize the PDF and end the response
     doc.end();
   } catch (error) {
-    console.error("Error generating PDF:", error);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -206,7 +200,6 @@ exports.downloadMonthlySalesExcel = async (req, res) => {
 
     const selectedMonth =
       new Date(Date.parse(`${selectedMonthName} 1, 2023`)).getMonth() + 1;
-    console.log("selectedMonth", selectedMonth);
 
     const startOfMonth = new Date(2023, selectedMonth - 1, 1);
     const endOfMonth = new Date(2023, selectedMonth, 1);
@@ -264,7 +257,6 @@ exports.downloadMonthlySalesExcel = async (req, res) => {
     // End the response
     res.end();
   } catch (error) {
-    console.error("Error generating Excel:", error);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -273,8 +265,7 @@ exports.downloadMonthlySalesExcel = async (req, res) => {
 exports.downloadDailySalesPdf = async (req, res) => {
   try {
     const selectedDate = new Date(req.query.date);
-    console.log("selectedDate", selectedDate);
-
+    
     const yearlySales = await reportCollection
       .find({
         "orderDetails.date": {
@@ -339,7 +330,6 @@ exports.downloadDailySalesPdf = async (req, res) => {
     // Finalize the PDF and end the response
     doc.end();
   } catch (error) {
-    console.error("Error generating PDF:", error);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -348,7 +338,6 @@ exports.downloadDailySalesPdf = async (req, res) => {
 exports.downloadDailySalesExcel = async (req, res) => {
   try {
     const selectedDate = new Date(req.query.date);
-    console.log("selectedDate", selectedDate);
 
     const yearlySales = await reportCollection
       .find({
@@ -411,7 +400,6 @@ exports.downloadDailySalesExcel = async (req, res) => {
     // End the response
     res.end();
   } catch (error) {
-    console.error("Error generating Excel:", error);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -457,7 +445,6 @@ exports.downloadProductStockPdf = async (req, res) => {
     // Finalize the PDF and end the response
     doc.end();
   } catch (error) {
-    console.error("Error generating PDF:", error);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -498,7 +485,6 @@ exports.downloadProductStockExcel = async (req, res) => {
     // End the response
     res.end();
   } catch (error) {
-    console.error("Error generating Excel sheet:", error);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -571,7 +557,6 @@ exports.downloadSalesReportPdf = async (req, res) => {
     // Finalize the PDF and end the response
     doc.end();
   } catch (error) {
-    console.error("Error generating PDF:", error);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -583,7 +568,6 @@ async function getProductFromId(productId) {
     console.log(product);
     return product ? product.name : "Unknown Product";
   } catch (error) {
-    console.error("Error fetching product:", error);
     return "Unknown Product";
   }
 }
@@ -646,7 +630,6 @@ exports.downloadSalesReportExcel = async (req, res) => {
     // End the response
     res.end();
   } catch (error) {
-    console.error("Error generating Excel:", error);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -726,7 +709,6 @@ exports.downloadTotalUsers = async (req, res) => {
     // Finalize the PDF and end the response
     doc.end();
   } catch (error) {
-    console.error("Error generating PDF:", error);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -795,7 +777,6 @@ exports.downloadTotalUsersExcel = async (req, res) => {
     // End the response
     res.end();
   } catch (error) {
-    console.error("Error generating Excel:", error);
     res.status(500).send("Internal Server Error");
   }
 };

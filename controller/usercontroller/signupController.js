@@ -30,19 +30,15 @@ exports.postOtpPage = async (req, res) => {
   try {
     const transporter = createTransporter(); // Create a transporter for sending OTP emails
     const otp = generateOtp();
-    console.log(`OTP sent: ${otp}`);
 
     // Check if the email already exists in the collection
     const existingUser = await collection.findOne({ email: req.body.email });
 
     if (existingUser) {
-      console.log("User already exists");
       const successMessage = "User already exists..";
       res.redirect(`/signup?success=${encodeURIComponent(successMessage)}`);
       return;
     }
-
-    console.log(req.body.email, req.body.Phone, req.body.password);
     const userDetails = {
       email: req.body.email,
       first_name: req.body.first_name,
@@ -67,20 +63,13 @@ exports.postOtpPage = async (req, res) => {
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.log(error);
         res.status(500).json({ message: "Failed to send OTP" });
       } else {
-        console.log("OTP sent: " + info.response);
         res.status(200).json({ message: "OTP sent successfully" });
       }
     });
-
     res.redirect("/signup/otp");
   } catch (error) {
-    console.log(
-      "Error occurred while entering the values in the database",
-      error
-    );
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -89,20 +78,12 @@ exports.postOtpPage = async (req, res) => {
 exports.checkOtp = async (req, res) => {
   const enteredOTP = req.body.otp;
 
-  console.log(
-    `entered otp: ${enteredOTP} userdetailsArry: ${JSON.stringify(
-      req.session.userDetailsArray
-    )}`
-  );
-
   const userDetailsIndex = req.session.userDetailsArray.findIndex(
     (user) => user.otp === enteredOTP
   );
 
   if (userDetailsIndex !== -1) {
     const userDetails = req.session.userDetailsArray[userDetailsIndex];
-
-    console.log(userDetails);
 
     await collection.insertMany([userDetails]);
     await collection.updateOne(
@@ -124,15 +105,11 @@ exports.checkOtp = async (req, res) => {
 
     transporter.sendMail(mailContent, (error, info) => {
       if (error) {
-        console.log(error);
         res.status(500).json({ message: "Failed to register user" });
       } else {
-        console.log("User registered");
-
         res.status(200).json({ message: "User registration success" });
       }
     });
-
     res.redirect("/login");
   } else {
     res.redirect("/signup/otp");

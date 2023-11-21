@@ -10,7 +10,6 @@ exports.getOfferPage = async (req, res) => {
     const offer = await offerCollection.find();
     res.render("admin/offer", { offer });
   } catch (error) {
-    console.error("There was an error while showing the offerPage", error);
     res.render("error/500");
   }
 };
@@ -21,7 +20,6 @@ exports.getOfferAddPage = async (req, res) => {
     const category = await categoryCollection.find();
     res.render("admin/add_offer", { category, error: null });
   } catch (error) {
-    console.error("There is an error while showing the page", error);
     res.render("error/500");
   }
 };
@@ -48,10 +46,6 @@ exports.postOfferPage = async (req, res) => {
     }
     res.redirect("/admin/dashboard/offer");
   } catch (error) {
-    console.error(
-      "There was an error while inserting the data in the offer collection",
-      error
-    );
     res.render("error/500");
   }
 };
@@ -64,7 +58,6 @@ exports.getEditPage = async (req, res) => {
     const offer = await offerCollection.findById(id);
     res.render("admin/edit_offer", { offer, category });
   } catch (error) {
-    console.error("There was an error while rendering the page", error);
     res.render("error/500");
   }
 };
@@ -81,7 +74,6 @@ exports.updateOffer = async (req, res) => {
     await offers.save();
     res.redirect("/admin/dashboard/offer");
   } catch (error) {
-    console.error("There was an error while updsting", error);
     res.render("error/500");
   }
 };
@@ -95,11 +87,8 @@ exports.deleteOffer = async (req, res) => {
     if (!deletedOffer) {
       return res.status(404).json({ message: "Offer not found" });
     }
-
-    console.log("Offer is deleted successfully");
     return res.status(200).json({ message: "Offer deleted successfully" });
   } catch (error) {
-    console.error("Error in deleting the coupon", error);
     res.render("error/500");
   }
 };

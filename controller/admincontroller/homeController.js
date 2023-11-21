@@ -46,9 +46,6 @@ exports.getAdminHome = async (req, res) => {
       // Extract months and counts for chart data
       const months = Object.keys(monthlyCounts);
       const counts = Object.values(monthlyCounts);
-
-      console.log("Monthly Counts:", monthlyCounts);
-
       const yearlyCounts = {};
       orders.forEach((order) => {
         order.orderDetails.forEach((orderDetail) => {
@@ -86,8 +83,6 @@ exports.getAdminHome = async (req, res) => {
           } else {
             dailyCounts[date] = 1;
           }
-
-          // Include other details as needed
         });
       });
 
@@ -113,7 +108,6 @@ exports.getAdminHome = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log("error", error);
     res.render("error/404");
   }
 };
@@ -165,8 +159,6 @@ exports.postAdminHome = async (req, res) => {
       const months = Object.keys(monthlyCounts);
       const counts = Object.values(monthlyCounts);
 
-      console.log("Monthly Counts:", monthlyCounts);
-
       const yearlyCounts = {};
       orders.forEach((order) => {
         order.orderDetails.forEach((orderDetail) => {
@@ -203,8 +195,6 @@ exports.postAdminHome = async (req, res) => {
           } else {
             dailyCounts[date] = 1;
           }
-
-          // Include other details as needed
         });
       });
 

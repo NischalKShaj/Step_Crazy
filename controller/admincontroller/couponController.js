@@ -18,17 +18,14 @@ exports.getCouponPage = async (req, res) => {
         .skip(skip)
         .limit(ITEMS_PER_PAGE)
         .exec();
-
       // Calculate total count of coupons for pagination
       const totalCount = await couponCollection.countDocuments();
       const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
-
       res.render("admin/coupon", { coupons, totalPages, currentPage: page });
     } else {
       res.redirect("/admin");
     }
   } catch (error) {
-    console.error("There is an error while rendering the coupon page", error);
     res.render("error/500");
   }
 };
@@ -55,8 +52,6 @@ exports.postCoupnPage = async (req, res) => {
       });
 
       if (existingCoupon) {
-        // Coupon code already exists, handle accordingly (e.g., show an error message)
-        console.error("Coupon code already exists");
         res.render("admin/add_coupon", { error: "Coupon already exists" });
       } else {
         // Coupon code doesn't exist, proceed with insertion
@@ -72,10 +67,6 @@ exports.postCoupnPage = async (req, res) => {
         res.redirect("/admin/dashboard/coupon");
       }
     } catch (error) {
-      console.error(
-        "Unexpected error occurred while inserting the value",
-        error
-      );
       res.render("error/500");
     }
   } else {
@@ -98,7 +89,6 @@ exports.getEditCoupon = (req, res) => {
         }
       })
       .catch((error) => {
-        console.log("Error finding the category....", error);
         res.render("error/404");
       });
   } else {
@@ -126,7 +116,6 @@ exports.postCouponUpdate = async (req, res) => {
       res.redirect("/admin/dashboard/coupon");
     } catch (error) {
       res.redirect("/admin/dashboard/coupon/edit/:id");
-      console.log("There is an error while updating the values....", error);
     }
   } else {
     res.redirect("/admin");
@@ -146,11 +135,8 @@ exports.deleteCoupon = async (req, res) => {
       if (!deletedCoupon) {
         return res.status(404).json({ message: "Coupon not found" });
       }
-
-      console.log("Coupon is deleted successfully");
       return res.status(200).json({ message: "Coupon deleted successfully" });
     } catch (error) {
-      console.error("Error in deleting the coupon", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   } else {

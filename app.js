@@ -1,9 +1,6 @@
 // requiring the modules for the project
 const express = require("express");
 const path = require("path");
-// const mongoose = require("mongoose");
-// const session = require("express-session");
-// const multer = require("multer");
 
 // requiring the local modules for the project
 const routerHome = require("./routes/userRoutes/home");

@@ -31,13 +31,10 @@ exports.getAddressAdd = (req, res) => {
 // for redirecting to the profile page
 exports.postProfilePage = async (req, res) => {
   const user = req.session.user;
-  console.log("user", user);
   const User = await userCollection.find({ email: user });
-  console.log("User", User);
   try {
     if (user) {
       const filter = { email: user };
-      console.log("filter", filter);
       const userAddress = {
         pincode: req.body.pincode,
         locality: req.body.locality,
@@ -50,14 +47,10 @@ exports.postProfilePage = async (req, res) => {
           address: userAddress,
         },
       };
-
-      console.log(userAddress);
       await userCollection.updateOne(filter, update);
-
       res.redirect("/profile");
     }
   } catch (error) {
-    console.error("error while adding the porfile", error);
     res.redirect("/profile/add-address");
   }
 };
@@ -65,14 +58,10 @@ exports.postProfilePage = async (req, res) => {
 // router to show the address page
 exports.getAddressPage = async (req, res) => {
   const user = req.session.user;
-
   if (user) {
     const address = req.session.user;
     id = req.params.id;
-
-    console.log(address);
     const userAdd = await userCollection.find({ email: address });
-    console.log(userAdd);
     res.render("user/showAddress", { address, userAdd });
   } else {
     res.redirect("/login");
@@ -82,7 +71,6 @@ exports.getAddressPage = async (req, res) => {
 // router for editing the user profile
 exports.getProfileEdit = (req, res) => {
   const id = req.params.id;
-
   userCollection
     .findById(id)
     .then((user) => {
@@ -95,7 +83,6 @@ exports.getProfileEdit = (req, res) => {
       }
     })
     .catch((error) => {
-      console.log("Error finding the user....", error);
       res.redirect("/profile");
     });
 };
@@ -106,22 +93,18 @@ exports.postProfileEdit = async (req, res) => {
   try {
     if (userId) {
       const id = req.params.id;
-
       const updateProfile = await userCollection.findByIdAndUpdate(id, {
         first_name: req.body.first_name,
         email: req.body.email,
         phone: req.body.phone,
         gender: req.body.gender,
       });
-
-      console.log(updateProfile);
       res.redirect("/profile");
     } else {
       // If the session does not exist, redirect the user to a login or access-denied page.
       res.redirect("/login"); // or res.redirect("/access-denied");
     }
   } catch (error) {
-    console.log("There is an error while updating the values....", error);
     res.redirect("/profile/edit-profile/");
   }
 };
@@ -137,7 +120,6 @@ exports.getAddressEdit = async (req, res) => {
       .findOne({ email: user }) // Find a user by their email
       .then((userAddress) => {
         if (!userAddress) {
-          console.log("User not found");
           res.redirect("/login");
         } else {
           // Find the specific address based on the addressId
@@ -146,20 +128,16 @@ exports.getAddressEdit = async (req, res) => {
           );
 
           if (!address) {
-            console.log("Address not found");
             res.redirect("/login");
           } else {
-            console.log(address);
             res.render("user/editAddress", { userAddress, address });
           }
         }
       })
       .catch((error) => {
-        console.log("Error finding the user....", error);
         res.redirect("/login");
       });
   } else {
-    console.log("User not authenticated");
     res.redirect("/login");
   }
 };
@@ -170,7 +148,6 @@ exports.postAddressEdit = async (req, res) => {
   try {
     if (userId) {
       const addressId = req.params.id;
-      console.log(addressId);
       const filter = { "address._id": addressId };
       const update = {
         $set: {
@@ -188,7 +165,6 @@ exports.postAddressEdit = async (req, res) => {
       res.redirect("/login");
     }
   } catch (error) {
-    console.error("There is an error while updating the address", error);
     res.redirect("/profile");
   }
 };
@@ -219,8 +195,6 @@ exports.postNewAddress = async (req, res) => {
         state,
         pincode,
       };
-
-      console.log(newAddress);
       // Add the new address to the user's address array
       user.address.push(newAddress);
 
@@ -232,7 +206,6 @@ exports.postNewAddress = async (req, res) => {
       res.json({ success: false, message: "User not found" });
     }
   } catch (error) {
-    console.error(error);
     res.json({
       success: false,
       message: "An error occurred while saving the address",
@@ -253,7 +226,6 @@ exports.getNewPassword = async (req, res) => {
       res.redirect("/");
     }
   } catch (error) {
-    console.error("There is was an error while getting the password", error);
     res.render("error/500");
   }
 };
@@ -263,9 +235,6 @@ exports.postNewPassword = async (req, res) => {
   const userEmail = req.session.user;
   const id = req.params.id;
   const user = await userCollection.findById(id);
-  console.log("req.body", req.body);
-  console.log("old password", req.body.password);
-  console.log("user password", user.password);
   try {
     if (userEmail) {
       if (req.body.password === user.password) {
@@ -283,7 +252,6 @@ exports.postNewPassword = async (req, res) => {
       res.redirect("/");
     }
   } catch (error) {
-    console.error("There is an error while changing the password", error);
     res.render("error/500");
   }
 };

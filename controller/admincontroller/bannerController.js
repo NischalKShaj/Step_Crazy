@@ -40,7 +40,6 @@ exports.getAddBanner = async (req, res) => {
       res.redirect("/admin");
     }
   } catch (error) {
-    console.error("There is was an error", error);
     res.render("error/500");
   }
 };
@@ -67,7 +66,6 @@ exports.postBannerPage = async (req, res) => {
           description: req.body.description,
           image: imageArray,
         };
-        console.log("bannerDetails", bannerDetails);
         await bannerCollection.insertMany([bannerDetails]);
         res.redirect("/admin/dashboard/banner");
       }
@@ -75,7 +73,6 @@ exports.postBannerPage = async (req, res) => {
       res.redirect("/admin");
     }
   } catch (error) {
-    console.error("There was an error while inserting the values", error);
     res.render("error/500");
   }
 };
@@ -95,7 +92,6 @@ exports.getUpdateBanner = async (req, res) => {
         }
       })
       .catch((error) => {
-        console.log("Error finding the banner....", error);
         res.render("error/500");
       });
   } else {
@@ -119,7 +115,6 @@ exports.postUpdatedBanner = async (req, res) => {
     await bannerDetail.save();
     res.redirect("/admin/dashboard/banner");
   } else {
-    console.error("There is an error while updating the banner", error);
     res.render("error/500");
   }
 };
@@ -135,12 +130,9 @@ exports.deleteBanner = async (req, res) => {
       if (!bannerDetail) {
         return res.status(404).json({ message: "Coupon not found" });
       }
-
-      console.log("Coupon is deleted successfully");
       return res.status(200).json({ message: "Coupon deleted successfully" });
     }
   } catch (error) {
-    console.error("There was an error while deleting the coupon");
     res.render("error/500");
   }
 };
@@ -157,10 +149,8 @@ exports.deleteImage = async (req, res) => {
         { $pull: { image: image } },
         { new: true }
       );
-      console.log("Image removed successfully:", updatedBanner);
       res.redirect(`/admin/dashboard/banner/edit/${bannerId}`);
     } catch (error) {
-      console.error("Error removing image:", error);
       res.render("error/500");
     }
   } else {

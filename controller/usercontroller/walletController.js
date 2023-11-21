@@ -12,8 +12,6 @@ exports.getWallet = async (req, res) => {
     if (user && user.blocked === false) {
       const orders = user.order;
 
-      console.log("user.order", user.order);
-
       if (orders && orders.length > 0) {
         // Create an array to store all product details
         const allOrderDetails = [];
@@ -26,33 +24,25 @@ exports.getWallet = async (req, res) => {
         for (const order of walletOrders) {
           // Assuming each order has an array of product IDs in the "products" field
           const productIds = order.products;
-          console.log("productId", productIds);
 
           // Use populate to retrieve product details for each product ID
-          console.log("inside wallet payment method");
           const orderDetails = await productCollection
             .find({ _id: { $in: productIds } })
             .exec();
           allOrderDetails.push(orderDetails);
         }
-
-        console.log("allorderdetails", allOrderDetails);
-
         res.render("user/wallet", {
           user,
           orders: walletOrders, // Pass the filtered wallet orders
           orderDetails: allOrderDetails,
         });
       } else {
-        console.log("No wallet orders found for the user");
         res.redirect("/");
       }
     } else {
-      console.log("User not found");
       res.redirect("/");
     }
   } catch (error) {
-    console.error("Error while fetching wallet order details:", error);
-    res.render("error/404");
+    res.render("error/500");
   }
 };

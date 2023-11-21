@@ -40,9 +40,6 @@ exports.getAdminPage = async (req, res) => {
     // Extract months and counts for chart data
     const months = Object.keys(monthlyCounts);
     const counts = Object.values(monthlyCounts);
-
-    console.log("Monthly Counts:", monthlyCounts);
-
     const yearlyCounts = {};
     orders.forEach((order) => {
       order.orderDetails.forEach((orderDetail) => {
@@ -79,8 +76,6 @@ exports.getAdminPage = async (req, res) => {
         } else {
           dailyCounts[date] = 1;
         }
-
-        // Include other details as needed
       });
     });
 
@@ -106,7 +101,6 @@ exports.getAdminPage = async (req, res) => {
     });
   } else {
     const invalid = req.query.success;
-    console.log(invalid);
     res.render("admin/admin", { invalid });
   }
 };

@@ -22,14 +22,11 @@ exports.getCart = async (req, res) => {
         .find({ user: userId })
         .populate("product")
         .exec();
-
       res.render("user/cart", { cartItems });
     } else {
-      console.error("User not found for email: " + userEmail);
       res.redirect("/login");
     }
   } catch (error) {
-    console.error("error in routing ", error);
     res.redirect("/login");
   }
 };
@@ -41,13 +38,10 @@ exports.addProducts = async (req, res) => {
     const user = await User.findOne({ email: userEmail });
 
     if (!user) {
-      console.error("User not found for email: " + userEmail);
       return res.redirect("/login");
     } else if (user && user.blocked === false) {
       const userId = user._id;
       const productId = new mongoose.Types.ObjectId(req.params.id);
-
-      console.log("ProductId:", productId); // Log the productId
 
       // Verify that the product exists in the product collection
       const existingProduct = await productCollection.findOne({
@@ -60,18 +54,12 @@ exports.addProducts = async (req, res) => {
         return res.redirect("/product");
       }
 
-      console.log("Existing Product:", existingProduct); // Log existingProduct
-
       // Now you can add the product to the cart
       const existingCartItem = await cartCollection.findOne({
         user: userId,
         product: productId,
       });
-
-      console.log("Existing Cart Item:", existingCartItem); // Log existingCartItem
-
       if (existingCartItem) {
-        console.log("Product already available in the cart");
       } else {
         const cartItem = new cartCollection({
           user: userId,
@@ -82,22 +70,18 @@ exports.addProducts = async (req, res) => {
           { email: user.email },
           { $inc: { cartQuantity: 1 } }
         );
-        console.log("cartItem ", cartItem);
         await cartItem.save();
-        console.log("Product added to the cart successfully");
       }
 
       const cartItems = await cartCollection
         .find({ user: userId })
         .populate("product")
         .exec();
-      console.log("cartItems", cartItems);
       res.redirect("/cart");
     } else {
       res.redirect("/login");
     }
   } catch (error) {
-    console.error("Error adding the product to the cart:", error);
     res.redirect("/product");
   }
 };
@@ -116,7 +100,7 @@ async function increamentQuantity(productId) {
       });
     }
   } catch (error) {
-    console.error("Error while decreasing the stock", error);
+    res.render("error/500");
   }
 }
 
@@ -133,7 +117,7 @@ async function decrementQuantity(productId, userId) {
       });
     }
   } catch (error) {
-    console.error("Error while increasing the stock", error);
+    res.render("error/500");
   }
 }
 
@@ -146,7 +130,6 @@ exports.postCart = (req, res) => {
 exports.putStock = async (req, res) => {
   const productId = req.params.productId;
   const { plusCount, minusCount, cartId } = req.body;
-  console.log(plusCount, minusCount, cartId);
 
   // Check if plusCount is defined
   if (plusCount !== undefined) {
@@ -158,10 +141,6 @@ exports.putStock = async (req, res) => {
       increamentQuantity(productId);
       // Save the updated cart item<
       await existingCartItem.save();
-
-      console.log("Updated quantity for cart item:", existingCartItem);
-    } else {
-      console.error("Cart item not found.");
     }
   } else if (minusCount !== undefined) {
     const existingCartItem = await cartCollection.findById(cartId);
@@ -171,10 +150,6 @@ exports.putStock = async (req, res) => {
       decrementQuantity(productId);
       // Save the updated cart item
       await existingCartItem.save();
-
-      console.log("Updated quantity for cart item:", existingCartItem);
-    } else {
-      console.error("Cart item not found.");
     }
   }
 };
@@ -184,7 +159,6 @@ exports.getCheckout = async (req, res) => {
   const address = req.session.user;
 
   if (!address) {
-    console.log("User email not found in session.");
     return res.redirect("/login");
   }
 
@@ -192,12 +166,10 @@ exports.getCheckout = async (req, res) => {
     const user = await userCollection.findOne({ email: address });
     const coupon = await couponCollection.find();
     if (!user) {
-      console.log("User not found in the database.");
       throw new Error("User not found");
     } else if (user && user.blocked === false) {
       const userId = user._id;
       const userEmail = user.email;
-      console.log("userId", userId);
 
       // Validate stock before fetching cart items
       const cartItems = await cartCollection
@@ -213,13 +185,11 @@ exports.getCheckout = async (req, res) => {
         });
 
         if (!existingProduct) {
-          console.log(`Product with ID ${product} not found.`);
           throw new Error(`Product with ID ${product} not found.`);
         }
 
         // Validate if the product is still in stock
         if (quantity > existingProduct.stock) {
-          console.log(`Product with ID ${product} is out of stock.`);
           throw new Error(`Product with ID ${product} is out of stock.`);
         }
       }
@@ -229,9 +199,6 @@ exports.getCheckout = async (req, res) => {
         .populate({ path: "product", model: "product" });
       const useAdd = await userCollection.find({ email: address });
 
-      console.log("cartItems", cartItem);
-      console.log(useAdd);
-
       res.render("user/checkout", { address, useAdd, cartItem, user, coupon });
       // Clear cartItem after rendering the page
       cartItem = [];
@@ -239,7 +206,6 @@ exports.getCheckout = async (req, res) => {
       res.redirect("/login");
     }
   } catch (error) {
-    console.error("Error while loading the checkout page:", error);
     res.redirect("/product");
   }
 };
@@ -250,8 +216,6 @@ exports.deleteProduct = async (req, res) => {
   const user = await userCollection.findOne({ email: userEmail });
   try {
     const cartId = req.params.id;
-
-    console.log(cartId);
     // Use the model to find the cart item that matches the user, product ID, and remove it
     const removedCartItem = await cartCollection.findOneAndRemove({
       _id: cartId,
@@ -260,20 +224,8 @@ exports.deleteProduct = async (req, res) => {
       { email: userEmail },
       { $inc: { cartQuantity: -1 } }
     );
-    console.log(cartId);
-    console.log(removedCartItem);
-    if (removedCartItem) {
-      // The product was successfully removed from the cart
-      console.log("Product successfully removed from the cart");
-      console.log(removedCartItem);
-    } else {
-      // The product wasn't found in the cart
-      console.log("Product not found in the cart");
-    }
-
     res.redirect("/cart");
   } catch (error) {
-    console.error("Error while removing the product", error);
     res.redirect("/cart");
   }
 };

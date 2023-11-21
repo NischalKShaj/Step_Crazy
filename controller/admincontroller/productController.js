@@ -47,16 +47,11 @@ exports.getProductPage = async (req, res) => {
       // Calculate total count of products for pagination
       const totalCount = await collection.countDocuments(query);
       const totalPages = Math.ceil(totalCount / limit);
-
       res.render("admin/product", { products, totalPages, currentPage: page });
     } else {
       res.redirect("/admin");
     }
   } catch (error) {
-    console.error(
-      "There is an unexpected error while fetching products",
-      error
-    );
     res.render("error/500");
   }
 };
@@ -83,7 +78,6 @@ exports.postProductPage = async (req, res) => {
       const category = await categoryCollection.find();
       if (existingProduct) {
         // Product with the same name already exists, handle accordingly (e.g., show an error message)
-        console.error("Product with the same name already exists");
         res.render("admin/add_product", {
           category,
           error: "Product with the same name already exists",
@@ -108,10 +102,6 @@ exports.postProductPage = async (req, res) => {
         res.redirect("/admin/dashboard/product");
       }
     } catch (error) {
-      console.error(
-        "Unexpected error occurred while inserting the product",
-        error
-      );
       res.render("error/404");
     }
   } else {
@@ -135,7 +125,6 @@ exports.getEditProduct = async (req, res) => {
         }
       })
       .catch((error) => {
-        console.log("Error finding the product....", error);
         res.redirect("admin/dashboard/product");
       });
   } else {
@@ -169,9 +158,7 @@ exports.postUpdateProduct = async (req, res) => {
 
       await updateProduct.save();
       res.redirect("/admin/dashboard/product");
-      console.log("value updated successfully...");
     } catch (error) {
-      console.log("The value is not inserted properly...", error);
       res.redirect("/admin/dashboard/product");
     }
   } else {
@@ -194,10 +181,8 @@ exports.putDeactivate = async (req, res) => {
       if (!deactivate) {
         return res.status(404).json({ message: "Product is not found" });
       }
-      console.log("The product is deactivated successfully..");
       return res.json({ message: "Product deactivated" });
     } catch (error) {
-      console.error("There was an error while deactivating the porduct", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   } else {
@@ -219,10 +204,8 @@ exports.putActivate = async (req, res) => {
       if (!activate) {
         return res.status(404).json({ message: "Product is not found" });
       }
-      console.log("The product is activated successfully...");
       return res.json({ message: "Product is activated" });
     } catch (error) {
-      console.error("There was an error while activating the product", error);
       return res.status(505).json({ message: "Internal server error" });
     }
   } else {
@@ -244,10 +227,8 @@ exports.deleteImage = async (req, res) => {
         { $pull: { image: image } },
         { new: true }
       );
-      console.log("Image removed successfully:", updatedProduct);
       res.redirect(`/admin/dashboard/product/edit/${ProductId}`);
     } catch (error) {
-      console.error("Error removing image:", error);
       res.status(500).send("Error removing image");
     }
   } else {

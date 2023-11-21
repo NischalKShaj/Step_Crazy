@@ -37,7 +37,6 @@ exports.getCategoryPage = async (req, res) => {
       res.redirect("/admin");
     }
   } catch (error) {
-    console.error("Error fetching categories:", error);
     res.render("error/500");
   }
 };
@@ -61,7 +60,6 @@ exports.postCategory = async (req, res) => {
       category = await collection.findOne({ category: req.body.category });
       console.log(category);
     } catch (error) {
-      console.error("error in the page", error);
       res.redirect("/admin/dashboard/category/add");
     }
     const categoryDetails = {
@@ -94,7 +92,6 @@ exports.getEditCategory = (req, res) => {
         }
       })
       .catch((error) => {
-        console.log("Error finding the category....", error);
         res.redirect("/admin/dashboard/category");
       });
   } else {
@@ -112,12 +109,9 @@ exports.postCategoryUpdate = async (req, res) => {
       const upateCategory = await collection.findByIdAndUpdate(id, {
         category: req.body.category,
       });
-
-      console.log("upateCategory", upateCategory);
       res.redirect("/admin/dashboard/category");
     } catch (error) {
       res.redirect("/admin/dashboard/category/edit");
-      console.log("There is an error while updating the values....", error);
     }
   } else {
     res.redirect("/admin");
@@ -136,22 +130,14 @@ exports.deleteCategory = async (req, res) => {
       if (!deletedCategory) {
         return res.status(404).json({ message: "Category not found" });
       }
-
       const catName = deletedCategory.category;
-
       // Update the status of products with the same category name to "false"
       const productData = await productCollection.updateMany(
         { category: catName },
         { $set: { status: false } }
       );
-
-      console.log("Category is deleted successfully");
-      console.log(catName);
-      console.log(productData);
-
       return res.status(200).json({ message: "Category deleted successfully" });
     } catch (error) {
-      console.error("Error in deleting the category", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   } else {

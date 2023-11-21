@@ -35,7 +35,6 @@ exports.getUserPage = async (req, res) => {
       res.redirect("/admin");
     }
   } catch (error) {
-    console.error("There is an unexpected error while fetching users", error);
     res.render("error/500");
   }
 };
@@ -51,7 +50,6 @@ exports.postUserPage = (req, res) => {
         res.redirect("/dashboard/user");
       })
       .catch((err) => {
-        console.error("Error querying users:", err);
         res.status(500).send("Internal Server Error");
       });
   } else {
@@ -75,11 +73,8 @@ exports.postBlockeUser = async (req, res) => {
           .status(404)
           .json({ success: false, message: "User not found" });
       }
-
-      console.log("The user is blocked successfully...");
       return res.json({ success: true, message: "User blocked successfully" });
     } catch (error) {
-      console.error("Error blocking user:", error);
       return res
         .status(500)
         .json({ success: false, message: "Internal server error" });
@@ -104,13 +99,11 @@ exports.postUnblockUser = async (req, res) => {
           .status(404)
           .json({ success: false, message: "User not found" });
       }
-      console.log("The user is now unblocked successfully...");
       return res.json({
         success: true,
         message: "User unblocked successfully",
       });
     } catch (error) {
-      console.error("Error blocking the user:", error);
       return res
         .status(500)
         .json({ success: false, message: "Internal server error" });

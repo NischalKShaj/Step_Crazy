@@ -138,18 +138,13 @@ exports.postForgotLogin = async (req, res) => {
   try {
     const otp = await collection.findOne({ email: userDetails.email });
     const OTP = req.body.otp;
-    console.log(OTP, otp);
     if (otp.otp == OTP) {
-      console.log(userDetails);
       const filter = { email: userDetails.email };
       // const update = { password: userDetails.password };
       const update = {
         $set: { password: userDetails.password },
         $unset: { otp: 1 }, // Unset the 'otp' field
       };
-      console.log(filter, update);
-
-      console.log(userDetails.email, userDetails.password, userDetails.otp);
       // sending the confirmation mail to the user
       mailContent = {
         from: "nischalkshaj5@gmail.com",
@@ -157,7 +152,6 @@ exports.postForgotLogin = async (req, res) => {
         subject: "User password is changed successfully",
         text: "Your password is changed successfully now you can change use the changed password while loggin in.",
       };
-      console.log("password changed successfully");
 
       // sending the email to the specified email address
       transporter.sendMail(mailContent, (error, info) => {
@@ -165,7 +159,6 @@ exports.postForgotLogin = async (req, res) => {
           // console.log(error);
           res.status(500).json({ message: "Failed to register user" });
         } else {
-          console.log("user registered");
           res.status(200).json({ message: "User registration success" });
         }
       });
