@@ -37,6 +37,9 @@ router.post("/login", homeController.postLoginPage);
 // redirecting the otp page
 router.post("/otp", signupController.postOtpPage);
 
+// for resending the otp
+router.post("/resendotp", signupController.getOtpResend);
+
 // rendering the otp page
 router.get("/otp", signupController.getOtpPage);
 
@@ -242,11 +245,7 @@ router.post(
 router.post("/clear-coupon", usersAuth.userAuth, orderController.clearCoupon);
 
 // router for showing the available offers
-router.get(
-  "/offers",
-  usersAuth.userAuth,
-  orderController.showOffers
-);
+router.get("/offers", usersAuth.userAuth, orderController.showOffers);
 
 // exporting the module to app.js
 module.exports = router;

@@ -2,22 +2,26 @@
 
 const collection = require("../../models/user/userDatabase");
 const cartCollection = require("../../models/cart/cartDetail");
+const bannerCollection = require("../../models/banner/bannerDetail");
 
 // getting the homepage
 exports.getHomePage = async (req, res) => {
-  const user = req.session.user;
-  const data = await collection.findOne(
-    { email: user },
-    { first_name: 1, cartQuantity: 1, _id: 0 }
-  );
-  // for adding the bannerslides
-  const bannerData = [
-    { image: "../../Img/home/banner1.png", alt: "image1" },
-    { image: "../../Img/home/banner2.png", alt: "image2" },
-    { image: "../../Img/home/banner3.png", alt: "image3" },
-  ];
-  const cart = await cartCollection.find({}, { quantity: 1, _id: 0 });
-  res.render("home/home", { data, user, cart, bannerData });
+  try {
+    const user = req.session.user;
+    const data = await collection.findOne(
+      { email: user },
+      { first_name: 1, cartQuantity: 1, _id: 0 }
+    );
+
+    // Fetch banner data from the database
+    const bannerData = await bannerCollection.find({}, { _id: 0 });
+
+    const cart = await cartCollection.find({}, { quantity: 1, _id: 0 });
+    res.render("home/home", { data, user, cart, bannerData });
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).send("Internal Server Error");
+  }
 };
 
 // getting the loginpage

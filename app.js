@@ -1,6 +1,7 @@
 // requiring the modules for the project
 const express = require("express");
 const path = require("path");
+require('dotenv').config();
 
 // requiring the local modules for the project
 const routerHome = require("./routes/userRoutes/home");
@@ -15,7 +16,7 @@ const errorPage = require("./middleware/error/404");
 const app = express();
 
 // setting up the port number
-const port = 4000;
+const port = process.env.PORT || 4000;
 
 // setting up the static folders
 app.use(express.static("public"));

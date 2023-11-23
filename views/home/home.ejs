@@ -308,9 +308,12 @@ https://templatemo.com/tm-559-zay-shop
 
     <!-- Start Banner Hero -->
    
+   
+    <!-- Carousel Section -->
     <div id="template-mo-zay-hero-carousel" class="carousel slide" data-bs-ride="carousel">
+      <!-- Indicators -->
       <ol class="carousel-indicators">
-        <% bannerData.forEach((banner, index) => { %>
+        <% bannerData.slice(0, 3).forEach((banner, index) => { %>
           <li
             data-bs-target="#template-mo-zay-hero-carousel"
             data-bs-slide-to="<%= index %>"
@@ -318,22 +321,19 @@ https://templatemo.com/tm-559-zay-shop
           ></li>
         <% }); %>
       </ol>
+      
+      <!-- Carousel Inner -->
       <div class="container">
-      <div class="carousel-inner">
-        <% bannerData.forEach((banner, index) => { %>
-          <div class="carousel-item<%= index === 0 ? ' active' : '' %>">
-            
-              
-                <!-- <div class="mx-auto col-md-8 col-lg-6 order-lg-last"> -->
-                  <img class="img-fluid" src="/Img/<%= banner.image %>" alt="<%= banner.alt %>" style="width: 100%; height: auto;" />
-                <!-- </div> -->
-              
-            <!-- </div> -->
-          </div>
-        <% }); %>
-      </div>
+        <div class="carousel-inner">
+          <% bannerData.slice(0, 3).forEach((banner, index) => { %>
+            <div class="carousel-item<%= index === 0 ? ' active' : '' %>">
+              <img class="img-fluid" src="<%= banner.image %>" alt="<%= banner.name %>" style="width: 100%; height: auto;" />
+            </div>
+          <% }); %>
+        </div>
       </div>
       
+      <!-- Controls -->
       <a
         class="carousel-control-prev text-decoration-none w-auto ps-3"
         href="#template-mo-zay-hero-carousel"
@@ -354,10 +354,7 @@ https://templatemo.com/tm-559-zay-shop
       </a>
     </div>
     
-    
-    <!-- End Banner Hero -->
-
-    <!-- Start Categories of The Month -->
+    <!-- Categories of The Month Section -->
     <section class="container py-5">
       <div class="row text-center pt-3">
         <div class="col-lg-6 m-auto">
@@ -370,162 +367,73 @@ https://templatemo.com/tm-559-zay-shop
         </div>
       </div>
       <div class="row">
-        <div class="col-12 col-md-4 p-5 mt-3">
-          <a href="/product"
-            ><img
-              src="../Img/home/sneakers3.jpeg"
-              class="rounded-circle img-fluid border"
-          /></a>
-          <h5 class="text-center mt-3 mb-3">Sneakers</h5>
-          <p class="text-center"><a class="btn btn-success">Go Shop</a></p>
-        </div>
-        <div class="col-12 col-md-4 p-5 mt-3">
-          <a href="/product"
-            ><img
-              src="../Img/home/formal9.jpeg"
-              class="rounded-circle img-fluid border"
-          /></a>
-          <h2 class="h5 text-center mt-3 mb-3">Formals</h2>
-          <p class="text-center"><a class="btn btn-success">Go Shop</a></p>
-        </div>
-        <div class="col-12 col-md-4 p-5 mt-3">
-          <a href="/product"
-            ><img
-              src="../Img/home/casual2.jpeg"
-              class="rounded-circle img-fluid border"
-          /></a>
-          <h2 class="h5 text-center mt-3 mb-3">Casuals</h2>
-          <p class="text-center"><a class="btn btn-success">Go Shop</a></p>
-        </div>
+        <% bannerData.slice(3, 6).forEach((banner, index) => { %>
+          <div class="col-12 col-md-4 p-5 mt-3">
+            <a href="/product"
+              ><img
+                src="<%= banner.image %>"
+                class="rounded-circle img-fluid border"
+            /></a>
+            <h5 class="text-center mt-3 mb-3"><%= banner.name %></h5>
+            <p class="text-center"><a class="btn btn-success">Go Shop</a></p>
+          </div>
+        <% }); %>
       </div>
     </section>
     <!-- End Categories of The Month -->
 
     <!-- Start Featured Product -->
-    <section class="bg-light">
-      <div class="container py-5">
-        <div class="row text-center py-3">
-          <div class="col-lg-6 m-auto">
-            <h1 class="h1">Featured Product</h1>
-            <p>
-              Superior Comfort: We understand the importance of comfort in every
-              step you take. With our products, you can enjoy all-day comfort
-              without compromising on style. Say goodbye to discomfort and hello
-              to blissful walking.
-            </p>
+<!-- Featured Product Section -->
+      <section class="bg-light">
+        <div class="container py-5">
+          <div class="row text-center py-3">
+            <div class="col-lg-6 m-auto">
+              <h1 class="h1">Featured Product</h1>
+              <p>
+                Superior Comfort: We understand the importance of comfort in every
+                step you take. With our products, you can enjoy all-day comfort
+                without compromising on style. Say goodbye to discomfort and hello
+                to blissful walking.
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <% bannerData.slice(6, 9).forEach((banner, index) => { %>
+              <div class="col-12 col-md-4 mb-4">
+                <div class="card h-100">
+                  <a href="/product">
+                    <img
+                      src="<%= banner.image %>"
+                      class="card-img-top"
+                      alt="..."
+                    />
+                  </a>
+                  <div class="card-body">
+                    <ul class="list-unstyled d-flex justify-content-between">
+                      <li>
+                        <i class="text-warning fa fa-star"></i>
+                        <i class="text-warning fa fa-star"></i>
+                        <i class="text-warning fa fa-star"></i>
+                        <i class="text-muted fa fa-star"></i>
+                        <i class="text-muted fa fa-star"></i>
+                      </li>
+                    </ul>
+                    <a
+                      href="/product"
+                      class="h2 text-decoration-none text-dark"
+                      ><%= banner.name %></a
+                    >
+                    <p class="card-text">
+                      <%= banner.description %>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            <% }); %>
           </div>
         </div>
-        <div class="row">
-          <div class="col-12 col-md-4 mb-4">
-            <div class="card h-100">
-              <a href="/product">
-                <img
-                  src="../Img/home/style3.jpg"
-                  class="card-img-top"
-                  alt="..."
-                />
-              </a>
-              <div class="card-body">
-                <ul class="list-unstyled d-flex justify-content-between">
-                  <li>
-                    <i class="text-warning fa fa-star"></i>
-                    <i class="text-warning fa fa-star"></i>
-                    <i class="text-warning fa fa-star"></i>
-                    <i class="text-muted fa fa-star"></i>
-                    <i class="text-muted fa fa-star"></i>
-                  </li>
-                  <li class="text-muted text-right">&#8377 2400.00</li>
-                </ul>
-                <a
-                  href="/product"
-                  class="h2 text-decoration-none text-dark"
-                  >Gym Weight</a
-                >
-                <p class="card-text">
-                  Looking to take your fitness routine to the next level? Look
-                  no further than our premium Gym Weights. These weights are the
-                  perfect companion for your strength training sessions,
-                  offering durability, versatility, and exceptional performance.
-                </p>
-                <p class="text-muted">Reviews (24)</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-md-4 mb-4">
-            <div class="card h-100">
-              <a href="/product">
-                <img
-                  src="../Img/home/style4.jpeg"
-                  class="card-img-top"
-                  alt="..."
-                />
-              </a>
-              <div class="card-body">
-                <ul class="list-unstyled d-flex justify-content-between">
-                  <li>
-                    <i class="text-warning fa fa-star"></i>
-                    <i class="text-warning fa fa-star"></i>
-                    <i class="text-warning fa fa-star"></i>
-                    <i class="text-muted fa fa-star"></i>
-                    <i class="text-muted fa fa-star"></i>
-                  </li>
-                  <li class="text-muted text-right">&#8377 480.00</li>
-                </ul>
-                <a
-                  href="/product"
-                  class="h2 text-decoration-none text-dark"
-                  >Cloud Nike Shoes</a
-                >
-                <p class="card-text">
-                  Elevate your footwear game to new heights with our Cloud Nike
-                  Shoes. These shoes are more than just a fashion statement;
-                  they are the epitome of comfort and style. Explore what makes
-                  our Cloud Nike Shoes the perfect choice for every step you
-                  take.
-                </p>
-                <p class="text-muted">Reviews (48)</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-md-4 mb-4">
-            <div class="card h-100">
-              <a href="/product">
-                <img
-                  src="../Img/home/style5.jpeg"
-                  class="card-img-top"
-                  alt="..."
-                />
-              </a>
-              <div class="card-body">
-                <ul class="list-unstyled d-flex justify-content-between">
-                  <li>
-                    <i class="text-warning fa fa-star"></i>
-                    <i class="text-warning fa fa-star"></i>
-                    <i class="text-warning fa fa-star"></i>
-                    <i class="text-warning fa fa-star"></i>
-                    <i class="text-warning fa fa-star"></i>
-                  </li>
-                  <li class="text-muted text-right">&#8377 360.00</li>
-                </ul>
-                <a
-                  href="/product"
-                  class="h2 text-decoration-none text-dark"
-                  >Summer Addides Shoes</a
-                >
-                <p class="card-text">
-                  Get ready to embrace the sunny days with style and comfort by
-                  slipping into our Summer Adidas Shoes. Designed to keep your
-                  feet cool and fashionable, these shoes are the perfect choice
-                  for all your summer adventures. Discover what sets our Summer
-                  Adidas Shoes apart.
-                </p>
-                <p class="text-muted">Reviews (74)</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
+
     <!-- End Featured Product -->
 
     <!-- Start Footer -->

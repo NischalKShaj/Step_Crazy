@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OTP</title>
     <link rel="stylesheet" type="text/css" href="../CSS/user/otp.css" />
+    
     <style>
       .dimmed-background {
         position: fixed;
@@ -43,9 +44,8 @@
     <div class="loader" id="loader"></div>
     <div class="container">
       <h1>OTP Validation</h1>
-      <p>Enter the OTP sent to your email or phone:</p>
+      <p>Enter the OTP sent to your email:</p>
 
-      <!-- Display an error message if OTP validation fails -->
 
       <form id="otp-form" method="POST" action="/login/checkOtp">
         <input
@@ -57,9 +57,90 @@
         />
         <button type="submit">Verify OTP</button>
       </form>
+      <!-- Add these elements to the HTML body -->
+      <form action="/resendotp" method="post">
+        <span id="timer"></span>
+        <button id="resendBtn" style="display: none;color: rgb(117, 117, 255);margin-top: 2px;" onclick="resendOTP()">Resend</button>
+      </form>
     </div>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
+
+      // script for resend option 
+      $(document).ready(function() {
+        const loader = $('#loader');
+        const dimmedBackground = $('#dimmedBackground');
+        const timerElement = $('#timer');
+        const resendBtn = $('#resendBtn');
+        let timeLeft = 30; // Set the initial time in seconds
+        let timerRunning = true; // Flag to track whether the timer is running
+
+        // Show the loader and dimmed background
+        loader.show();
+        dimmedBackground.show();
+
+        // Start the timer
+        const timerInterval = setInterval(function() {
+          if (timeLeft > 0) {
+            timerElement.text(`Resend in ${timeLeft} seconds`);
+            timeLeft--;
+          } else {
+            clearInterval(timerInterval);
+            timerRunning = false; // Set the flag to false when the timer ends
+            timerElement.hide();
+            resendBtn.show();
+            loader.hide();
+            dimmedBackground.hide();
+          }
+        }, 1000); // 1 second intervals
+
+        // Function to handle OTP resend
+        window.resendOTP = function() {
+          if (!timerRunning) {
+            // Reset the timer and hide the resend button
+            timeLeft = 30;
+            resendBtn.hide();
+            timerElement.show();
+
+            // Restart the timer
+            const resendTimerInterval = setInterval(function() {
+              if (timeLeft > 0) {
+                timerElement.text(`Resend in ${timeLeft} seconds`);
+                timeLeft--;
+              } else {
+                clearInterval(resendTimerInterval);
+                timerRunning = false; // Set the flag to false when the timer ends
+                timerElement.hide();
+                resendBtn.show();
+              }
+            }, 1000); // 1 second intervals
+
+            // Perform the OTP resend logic here (e.g., make an AJAX call to the server)
+            timerRunning = true; // Set the flag to true when the timer restarts
+            sendResendOTPAPI(); // Call the function to send API for OTP resend
+          }
+        };
+
+        // Function to send API for OTP resend
+        function sendResendOTPAPI() {
+          // Make an AJAX call to the backend API
+          $.ajax({
+            url: '/api/resend-otp', // Update the URL with your backend API endpoint
+            method: 'POST', // Use the appropriate HTTP method
+            success: function(response) {
+              console.log('OTP Resent successfully:', response);
+              // Handle success response if needed
+            },
+            error: function(error) {
+              console.error('Error Resending OTP:', error);
+              // Handle error response if needed
+            }
+          });
+        }
+      });
+
+
+
       $(document).ready(function() {
         const loader = $('#loader');
         const dimmedBackground = $('#dimmedBackground');
