@@ -31,8 +31,6 @@ exports.postOtpPage = async (req, res) => {
     const transporter = createTransporter(); // Create a transporter for sending OTP emails
     const otp = generateOtp();
 
-    console.log("otp", otp);
-
     // Check if the email already exists in the collection
     const existingUser = await collection.findOne({ email: req.body.email });
 
@@ -54,11 +52,8 @@ exports.postOtpPage = async (req, res) => {
       otp: otp,
     };
 
-    console.log("userDetails", userDetails);
-
     // Store the generated OTP and user details in the session
     const check = await temporaryCollection.insertMany([userDetails]);
-    console.log("check", check);
 
     // Configure the email options
     const mailOptions = {
@@ -85,18 +80,11 @@ exports.postOtpPage = async (req, res) => {
 exports.checkOtp = async (req, res) => {
   const enteredOTP = req.body.otp;
 
-  console.log("enterdOTP", enteredOTP);
-
   const temporary = await temporaryCollection.findOne({ otp: enteredOTP });
-
-  console.log("temporary", temporary);
 
   const check = temporary.otp;
 
-  console.log("check", check);
-
   if (check == enteredOTP) {
-    console.log("hello");
     await collection.insertMany([temporary]);
 
     const transporter = createTransporter(); // Create a transporter for sending confirmation emails
@@ -112,7 +100,7 @@ exports.checkOtp = async (req, res) => {
     // Clear the session
     req.session.destroy((err) => {
       if (err) {
-        console.error("Error clearing session:", err);
+        res.render("error/500");
       }
     });
     transporter.sendMail(mailContent, (error, info) => {
@@ -133,7 +121,6 @@ exports.getOtpResend = async (req, res) => {
   try {
     const transporter = createTransporter();
     const otp = generateOtp();
-    console.log("otp", otp);
 
     const userEmail = req.session.email;
 
@@ -153,7 +140,6 @@ exports.getOtpResend = async (req, res) => {
       { $set: { otp: otp } }
     );
 
-    console.log("userDetails", userDetails);
     // Configure the email options
     const mailOptions = {
       from: "nischalkshaj5@gmail.com",
