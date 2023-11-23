@@ -119,14 +119,11 @@ exports.postAdminHome = async (req, res) => {
       email: req.body.email,
       password: req.body.password,
     });
-
-    console.log(admin);
     if (
       admin.email === req.body.email &&
       admin.password === req.body.password
     ) {
       req.session.admin = req.body.email;
-      console.log("inside the dashboard...");
       const orders = await reportCollection.find(
         {},
         { "orderDetails.date": 1 }
@@ -252,14 +249,12 @@ exports.getAdminAdd = (req, res) => {
 // for inserting the value in the admin database
 exports.postAdmin = async (req, res) => {
   const Admin = req.session.admin;
-  console.log(req.body.password);
   if (Admin) {
     const admin = {
       name: req.body.name,
       email: req.body.email,
       password: req.body.password,
     };
-    console.log(admin);
     await collection.insertMany([admin]);
     res.redirect("/admin/dashboard/admins");
   } else {

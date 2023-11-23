@@ -123,7 +123,6 @@ exports.postUpdatedBanner = async (req, res) => {
 exports.deleteBanner = async (req, res) => {
   const admin = req.session.admin;
   const bannerId = req.params.bannerId;
-  console.log();
   try {
     if (admin) {
       const bannerDetail = await bannerCollection.findByIdAndDelete(bannerId);

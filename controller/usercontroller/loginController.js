@@ -37,7 +37,6 @@ exports.postHomePage = async (req, res) => {
       password: req.body.password,
     });
 
-    console.log(data);
     if (
       data.email === req.body.email &&
       data.password === req.body.password &&
@@ -72,24 +71,21 @@ try {
   exports.postOTP = async (req, res) => {
     let flag = true;
     const check = await collection.find({}, { email: 1, _id: 0 });
-    console.log(check[0].email);
+
     for (let i = 0; i < check.length; i++) {
       if (check[i].email === req.body.email) {
-        console.log("running");
-
         flag = false;
         break;
       }
     }
     if (flag === false) {
-      console.log(req.body.email, req.body.password);
       userDetails = {
         email: req.body.email,
         password: req.body.password,
       };
 
       const otp = generateOtp();
-      console.log(otp);
+
       optMap.set(userDetails.email, otp);
       try {
         await collection.updateOne(
@@ -97,7 +93,6 @@ try {
           { $set: { otp: otp } }
         );
       } catch (error) {
-        console.error("There is an error while updating the otp field", error);
         return;
       }
 
@@ -111,17 +106,14 @@ try {
       // sending the email to the specified email address
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-          console.log(error);
           res.status(500).json({ message: "Failed to send OTP" });
         } else {
-          console.log("OTP sent: " + info.response);
           res.status(200).json({ message: "OTP sent successfully" });
         }
       });
 
       res.render("user/otp");
     } else {
-      console.log("running2");
       const successMessage = "User doesnot exists..";
 
       res.redirect(`/login?success=${encodeURIComponent(successMessage)}`);
@@ -130,7 +122,6 @@ try {
   };
 } catch {
   res.redirect("/login");
-  console.log("error occured while entering the values in the database");
 }
 
 // to update the password
@@ -156,7 +147,6 @@ exports.postForgotLogin = async (req, res) => {
       // sending the email to the specified email address
       transporter.sendMail(mailContent, (error, info) => {
         if (error) {
-          // console.log(error);
           res.status(500).json({ message: "Failed to register user" });
         } else {
           res.status(200).json({ message: "User registration success" });

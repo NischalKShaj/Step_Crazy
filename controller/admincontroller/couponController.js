@@ -129,7 +129,6 @@ exports.postCouponUpdate = async (req, res) => {
 exports.deleteCoupon = async (req, res) => {
   const admin = req.session.admin;
   const couponId = req.params.couponId;
-  console.log(couponId);
   if (admin) {
     try {
       // Find and remove the coupon by ID

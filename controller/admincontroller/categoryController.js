@@ -58,7 +58,6 @@ exports.postCategory = async (req, res) => {
   if (admin) {
     try {
       category = await collection.findOne({ category: req.body.category });
-      console.log(category);
     } catch (error) {
       res.redirect("/admin/dashboard/category/add");
     }
@@ -66,7 +65,6 @@ exports.postCategory = async (req, res) => {
       category: req.body.category,
     };
     if (category === null) {
-      console.log(categoryDetails);
       await collection.insertMany([categoryDetails]);
       res.redirect("/admin/dashboard/category");
     } else {

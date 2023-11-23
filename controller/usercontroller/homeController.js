@@ -19,7 +19,7 @@ exports.getHomePage = async (req, res) => {
     const cart = await cartCollection.find({}, { quantity: 1, _id: 0 });
     res.render("home/home", { data, user, cart, bannerData });
   } catch (error) {
-    console.error("Error fetching data:", error);
+    
     res.status(500).send("Internal Server Error");
   }
 };

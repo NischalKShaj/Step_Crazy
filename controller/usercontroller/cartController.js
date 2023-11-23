@@ -49,7 +49,7 @@ exports.addProducts = async (req, res) => {
       });
 
       if (!existingProduct) {
-        console.log("Product not found.");
+        
         // Handle the case when the product doesn't exist, e.g., display an error message.
         return res.redirect("/product");
       }

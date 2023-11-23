@@ -265,7 +265,7 @@ exports.downloadMonthlySalesExcel = async (req, res) => {
 exports.downloadDailySalesPdf = async (req, res) => {
   try {
     const selectedDate = new Date(req.query.date);
-    
+
     const yearlySales = await reportCollection
       .find({
         "orderDetails.date": {
@@ -565,7 +565,7 @@ exports.downloadSalesReportPdf = async (req, res) => {
 async function getProductFromId(productId) {
   try {
     const product = await productCollection.findOne({ _id: productId });
-    console.log(product);
+
     return product ? product.name : "Unknown Product";
   } catch (error) {
     return "Unknown Product";

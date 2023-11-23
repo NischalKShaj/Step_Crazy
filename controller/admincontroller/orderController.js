@@ -20,8 +20,6 @@ exports.getOrderPage = async (req, res) => {
       if (user) {
         const orders = user.order;
 
-        console.log("user.order", user.order);
-
         if (orders && orders.length > 0) {
           const startIndex = (page - 1) * limit;
           const endIndex = startIndex + limit;
@@ -36,8 +34,6 @@ exports.getOrderPage = async (req, res) => {
             // Assuming each order has an array of product IDs in the "products" field
             const productIds = order.products;
             const orderId = order._id;
-            console.log("orderId", orderId);
-            console.log("productId", productIds);
 
             // Use populate to retrieve product details for each product ID
             const orderDetails = await productCollection

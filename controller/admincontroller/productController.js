@@ -220,8 +220,6 @@ exports.deleteImage = async (req, res) => {
     try {
       const image = req.params.image;
       const ProductId = req.params.ProductId;
-      console.log(image);
-      console.log(ProductId);
       const updatedProduct = await collection.findByIdAndUpdate(
         ProductId,
         { $pull: { image: image } },

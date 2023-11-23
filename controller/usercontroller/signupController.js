@@ -101,7 +101,6 @@ exports.postOtpPage = async (req, res) => {
     });
     res.redirect("/signup/otp");
   } catch (error) {
-    console.error("error", error);
     res.render("error/500");
   }
 };
@@ -125,8 +124,8 @@ exports.checkOtp = async (req, res) => {
       subject: "User Registration Success",
       text: "Thank you for choosing Step Crazy, you have successfully registered with Step Crazy. Enjoy shopping with us.",
     };
-    await temporaryCollection.deleteOne({ otp: enteredOTP });
 
+    const result = await temporaryCollection.deleteOne({ otp: enteredOTP });
     // Clear the session
     req.session.destroy((err) => {
       if (err) {
@@ -187,7 +186,6 @@ exports.getOtpResend = async (req, res) => {
     });
     res.redirect("/signup/otp");
   } catch (error) {
-    console.error("There was an error while checking the resend otp", error);
     res.render("error/500");
   }
 };

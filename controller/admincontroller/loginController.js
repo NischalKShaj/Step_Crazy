@@ -8,7 +8,7 @@ const userCollection = require("../../models/user/userDatabase");
 // for rendering the admin page
 exports.getAdminPage = async (req, res) => {
   const admin = req.session.admin;
-  console.log("admin", admin);
+
   if (admin) {
     const orders = await reportCollection.find({}, { "orderDetails.date": 1 });
 

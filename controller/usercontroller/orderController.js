@@ -295,7 +295,7 @@ exports.postOnlineConfirm = async (req, res) => {
       res.redirect("/login");
     }
   } catch (error) {
-    console.error("Error message", error);
+    
     res.render("error/500");
   }
 };
@@ -438,7 +438,7 @@ exports.getWalletPayment = async (req, res) => {
       res.redirect("/login");
     }
   } catch (error) {
-    console.error("Error message", error);
+    
     res.render("error/500");
   }
 };
@@ -446,7 +446,7 @@ exports.getWalletPayment = async (req, res) => {
 // controller for doing the  onlinepayment
 exports.postOnlinePayment = (req, res) => {
   const totalamount = req.body.totalAmount;
-  console.log(totalamount);
+  
   let options = {
     amount: totalamount * 100,
     currency: "INR",
@@ -535,7 +535,7 @@ exports.postCancelOrder = async (req, res) => {
       const product = specificOrder.products[0];
       const priceArray = specificOrder.price;
       const price = priceArray.reduce((total, amount) => total + amount, 0);
-      console.log("price", price);
+      
       if (payment == "onlinepayment" || payment == "wallet") {
         user = await userCollection.updateOne(
           { email: userId },
