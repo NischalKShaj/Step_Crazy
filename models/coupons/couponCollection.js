@@ -17,6 +17,14 @@ const stepCrazy = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  maxAmount: {
+    type: String,
+    required: true,
+  },
+  flatDiscount: {
+    type: String,
+    required: true,
+  },
   expiryDate: {
     type: String,
     required: true,

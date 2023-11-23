@@ -32,6 +32,13 @@ const stepCrazy = new mongoose.Schema({
     required: true,
     default: Date.now,
   },
+  referalCode: {
+    type: String,
+    required: true,
+  },
+  enteredReferal: {
+    type: String,
+  },
   otp: {
     type: Number,
   },

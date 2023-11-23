@@ -196,6 +196,29 @@
                     />
                   </div>
                   <div class="form-outline mb-2">
+                    <label for="flatDiscount">Discount</label>
+                    <input
+                      type="number"
+                      value="<%= coupon.flatDiscount %>"
+                      name="flatDiscount"
+                      class="form-control form-control-lg"
+                      placeholder="Enter the discount amount"
+                      required
+                    />
+                  </div>
+                  <div class="form-outline mb-2">
+                    <label for="maxAmount">Max Amount</label>
+                    <input
+                    min="0"
+                      type="number"
+                      value="<%= coupon.maxAmount %>"
+                      name="maxAmount"
+                      class="form-control form-control-lg"
+                      placeholder="Enter the maximum amount for the coupon"
+                      required
+                    />
+                  </div>
+                  <div class="form-outline mb-2">
                     <label for="expiryDate">Expiry Date</label>
                     <input
                         min="0"

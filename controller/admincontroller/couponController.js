@@ -59,6 +59,8 @@ exports.postCoupnPage = async (req, res) => {
           code: req.body.code,
           discount: req.body.discount,
           minAmount: req.body.minAmount,
+          maxAmount: req.body.maxAmount,
+          flatDiscount: req.body.flatDiscount,
           expiryDate: req.body.expiryDate,
           description: req.body.description,
         };
@@ -102,13 +104,14 @@ exports.postCouponUpdate = async (req, res) => {
   if (admin) {
     try {
       const id = req.params.id;
-
       const updateCoupon = await couponCollection.findByIdAndUpdate(id, {
         code: req.body.code,
         discount: req.body.discount,
         description: req.body.description,
         expiryDate: req.body.expiryDate,
         minAmount: req.body.minAmount,
+        maxAmount: req.body.maxAmount,
+        flatDiscount: req.body.flatDiscount,
       });
 
       await updateCoupon.save();

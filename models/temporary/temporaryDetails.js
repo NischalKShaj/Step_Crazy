@@ -38,6 +38,18 @@ const stepCrazy = new mongoose.Schema({
   otp: {
     type: Number,
   },
+  referalCode: {
+    type: String,
+    required: true,
+  },
+  enteredReferal: {
+    type: String,
+  },
+  wallet: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
   blocked: {
     type: Boolean,
     default: false,

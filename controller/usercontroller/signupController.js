@@ -33,12 +33,24 @@ exports.postOtpPage = async (req, res) => {
 
     // Check if the email already exists in the collection
     const existingUser = await collection.findOne({ email: req.body.email });
+    const user = await collection.find();
 
     if (existingUser) {
       const successMessage = "User already exists..";
       res.redirect(`/signup?success=${encodeURIComponent(successMessage)}`);
       return;
     }
+    const userName = req.body.first_name;
+    const referal = (userName) => {
+      const randomString = Math.random().toString(36).substr(2, 6);
+
+      // Combine the user's name and the random string
+      const referralCode = userName.slice(0, 3) + randomString;
+
+      return referralCode.toUpperCase();
+    };
+
+    const referalCode = referal(userName);
 
     req.session.email = req.body.email;
 
@@ -49,8 +61,25 @@ exports.postOtpPage = async (req, res) => {
       gender: req.body.gender,
       phone: req.body.Phone,
       password: req.body.password,
+      referalCode: referalCode,
+      enteredReferal: req.body.enteredReferal,
+      wallet: 0,
       otp: otp,
     };
+
+    let matchingUser;
+    await user.forEach((users) => {
+      if (users.referalCode == userDetails.enteredReferal) {
+        matchingUser = users;
+      }
+    });
+    if (matchingUser) {
+      await collection.updateOne(
+        { referalCode: userDetails.enteredReferal },
+        { $inc: { wallet: 500 } }
+      );
+      userDetails.wallet = 500;
+    }
 
     // Store the generated OTP and user details in the session
     const check = await temporaryCollection.insertMany([userDetails]);
@@ -72,7 +101,8 @@ exports.postOtpPage = async (req, res) => {
     });
     res.redirect("/signup/otp");
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    console.error("error", error);
+    res.render("error/500");
   }
 };
 
