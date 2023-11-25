@@ -34,7 +34,7 @@ const stepCrazy = new mongoose.Schema({
   },
   referalCode: {
     type: String,
-    required: true,
+    
   },
   enteredReferal: {
     type: String,

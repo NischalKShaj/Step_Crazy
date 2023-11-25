@@ -295,7 +295,6 @@ exports.postOnlineConfirm = async (req, res) => {
       res.redirect("/login");
     }
   } catch (error) {
-    
     res.render("error/500");
   }
 };
@@ -438,7 +437,6 @@ exports.getWalletPayment = async (req, res) => {
       res.redirect("/login");
     }
   } catch (error) {
-    
     res.render("error/500");
   }
 };
@@ -446,7 +444,7 @@ exports.getWalletPayment = async (req, res) => {
 // controller for doing the  onlinepayment
 exports.postOnlinePayment = (req, res) => {
   const totalamount = req.body.totalAmount;
-  
+
   let options = {
     amount: totalamount * 100,
     currency: "INR",
@@ -535,7 +533,7 @@ exports.postCancelOrder = async (req, res) => {
       const product = specificOrder.products[0];
       const priceArray = specificOrder.price;
       const price = priceArray.reduce((total, amount) => total + amount, 0);
-      
+
       if (payment == "onlinepayment" || payment == "wallet") {
         user = await userCollection.updateOne(
           { email: userId },
@@ -773,13 +771,14 @@ exports.getCoupon = async (req, res) => {
 exports.checkCoupons = async (req, res) => {
   const userId = req.session.user;
   const couponCode = req.body.code; // The coupon code entered by the user
-
+  console.log("coupon code", couponCode);
   try {
     const user = await userCollection.findOne({ email: userId });
     const coupon = await couponCollection.findOne({ code: couponCode });
+    console.log("coupon", coupon);
 
     if (user && user.blocked === false) {
-      const unUsedCoupons = user.unUsedCoupons;
+      const unUsedCoupons = user.unUsedCoupons || [];
       if (unUsedCoupons && unUsedCoupons.length > 0) {
         unUsedCoupons.pop();
       }
@@ -803,6 +802,7 @@ exports.checkCoupons = async (req, res) => {
             const cartItem = await cartCollection
               .find({ user: userid })
               .populate({ path: "product", model: "product" });
+            console.log("cartItem", cartItem);
 
             // Calculate the total discount for the user's cart
             let amount = 0;
@@ -812,6 +812,7 @@ exports.checkCoupons = async (req, res) => {
 
             // Check if the cart amount is greater than or equal to the minimum amount specified in the coupon
             if (amount < coupon.minAmount) {
+              console.log("hi");
               res.json({
                 success: false,
                 message:
@@ -822,11 +823,21 @@ exports.checkCoupons = async (req, res) => {
 
             const discount = coupon.discount;
             const totalDiscount = (amount * discount) / 100;
-
+            console.log(discount);
+            console.log(totalDiscount);
+            const coupons = coupon.code;
+            console.log("coupons", coupons);
             // Update the unUsedCoupons array
-            unUsedCoupons.push({ coupons: couponCode });
+            const result = unUsedCoupons.push({ coupons: coupons });
+            // console.log("userCoupon.unUsedCoupons", userCoupon.unUsedCoupons);
+            console.log("useD", result);
             // Save the updated user document with used coupons
-            await user.save();
+            try {
+              // Save the updated user document with used coupons
+              await user.save();
+            } catch (error) {
+              res.render("error/500");
+            }
 
             res.json({
               success: true,
