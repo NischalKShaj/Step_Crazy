@@ -14,6 +14,7 @@ const fs = require("fs");
 const PDFDocument = require("pdfkit");
 const pdfMake = require("pdfmake/build/pdfmake");
 const pdfFonts = require("pdfmake/build/vfs_fonts");
+const { totalmem } = require("os");
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -90,10 +91,18 @@ exports.postOrderPage = async (req, res) => {
 
           const coupon = await couponCollection.findOne({ code: couponCode });
 
-          if (coupon) {
+          if (coupon && cartTotalPrice < coupon.maxAmount) {
             const discount = coupon.discount;
             cartTotalPrice = (cartTotalPrice * discount) / 100;
 
+            // Track the used coupon
+            usedCoupons.push({ coupon: couponCode });
+            Coupon.push({ coupon: couponCode });
+            // Mark the coupon as used in the user collection
+            unUsedCoupons.pop();
+          } else if (coupon && cartTotalPrice > coupon.maxAmount) {
+            const amount = coupon.flatDiscount;
+            cartTotalPrice -= amount;
             // Track the used coupon
             usedCoupons.push({ coupon: couponCode });
             Coupon.push({ coupon: couponCode });
@@ -826,9 +835,15 @@ exports.checkCoupons = async (req, res) => {
             console.log(totalDiscount);
             const coupons = coupon.code;
             console.log("coupons", coupons);
+            const flatDiscount = coupon.flatDiscount;
+
+            if (amount > coupon.maxAmount) {
+              amount -= flatDiscount;
+              console.log("amount", amount);
+            }
             // Update the unUsedCoupons array
             const result = unUsedCoupons.push({ coupons: coupons });
-            // console.log("userCoupon.unUsedCoupons", userCoupon.unUsedCoupons);
+
             console.log("useD", result);
             // Save the updated user document with used coupons
             try {
@@ -837,12 +852,19 @@ exports.checkCoupons = async (req, res) => {
             } catch (error) {
               res.render("error/500");
             }
-
-            res.json({
-              success: true,
-              discountPercent: discount,
-              amountAfterDiscount: totalDiscount,
-            });
+            if (amount > coupon.maxAmount) {
+              res.json({
+                success: true,
+                flatDiscount: flatDiscount,
+                amountAfterFlatDiscount: amount,
+              });
+            } else {
+              res.json({
+                success: true,
+                discountPercent: discount,
+                amountAfterDiscount: totalDiscount,
+              });
+            }
           }
         }
       } else {

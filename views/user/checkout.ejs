@@ -237,15 +237,23 @@
                           <p style="color: red;">Insufficient balance in the wallet</p>
                           <% isWalletDisabled = true; %>
                         <% } %>
-                        <li>Subtotal <span>&#x20B9;<i id="grandtotal"><%= item.product.price * item.quantity %></i></span></li>
+                        <% subtotal =  item.product.price * item.quantity%>
+                        <li>Subtotal <span>&#x20B9;<i id="grandtotal"><%= subtotal %></i></span></li>
                       </ul>
                     </div>
                   <% }) %>
                   <div id="clear"></div>
                   <section id="discountSection" hidden>
                     <ul>
-                      <li><span id="discountPercent"></span></li>
-                      <li><span id="amountAfterDiscount"></span></li>
+                     
+                      
+                        <span id="flatDiscount"></span><br>
+                        <span id="totalAmount"></span>
+                       
+                      
+                        <span id="discountPercent"></span><br>
+                        <span id="amountAfterDiscount"></span>
+                        
                       <button class="btn btn-primary" type="button" id="clear-coupon" style="display: none;">Clear</button>
                     </ul>
                   </section>
@@ -603,8 +611,18 @@
             const data = await response.json();
             if (data.success) {
               // Update the hidden sections with the discount details
-              document.getElementById("discountPercent").textContent = `Discount Percent: ${data.discountPercent}%`;
-              document.getElementById("amountAfterDiscount").textContent = `Total: ₹${data.amountAfterDiscount}`;
+              if (data.flatDiscount) {
+                document.getElementById("flatDiscount").textContent = `Flat Discount: ₹${data.flatDiscount}`;
+                document.getElementById("totalAmount").textContent = `Total ₹${data.amountAfterFlatDiscount}`;
+                document.getElementById("discountPercent").style.display = "none";
+                document.getElementById("amountAfterDiscount").style.display = "none";
+              } else {
+                document.getElementById("discountPercent").textContent = `Discount Percent: ${data.discountPercent}%`;
+                document.getElementById("amountAfterDiscount").textContent = `Total: ₹${data.amountAfterDiscount}`;
+                document.getElementById("flatDiscount").style.display = "none";
+                document.getElementById("totalAmount").style.display = "none";
+              }
+
 
               // Show the hidden sections
               document.getElementById("discountSection").removeAttribute("hidden");
