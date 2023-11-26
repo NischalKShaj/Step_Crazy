@@ -33,7 +33,7 @@ exports.postOrderPage = async (req, res) => {
   try {
     const user = await userCollection.findOne({ email: userId });
     const unUsedCoupons = user.unUsedCoupons;
-    let usedCoupons = []; // Create an array to track used coupons
+    let usedCoupons = [];
     const Coupon = user.usedCoupons;
 
     if (!user) {
@@ -88,7 +88,6 @@ exports.postOrderPage = async (req, res) => {
         for (const unusedCoupon of unUsedCoupons) {
           const couponCode = unusedCoupon.coupons;
 
-          // Now you can use `couponCode` to look up the coupon in your collection
           const coupon = await couponCollection.findOne({ code: couponCode });
 
           if (coupon) {
