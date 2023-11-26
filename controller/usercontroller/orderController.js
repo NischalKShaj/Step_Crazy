@@ -236,9 +236,16 @@ exports.postOnlineConfirm = async (req, res) => {
           const couponCode = unusedCoupon.coupons;
 
           const coupon = await couponCollection.findOne({ code: couponCode });
-          if (coupon) {
+          if (coupon && totalOrderPrice < coupon.maxAmount) {
             const discount = coupon.discount;
             totalOrderPrice = (totalOrderPrice * discount) / 100;
+
+            Coupon.push({ coupon: couponCode });
+            usedCoupons.push({ coupon: couponCode });
+            unUsedCoupons.pop();
+          } else if (coupon && totalOrderPrice > coupon.maxAmount) {
+            const amount = coupon.flatDiscount;
+            totalOrderPrice -= amount;
 
             Coupon.push({ coupon: couponCode });
             usedCoupons.push({ coupon: couponCode });
@@ -369,12 +376,19 @@ exports.getWalletPayment = async (req, res) => {
           const couponCode = unusedCoupon.coupons;
 
           const coupon = await couponCollection.findOne({ code: couponCode });
-          if (coupon) {
+          if (coupon && totalPayment < coupon.maxAmount) {
             const discount = coupon.discount;
             // Calculate the discount on the total payment
             totalPayment = (totalPayment * discount) / 100;
 
             // Mark the coupon as used in the user collection
+            Coupon.push({ coupon: couponCode });
+            usedCoupons.push({ coupon: couponCode });
+            unUsedCoupons.pop();
+          } else if (coupon && totalPayment > coupon.maxAmount) {
+            const flatDiscount = coupon.flatDiscount;
+            totalPayment -= flatDiscount;
+
             Coupon.push({ coupon: couponCode });
             usedCoupons.push({ coupon: couponCode });
             unUsedCoupons.pop();

@@ -31,9 +31,94 @@ exports.getWallet = async (req, res) => {
             .exec();
           allOrderDetails.push(orderDetails);
         }
+        // Filtering the cancelled order from the order history
+        const canecelledOrders = orders.filter(
+          (order) =>
+            order.status === "Cancel" &&
+            (order.paymentMethod === "onlinepayment" ||
+              order.paymentMethod === "wallet")
+        );
+        for (const orders of canecelledOrders) {
+          const productId = orders.products;
+
+          const orderStatus = await productCollection
+            .find({ _id: { $in: productId } })
+            .exec();
+          allOrderDetails.push(orderStatus);
+        }
+        const cancelledOrderDetails = await Promise.all(
+          canecelledOrders.map(async (order) => {
+            const productDetails = await Promise.all(
+              order.products.map(async (productId) => {
+                const product = await productCollection
+                  .findById(productId)
+                  .exec();
+                const productName = product ? product.name : "Unknown Product";
+                return {
+                  image:
+                    product.image && product.image.length > 0
+                      ? product.image[0]
+                      : "/path/to/placeholder-image.jpg",
+                  name: productName,
+                };
+              })
+            );
+            return {
+              products: productDetails,
+              quantity: order.quantity,
+              price: order.price,
+            };
+          })
+        );
+        // Filtering the returned order from the order history
+        const returnOrders = orders.filter(
+          (order) =>
+            order.status === "Returned" &&
+            (order.paymentMethod === "cod" ||
+              order.paymentMethod === "onlinepayment" ||
+              order.paymentMethod === "wallet")
+        );
+        for (const ordered of returnOrders) {
+          const product = ordered.products;
+          const orderReturned = await productCollection
+            .find({ _id: { $in: product } })
+            .exec();
+          allOrderDetails.push(orderReturned);
+        }
+
+        const returnedOrderDetails = await Promise.all(
+          returnOrders.map(async (order) => {
+            const productDetails = await Promise.all(
+              order.products.map(async (productId) => {
+                const product = await productCollection
+                  .findById(productId)
+                  .exec();
+                const productName = product ? product.name : "Unknown Product";
+                return {
+                  image:
+                    product.image && product.image.length > 0
+                      ? product.image[0]
+                      : "/path/to/placeholder-image.jpg",
+                  name: productName,
+                };
+              })
+            );
+
+            return {
+              products: productDetails,
+              quantity: order.quantity,
+              price: order.price,
+            };
+          })
+        );
+
+        console.log("cancelled order ", cancelledOrderDetails);
+        console.log("returned order", returnedOrderDetails);
         res.render("user/wallet", {
           user,
-          orders: walletOrders, // Pass the filtered wallet orders
+          orders: walletOrders,
+          canecelledOrders: cancelledOrderDetails,
+          returnOrders: returnedOrderDetails,
           orderDetails: allOrderDetails,
         });
       } else {
@@ -43,6 +128,7 @@ exports.getWallet = async (req, res) => {
       res.redirect("/");
     }
   } catch (error) {
+    console.log(error);
     res.render("error/500");
   }
 };

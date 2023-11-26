@@ -527,15 +527,22 @@
           console.log(totalPrice,selectedAddresses);
           
           const newTotal = document.getElementById("amountAfterDiscount").innerHTML
+          const flatDiscount = document.getElementById("totalAmount").innerHTML
           const text = newTotal;
+          const newAmount = flatDiscount;
           const regex = /₹(\d+)/; // This regex pattern captures one or more digits following the ₹ symbol.
 
           const match = text.match(regex);
+          const filter = newAmount.match(regex)
 
           if (match) {
             const amount = match[1]; // The captured numeric value is in match[1].
             totalPrice = amount;
             console.log("Total Amount: " + amount);
+          } else if (filter){
+            const amount = filter[1];
+            totalPrice = amount
+            console.log("flat discount amount :",amount);
           } else {
             console.log("Total Amount not found in the text.");
           }
