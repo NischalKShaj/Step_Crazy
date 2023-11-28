@@ -91,6 +91,8 @@
                         <th>Discount</th>
                         <th>Description</th>
                         <th>Min Amount</th>
+                        <th>Max Amount</th>
+                        <th>Flat Discount</th>
                         <th>Expiry Date</th>
                       </tr>
                     </thead>
@@ -101,7 +103,9 @@
                         <td><%= row.code %></td>
                         <td><%= row.discount %>%</td>
                         <td><%= row.description %></td>
-                        <td><%= row.minAmount %></td>
+                        <td>₹<%= row.minAmount %></td>
+                        <td>₹<%= row.maxAmount %></td>
+                        <td>₹<%= row.flatDiscount %></td>
                         <td><%= row.expiryDate %></td>
                       </tr>
                       <% }) %>
