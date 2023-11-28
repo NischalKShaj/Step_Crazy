@@ -792,13 +792,11 @@ exports.getCoupon = async (req, res) => {
 // controller for checking the coupons
 exports.checkCoupons = async (req, res) => {
   const userId = req.session.user;
-  const couponCode = req.body.code; // The coupon code entered by the user
-  console.log("coupon code", couponCode);
+  const couponCode = req.body.code;
   try {
     const user = await userCollection.findOne({ email: userId });
     const coupon = await couponCollection.findOne({ code: couponCode });
-    console.log("coupon", coupon);
-
+    
     if (user && user.blocked === false) {
       const unUsedCoupons = user.unUsedCoupons || [];
       if (unUsedCoupons && unUsedCoupons.length > 0) {
@@ -824,7 +822,6 @@ exports.checkCoupons = async (req, res) => {
             const cartItem = await cartCollection
               .find({ user: userid })
               .populate({ path: "product", model: "product" });
-            console.log("cartItem", cartItem);
 
             // Calculate the total discount for the user's cart
             let amount = 0;
@@ -834,7 +831,6 @@ exports.checkCoupons = async (req, res) => {
 
             // Check if the cart amount is greater than or equal to the minimum amount specified in the coupon
             if (amount < coupon.minAmount) {
-              console.log("hi");
               res.json({
                 success: false,
                 message:
@@ -845,20 +841,14 @@ exports.checkCoupons = async (req, res) => {
 
             const discount = coupon.discount;
             const totalDiscount = (amount * discount) / 100;
-            console.log(discount);
-            console.log(totalDiscount);
             const coupons = coupon.code;
-            console.log("coupons", coupons);
             const flatDiscount = coupon.flatDiscount;
 
             if (amount > coupon.maxAmount) {
               amount -= flatDiscount;
-              console.log("amount", amount);
             }
             // Update the unUsedCoupons array
             const result = unUsedCoupons.push({ coupons: coupons });
-
-            console.log("useD", result);
             // Save the updated user document with used coupons
             try {
               // Save the updated user document with used coupons

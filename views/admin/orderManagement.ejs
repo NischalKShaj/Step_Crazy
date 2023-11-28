@@ -152,7 +152,7 @@
                       <td><%= orders[i].price %></td>
                       <td>
                         <form action="/admin/dashboard/order/status/<%= orders[i]._id %>" method="post" class="d-flex">
-                          <select name="status" class="form-select" style="padding: 5px; border: 1px solid #ced4da; border-radius: 0.25rem;">
+                          <select name="status" class="form-select" style="padding: 5px; border: 1px solid #ced4da; border-radius: 0.25rem;"<%= (orders[i].status === "Cancel" || orders[i].status === "Returned") ? 'disabled' : '' %>>
                             <!-- Options for different order statuses -->
                             <option value="Pending" <%= orders[i].status === "Pending" ? 'selected' : '' %>>Pending</option>
                             <option value="Shipped" <%= orders[i].status === "Shipped" ? 'selected' : '' %>>Shipped</option>
@@ -161,7 +161,7 @@
                             <option value="Cancel" <%= orders[i].status === "Cancel" ? 'selected' : '' %>>Cancel</option>
                             <option value="Returned" <%= orders[i].status === "Returned" ? 'selected' : '' %>>Returned</option>
                           </select>
-                          <button type="submit" class="btn btn-primary ml-2">Update</button>
+                          <button type="submit" class="btn btn-primary ml-2" <%= (orders[i].status === "Cancel" || orders[i].status === "Returned") ? 'disabled' : '' %>>Update</button>
                         </form>
                       </td>
                       <td></td>

@@ -111,9 +111,6 @@ exports.getWallet = async (req, res) => {
             };
           })
         );
-
-        console.log("cancelled order ", cancelledOrderDetails);
-        console.log("returned order", returnedOrderDetails);
         res.render("user/wallet", {
           user,
           orders: walletOrders,
@@ -128,7 +125,6 @@ exports.getWallet = async (req, res) => {
       res.redirect("/");
     }
   } catch (error) {
-    console.log(error);
     res.render("error/500");
   }
 };
