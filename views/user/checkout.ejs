@@ -528,12 +528,16 @@
           
           const newTotal = document.getElementById("amountAfterDiscount").innerHTML
           const flatDiscount = document.getElementById("totalAmount").innerHTML
+          const offerAmount = document.getElementById("offers-container").innerHTML
+          console.log(offerAmount);
+          const off = offerAmount
           const text = newTotal;
           const newAmount = flatDiscount;
           const regex = /₹(\d+)/; // This regex pattern captures one or more digits following the ₹ symbol.
 
           const match = text.match(regex);
           const filter = newAmount.match(regex)
+          const matched = off.match(regex)
 
           if (match) {
             const amount = match[1]; // The captured numeric value is in match[1].
@@ -543,6 +547,9 @@
             const amount = filter[1];
             totalPrice = amount
             console.log("flat discount amount :",amount);
+          } else if(matched){
+            const amount = matched[1];
+            totalPrice -= amount
           } else {
             console.log("Total Amount not found in the text.");
           }
@@ -705,7 +712,7 @@
               // Build HTML to display offers
               let offersHTML = "<ul>";
               offers.forEach(offer => {
-                offersHTML += `<li>${offer.category}: &#8377 ${offer.discount} off</li>`;
+                offersHTML += `<li>${offer.category}: ₹${offer.discount} off</li>`;
                 // Adjust this based on your offer object structure
               });
               offersHTML += "</ul>";

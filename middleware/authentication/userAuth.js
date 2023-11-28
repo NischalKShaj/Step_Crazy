@@ -6,6 +6,6 @@ exports.userAuth = (req, res, next) => {
   if (user) {
     next();
   } else {
-    res.redirect("/");
+    res.redirect("/login");
   }
 };
