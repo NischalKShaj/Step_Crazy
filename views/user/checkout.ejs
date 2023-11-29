@@ -230,16 +230,20 @@
                     </table>
                   </div>
                   <% let isWalletDisabled = false; %>
+                  <% let totalSubtotal = 0; %>
+                  
                   <% cartItem.forEach((item) => { %>
-                    <div class="checkout_order_total">
-                      <ul>
-                        <% subtotal =  item.product.price * item.quantity; %>
-                        <li>Subtotal <span>&#x20B9;<i id="grandtotal"><%= subtotal %></i></span></li>
-                      </ul>
-                    </div>
+                    <% totalSubtotal += item.product.price * item.quantity; %>
                   <% }) %>
+                  
+                  <div class="checkout_order_total">
+                    <ul>
+                      <li>Total Price <span>&#x20B9;<%= totalSubtotal %></span></li>
+                    </ul>
+                  </div>
+                  
                   <% cartItem.forEach((item) => { %>
-                    <% if (user.wallet <= item.quantity * item.product.price && !isWalletDisabled) { %>
+                    <% if (user.wallet <= totalSubtotal && !isWalletDisabled) { %>
                       <p style="color: red;">Insufficient balance in the wallet</p>
                       <% isWalletDisabled = true; %>
                     <% } %>
