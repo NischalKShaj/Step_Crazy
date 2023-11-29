@@ -233,14 +233,16 @@
                   <% cartItem.forEach((item) => { %>
                     <div class="checkout_order_total">
                       <ul>
-                        <% if (user.wallet <= item.quantity * item.product.price) { %>
-                          <p style="color: red;">Insufficient balance in the wallet</p>
-                          <% isWalletDisabled = true; %>
-                        <% } %>
-                        <% subtotal =  item.product.price * item.quantity%>
+                        <% subtotal =  item.product.price * item.quantity; %>
                         <li>Subtotal <span>&#x20B9;<i id="grandtotal"><%= subtotal %></i></span></li>
                       </ul>
                     </div>
+                  <% }) %>
+                  <% cartItem.forEach((item) => { %>
+                    <% if (user.wallet <= item.quantity * item.product.price && !isWalletDisabled) { %>
+                      <p style="color: red;">Insufficient balance in the wallet</p>
+                      <% isWalletDisabled = true; %>
+                    <% } %>
                   <% }) %>
                   <div id="clear"></div>
                   <section id="discountSection" hidden>
