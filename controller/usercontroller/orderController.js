@@ -484,7 +484,7 @@ exports.getOrderDetails = async (req, res) => {
     const user = await userCollection.findOne({ email: userEmail }).exec();
 
     const page = parseInt(req.query.page) || 1;
-    const limit = 7;
+    const limit = 3;
 
     if (user && user.blocked === false) {
       const orders = user.order;
