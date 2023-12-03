@@ -112,17 +112,17 @@
                 </div>
                 <% function formatDate(inputDate) {
                   if (typeof inputDate === 'string') {
-                      // Split the date based on '/' or '-' to handle different formats
-                      const parts = inputDate.split(/[/|-]/);
+                      // Convert the string to a Date object
+                      const dateObject = new Date(inputDate);
               
-                      // Check for month/day/year format
-                      if (parts.length === 3) {
-                          const [month, day, year] = parts;
-                          return `${day}/${month}/${year}`;
-                      }
+                      // Use toLocaleString with a specific time zone (e.g., 'en-US', { timeZone: 'UTC' })
+                      const formattedDate = dateObject.toLocaleString('en-US', { timeZone: 'UTC' });
+              
+                      return formattedDate;
                   }
                   return inputDate;
               } %>
+              
     
                 <% if (orders.length > 0) { %>
                   <div class="card-body">
