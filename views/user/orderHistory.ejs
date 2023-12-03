@@ -121,7 +121,19 @@
                             <% for (let j = 0; j < orderDetails[i].length; j++) { %>
                               <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
-                                  <p class="text-muted mb-0 small">Date: <%= orders[i].date.toLocaleDateString() %></p>
+                                  <% function formatDate(inputDate) {
+                                    if (typeof inputDate === 'string') {
+                                        const parts = inputDate.split('/');
+                                        if (parts.length === 3) {
+                                            const [month, day, year] = parts;
+                                            return `${day}/${month}/${year}`;
+                                        }
+                                    }
+                                    return inputDate;
+                                } %>
+                                 <p class="text-muted mb-0 small">Date: <%= formatDate(orders[i].date) %></p>
+
+
                                   <strong>Product Name:</strong> <%= orderDetails[i][j].name %><br>
                                   <strong>Quantity:</strong> <%= orders[i].quantity[j] %><br>
                                   
@@ -260,6 +272,9 @@
           })
         }
         </script>
+
+        
+
 
         <script>
       $(document).ready(function() {
