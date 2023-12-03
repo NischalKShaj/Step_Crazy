@@ -488,11 +488,20 @@ exports.getOrderDetails = async (req, res) => {
 
     if (user && user.blocked === false) {
       const orders = user.order;
-      orders.forEach(order => {
+      orders.forEach((order) => {
         order.date = new Date(order.date);
       });
 
+      // Add this before and after sorting
+      console.log(
+        "Dates before sorting:",
+        orders.map((order) => order.date)
+      );
       orders.sort((a, b) => b.date - a.date);
+      console.log(
+        "Dates after sorting:",
+        orders.map((order) => order.date)
+      );
 
       if (orders && orders.length > 0) {
         const totalCount = orders.length;

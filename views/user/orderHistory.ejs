@@ -110,6 +110,16 @@
                     Receipt
                   </p>
                 </div>
+                <% function formatDate(inputDate) {
+                  if (typeof inputDate === 'string') {
+                      const parts = inputDate.split('/');
+                      if (parts.length === 3) {
+                          const [month, day, year] = parts;
+                          return `${day}/${month}/${year}`;
+                      }
+                  }
+                  return inputDate;
+                } %>
     
                 <% if (orders.length > 0) { %>
                   <div class="card-body">
@@ -121,17 +131,8 @@
                             <% for (let j = 0; j < orderDetails[i].length; j++) { %>
                               <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
-                                  <% function formatDate(inputDate) {
-                                    if (typeof inputDate === 'string') {
-                                        const parts = inputDate.split('/');
-                                        if (parts.length === 3) {
-                                            const [month, day, year] = parts;
-                                            return `${day}/${month}/${year}`;
-                                        }
-                                    }
-                                    return inputDate;
-                                } %>
-                                 <p class="text-muted mb-0 small">Date: <%= formatDate(orders[i].date) %></p>
+                                  
+                                <p class="text-muted mb-0 small">Date: <%= formatDate(orders[i].date) %></p>
 
 
                                   <strong>Product Name:</strong> <%= orderDetails[i][j].name %><br>
