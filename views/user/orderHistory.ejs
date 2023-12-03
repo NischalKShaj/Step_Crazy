@@ -110,7 +110,19 @@
                     Receipt
                   </p>
                 </div>
-                
+                <% function formatDate(inputDate) {
+                  if (typeof inputDate === 'string') {
+                      // Split the date based on '/' or '-' to handle different formats
+                      const parts = inputDate.split(/[/|-]/);
+              
+                      // Check for month/day/year format
+                      if (parts.length === 3) {
+                          const [month, day, year] = parts;
+                          return `${day}/${month}/${year}`;
+                      }
+                  }
+                  return inputDate;
+              } %>
     
                 <% if (orders.length > 0) { %>
                   <div class="card-body">
@@ -123,7 +135,7 @@
                               <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
                                   
-                                  <p class="text-muted mb-0 small">Date: <%= orders[i].date.toLocaleDateString() %></p>
+                                <p class="text-muted mb-0 small">Date: <%= formatDate(orders[i].date) %></p>
 
 
                                   <strong>Product Name:</strong> <%= orderDetails[i][j].name %><br>
