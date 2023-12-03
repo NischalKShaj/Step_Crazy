@@ -488,7 +488,12 @@ exports.getOrderDetails = async (req, res) => {
 
     if (user && user.blocked === false) {
       const orders = user.order;
-      orders.sort((a, b) => a.date-b.date);
+      orders.forEach(order => {
+        order.date = new Date(order.date);
+      });
+
+      orders.sort((a, b) => a.date - b.date);
+
       if (orders && orders.length > 0) {
         const totalCount = orders.length;
         const totalPages = Math.ceil(totalCount / limit);
