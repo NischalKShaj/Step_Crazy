@@ -497,7 +497,7 @@ exports.getOrderDetails = async (req, res) => {
         "Dates before sorting:",
         orders.map((order) => order.date)
       );
-      orders.sort((a, b) => a.date - b.date);
+      orders.sort((a, b) => b.date - a.date);
       console.log(
         "Dates after sorting:",
         orders.map((order) => order.date)
