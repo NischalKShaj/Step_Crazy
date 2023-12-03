@@ -492,7 +492,7 @@ exports.getOrderDetails = async (req, res) => {
         order.date = new Date(order.date);
       });
 
-      orders.sort((a, b) => a.date - b.date);
+      orders.sort((a, b) => b.date - a.date);
 
       if (orders && orders.length > 0) {
         const totalCount = orders.length;
