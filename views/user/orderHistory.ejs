@@ -111,17 +111,17 @@
                   </p>
                 </div>
                 <% function formatDate(inputDate) {
-                  if (typeof inputDate === 'string') {
-                      // Convert the string to a Date object
+                  if (inputDate instanceof Date) {
+                      // If input is already a Date object, return it formatted
+                      return inputDate.toLocaleDateString('en-US', { timeZone: 'UTC' });
+                  } else if (typeof inputDate === 'string') {
+                      // Parse the string into a Date object and return it formatted
                       const dateObject = new Date(inputDate);
-              
-                      // Use toLocaleString with a specific time zone (e.g., 'en-US', { timeZone: 'UTC' })
-                      const formattedDate = dateObject.toLocaleString('en-US', { timeZone: 'UTC' });
-              
-                      return formattedDate;
+                      return dateObject.toLocaleDateString('en-US', { timeZone: 'UTC' });
                   }
                   return inputDate;
-              } %>
+                } %>
+              
               
     
                 <% if (orders.length > 0) { %>
