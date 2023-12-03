@@ -110,24 +110,10 @@
                     Receipt
                   </p>
                 </div>
-                <% function formatDate(inputDate) {
-                  if (inputDate instanceof Date) {
-                      // If input is already a Date object, return it formatted
-                      return inputDate.toLocaleDateString('en-US', { timeZone: 'UTC' });
-                  } else if (typeof inputDate === 'string') {
-                      // Parse the string into a Date object and return it formatted
-                      const dateObject = new Date(inputDate);
-                      return dateObject.toLocaleDateString('en-US', { timeZone: 'UTC' });
-                  }
-                  return inputDate;
-                } %>
-              
-              
     
                 <% if (orders.length > 0) { %>
                   <div class="card-body">
-                    <% for (let i = orders.length - 1; i >= 0; i--) { %>
-
+                    <% for (let i = 0; i < orders.length; i++) { %>
                       <div class="card mb-3">
                         <div class="card-body">
                           <ul class="list-group">
@@ -135,10 +121,7 @@
                             <% for (let j = 0; j < orderDetails[i].length; j++) { %>
                               <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
-                                  
-                                <p class="text-muted mb-0 small">Date: <%= formatDate(orders[i].date) %></p>
-
-
+                                  <p class="text-muted mb-0 small">Date: <%= orders[i].date.toLocaleDateString() %></p>
                                   <strong>Product Name:</strong> <%= orderDetails[i][j].name %><br>
                                   <strong>Quantity:</strong> <%= orders[i].quantity[j] %><br>
                                   
@@ -277,9 +260,6 @@
           })
         }
         </script>
-
-        
-
 
         <script>
       $(document).ready(function() {

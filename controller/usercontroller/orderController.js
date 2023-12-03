@@ -488,21 +488,6 @@ exports.getOrderDetails = async (req, res) => {
 
     if (user && user.blocked === false) {
       const orders = user.order;
-      orders.forEach((order) => {
-        order.date = new Date(order.date);
-      });
-
-      // Add this before and after sorting
-      console.log(
-        "Dates before sorting:",
-        orders.map((order) => order.date)
-      );
-      orders.sort((a, b) => b.date - a.date);
-      console.log(
-        "Dates after sorting:",
-        orders.map((order) => order.date)
-      );
-
       if (orders && orders.length > 0) {
         const totalCount = orders.length;
         const totalPages = Math.ceil(totalCount / limit);
@@ -811,7 +796,7 @@ exports.checkCoupons = async (req, res) => {
   try {
     const user = await userCollection.findOne({ email: userId });
     const coupon = await couponCollection.findOne({ code: couponCode });
-
+    
     if (user && user.blocked === false) {
       const unUsedCoupons = user.unUsedCoupons || [];
       if (unUsedCoupons && unUsedCoupons.length > 0) {
