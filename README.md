@@ -54,28 +54,6 @@ stepcrazy is a comprehensive e-commerce platform developed and deployed to provi
 - **Cloud Hosting:**
   - AWS for reliable and scalable cloud hosting.
 
-## Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/ShoeShop.git
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Configure environment variables:
-   - Create a `.env` file and set the required variables (e.g., database connection details, API keys).
-
-4. Run the application:
-   ```bash
-   npm start
-   ```
-
-5. Access the application at `http://localhost:3000` in your web browser.
-
 ## Contributing
 
 We welcome contributions to improve the platform. If you have suggestions or find any issues, please open an issue or submit a pull request.
