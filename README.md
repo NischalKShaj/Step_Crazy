@@ -1,12 +1,10 @@
-
-
 ---
 
-# StepCrazy E-commerce Platform
+# Step crazy E-commerce Platform
 
 ## Overview
 
-stepcrazy is a comprehensive e-commerce platform developed and deployed to provide a seamless online shopping experience for shoe enthusiasts. The platform incorporates various features, including product view, zoom, cart/wishlist management, diverse payment methods, order details, coupon application, and PDF invoices. Additionally, it includes an admin dashboard for graphical sales representation, user management, and product/category/coupon editing.
+Step crazy is a comprehensive e-commerce platform developed and deployed to provide a seamless online shopping experience for shoe enthusiasts. The platform incorporates various features, including product view, zoom, cart/wishlist management, diverse payment methods, order details, coupon application, and PDF invoices. Additionally, it includes an admin dashboard for graphical sales representation, user management, and product/category/coupon editing.
 
 ## Features
 
@@ -54,10 +52,31 @@ stepcrazy is a comprehensive e-commerce platform developed and deployed to provi
 - **Cloud Hosting:**
   - AWS for reliable and scalable cloud hosting.
 
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/NischalKShaj/Step_Crazy.git
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Configure environment variables:
+   - Create a `.env` file and set the required variables (e.g., database connection details, API keys).
+
+4. Run the application:
+   ```bash
+   npm start
+   ```
+
+5. Access the application at `http://localhost:3000` in your web browser.
+
 ## Contributing
 
 We welcome contributions to improve the platform. If you have suggestions or find any issues, please open an issue or submit a pull request.
 
 
-
----
+This README provides an overview of the step crazy e-commerce platform, its features, technology stack, installation instructions, and contribution guidelines. Customize it as needed for your project.
