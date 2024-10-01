@@ -796,7 +796,7 @@ exports.checkCoupons = async (req, res) => {
   try {
     const user = await userCollection.findOne({ email: userId });
     const coupon = await couponCollection.findOne({ code: couponCode });
-    
+
     if (user && user.blocked === false) {
       const unUsedCoupons = user.unUsedCoupons || [];
       if (unUsedCoupons && unUsedCoupons.length > 0) {
